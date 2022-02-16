@@ -18,7 +18,10 @@ const VehicleMaintainence = () => {
     VehicleMaintenanceService.getVehicleReadyToMaintenance().then((res) => {
       tableData = res.data.data
       let rowDataList = []
-      tableData.map((data, index) => {
+      const filterData = tableData.filter((data) => data.vehicle_type_id.id == 1 )
+      console.log(filterData)
+      filterData.map((data, index) => {
+      // tableData.map((data, index) => {
         rowDataList.push({
           sno: index + 1,
           Tripsheet_No: '',

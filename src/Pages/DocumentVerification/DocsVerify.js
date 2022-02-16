@@ -2,6 +2,7 @@
 import { React, useState, useEffect } from 'react'
 import { CButton, CCard, CContainer, CSpinner } from '@coreui/react'
 import { Link } from 'react-router-dom'
+// import { Lines } from 'react-preloaders'
 import CustomTable from 'src/components/customComponent/CustomTable'
 import DocsVerifyService from 'src/Service/DocsVerify/DocsVerifyService'
 

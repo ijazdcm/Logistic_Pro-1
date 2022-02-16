@@ -18,8 +18,11 @@ import {
 } from '@coreui/react'
 import React, { useState, useEffect } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
 
 // SERVICES FILE
+import VendorCreationService from 'src/Service/VendorCreation/VendorCreationService'
 import DocumentVerificationService from 'src/Service/DocsVerify/DocsVerifyService'
 import ShedService from 'src/Service/SmallMaster/Shed/ShedService'
 import PanDataService from 'src/Service/SAP/PanDataService'
@@ -27,13 +30,17 @@ import PanDataService from 'src/Service/SAP/PanDataService'
 // VALIDATIONS FILE
 import useForm from 'src/Hooks/useForm.js'
 import validate from 'src/Utils/Validation'
-import VendorRequestValidation from 'src/Utils/VendorCreation/VendorRequestValidation'
+import VendorRequestValidation from 'src/Utils/TransactionPages/VendorCreation/VendorRequestValidation'
 
 const VendorCreationRequest = () => {
   const { id } = useParams()
   const navigation = useNavigate()
+
+  const [fetch, setFetch] = useState(false)
   const [visible, setVisible] = useState(false)
   const [currentInfo, setCurrentInfo] = useState({})
+  const [shedData, setShedData] = useState({})
+
   const [adharvisible, setAdharVisible] = useState(false)
   const [BankPassbook, setBankPassbook] = useState(false)
   const [PanCard, setPanCard] = useState(false)
@@ -93,16 +100,57 @@ const VendorCreationRequest = () => {
   const { values, errors, handleChange, onFocus, handleSubmit, enableSubmit, onBlur, isTouched } =
     useForm(callBack, VendorRequestValidation, formValues)
 
+  // GET SINGLE SHED DETAILS
+  const ShedData = (id) => {
+    ShedService.SingleShedData(id).then((resp) => {
+      setShedData(resp.data.data)
+    })
+  }
+
+  // ADD DOCUMENT VERIFICATION DETAILS
+  const addVendorRequest = (status) => {
+    // const formData = new FormData()
+    // formData.append('vehicle_id', currentVehicleInfo.vehicle_id)
+    // formData.append('vehicle_inspection_id', currentVehicleInfo.vehicle_inspection.inspection_id)
+    // formData.append('pan_number', values.panNumber || panNumber)
+    // formData.append('vendor_code', panData.LIFNR || 0)
+    // formData.append('owner_name', panData.NAME1 || values.ownerName)
+    // formData.append('owner_number', panData.TELF1 || values.ownerMob)
+    // formData.append('aadhar_number', panData.IDNUMBER || values.aadhar)
+    // formData.append('bank_acc_number', panData.BANKN || values.bankAcc)
+    // formData.append('license_copy', values.license)
+    // formData.append('rc_copy_front', values.rcFront)
+    // formData.append('rc_copy_back', values.rcBack)
+    // formData.append('insurance_copy_front', values.insurance)
+    // // data.append('insurance_copy_back', values.insect_vevils_presence_in_tar)
+    // formData.append('insurance_validity', values.insuranceValid)
+    // formData.append('tds_dec_form_front', values.TDSfront)
+    // formData.append('tds_dec_form_back', values.TDSback)
+    // formData.append('transport_shed_sheet', values.transportShedSheet)
+    // formData.append('shed_id', shedData && shedData.shed_id)
+    // formData.append('shed_name', shedData && shedData.shed_name)
+    // formData.append('ownership_transfer_form', values.ownershipTrans)
+    // formData.append('shed_owner_number', shedData.shed_owner_phone_1)
+    // formData.append('shed_owner_whatsapp', shedData.shed_owner_phone_2)
+    // formData.append('freight_rate', values.freightRate)
+    // formData.append('remarks', values.remarks ? values.remarks : 'NO REMARKS')
+    // formData.append('document_status', status)
+    // DocumentVerificationService.addDocumentVerificationData(formData).then((res) => {
+    //   console.log(res)
+    //   if (res.status == 200) {
+    //     toast.success('Document Verification Done!')
+    //     navigation('/DocsVerify')
+    //   }
+    // })
+  }
+
   // GET SINGLE VEHICLE DATA
   useEffect(() => {
-    DocumentVerificationService.getSingleVehicleInfoOnParkingYardGate(id).then((res) => {
-      const resData = res.data.data
+    VendorCreationService.getVehicleDocumentInfo(id).then((res) => {
+      const resData = res.data.data[0]
+      ShedData(resData.shed_id)
       setCurrentInfo(resData)
       setFetch(true)
-    })
-    // GET ALL SHED DETAILS
-    ShedService.getAllShedData().then((res) => {
-      setShedNames(res.data.data)
     })
   }, [])
 
@@ -128,35 +176,46 @@ const VendorCreationRequest = () => {
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="shedName">
                 Shed Name
-                {errors.shedName && <span className="small text-danger">{errors.shedName}</span>}
+                {/* {errors.shedName && <span className="small text-danger">{errors.shedName}</span>} */}
               </CFormLabel>
-              <CFormInput size="sm" id="shedName" readOnly />
+              <CFormInput
+                size="sm"
+                id="shedName"
+                value={fetch ? shedData.shed_name : ''}
+                readOnly
+              />
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="ownerName">
                 Owner Name
-                {errors.vehicleType && (
+                {/* {errors.vehicleType && (
                   <span className="small text-danger">{errors.vehicleType}</span>
-                )}
+                )} */}
               </CFormLabel>
-              <CFormInput size="sm" id="ownerName" readOnly />
+              <CFormInput
+                size="sm"
+                id="ownerName"
+                value={fetch ? shedData.shed_owner_name : ''}
+                readOnly
+              />
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="shedownerMob">
                 Shed Mobile Number*{' '}
-                {errors.shedownerMob && (
+                {/* {errors.shedownerMob && (
                   <span className="small text-danger">{errors.shedownerMob}</span>
-                )}
+                )} */}
               </CFormLabel>
               <CFormInput
                 size="sm"
                 id="shedownerMob"
                 className={`${errors.shedownerMob && 'is-invalid'}`}
                 name="shedownerMob"
-                value={values.shedownerMob || ''}
+                value={fetch ? shedData.shed_owner_phone_1 : ''}
                 onFocus={onFocus}
                 onBlur={onBlur}
                 onChange={handleChange}
+                readOnly
               />
             </CCol>
             <CCol xs={12} md={3}>
@@ -171,10 +230,11 @@ const VendorCreationRequest = () => {
                 id="shedownerWhatsapp"
                 className={`${errors.shedownerWhatsapp && 'is-invalid'}`}
                 name="shedownerWhatsapp"
-                value={values.shedownerWhatsapp || ''}
+                value={fetch ? shedData.shed_owner_phone_2 : ''}
                 onFocus={onFocus}
                 onBlur={onBlur}
                 onChange={handleChange}
+                readOnly
               />
             </CCol>
           </CRow>
@@ -772,7 +832,7 @@ const VendorCreationRequest = () => {
           <CModalTitle>Pan Card</CModalTitle>
         </CModalHeader>
         <CModalBody>
-          <CCardImage orientation="top" src="" />
+          <CCardImage orientation="top" src={fetch ? currentInfo : ''} />
         </CModalBody>
         <CModalFooter>
           <CButton color="secondary" onClick={() => setPanCard(false)}>
@@ -789,7 +849,7 @@ const VendorCreationRequest = () => {
           <CModalTitle>Pan Card</CModalTitle>
         </CModalHeader>
         <CModalBody>
-          <CCardImage orientation="top" src="" />
+          <CCardImage orientation="top" src={fetch ? currentInfo.license_copy : ''} />
         </CModalBody>
         <CModalFooter>
           <CButton color="secondary" onClick={() => setLicence(false)}>

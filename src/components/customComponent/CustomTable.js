@@ -1,35 +1,12 @@
 import DataTable from 'react-data-table-component'
 import React, { useEffect } from 'react'
 import { CButton, CCol, CFormInput, CInputGroup, CInputGroupText, CRow } from '@coreui/react'
-import { CustomLoader } from './CutomLoader'
+import { FilterComponent } from './FilterComponent'
+import { CustomLoader } from './CustomLoader'
 
 const CustomTable = ({ columns, data, fieldName, showSearchFilter, pending = false }) => {
   const [filterText, setFilterText] = React.useState('')
   const [resetPaginationToggle, setResetPaginationToggle] = React.useState(false)
-
-  const FilterComponent = ({ filterText, onFilter, onClear }) => (
-    <>
-      <CRow>
-        <CCol className="display-flex">
-          <CInputGroup>
-            <CFormInput
-              id="search"
-              type="text"
-              placeholder={`Search By ${fieldName}`}
-              aria-label="Search Input"
-              onChange={onFilter}
-              value={filterText}
-            />
-            <CInputGroupText>
-              <CButton color="secondary" type="button" onClick={onClear}>
-                X
-              </CButton>
-            </CInputGroupText>
-          </CInputGroup>
-        </CCol>
-      </CRow>
-    </>
-  )
 
   const filteredItems = data.filter(
     (item) => item[fieldName] && item[fieldName].toLowerCase().includes(filterText.toLowerCase())
@@ -48,6 +25,7 @@ const CustomTable = ({ columns, data, fieldName, showSearchFilter, pending = fal
         onFilter={(e) => setFilterText(e.target.value)}
         onClear={handleClear}
         filterText={filterText}
+        fieldName={fieldName}
       />
     )
   }, [filterText, resetPaginationToggle])
@@ -80,8 +58,6 @@ const CustomTable = ({ columns, data, fieldName, showSearchFilter, pending = fal
       },
     },
   }
-
-  
 
   return showSearchFilter ? (
     <DataTable

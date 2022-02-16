@@ -416,6 +416,59 @@ const DocVerifyVendorAvail = () => {
                   />
                 </CCol>
                 <CCol xs={12} md={3}>
+                  <CFormLabel htmlFor="aadharCopy">
+                    Aadhar Card Copy*{' '}
+                    {errors.aadharCopy && (
+                      <span className="small text-danger">{errors.aadharCopy}</span>
+                    )}
+                  </CFormLabel>
+                  <CFormInput
+                    type="file"
+                    name="aadharCopy"
+                    size="sm"
+                    id="aadharCopy"
+                    accept=".jpg,.jpeg,.png,.pdf"
+                    onFocus={onFocus}
+                    onBlur={onBlur}
+                    onChange={handleChange}
+                  />
+                </CCol>
+                <CCol xs={12} md={3}>
+                  <CFormLabel htmlFor="panCopy">
+                    PAN Card Copy*{' '}
+                    {errors.panCopy && <span className="small text-danger">{errors.panCopy}</span>}
+                  </CFormLabel>
+                  <CFormInput
+                    type="file"
+                    name="panCopy"
+                    size="sm"
+                    id="panCopy"
+                    accept=".jpg,.jpeg,.png,.pdf"
+                    onFocus={onFocus}
+                    onBlur={onBlur}
+                    onChange={handleChange}
+                  />
+                </CCol>
+
+                <CCol xs={12} md={3}>
+                  <CFormLabel htmlFor="passCopy">
+                    Bank Pass Book Copy*{' '}
+                    {errors.passCopy && (
+                      <span className="small text-danger">{errors.passCopy}</span>
+                    )}
+                  </CFormLabel>
+                  <CFormInput
+                    type="file"
+                    name="passCopy"
+                    size="sm"
+                    id="passCopy"
+                    accept=".jpg,.jpeg,.png,.pdf"
+                    onFocus={onFocus}
+                    onBlur={onBlur}
+                    onChange={handleChange}
+                  />
+                </CCol>
+                <CCol xs={12} md={3}>
                   <CFormLabel htmlFor="license">
                     License Copy*{' '}
                     {errors.license && <span className="small text-danger">{errors.license}</span>}

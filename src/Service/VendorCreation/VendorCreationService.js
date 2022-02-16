@@ -2,15 +2,15 @@ import AppConfig from 'src/AppConfig'
 import api from '../Config'
 
 const DOCS_VERIFY_URL = AppConfig.api.baseUrl + '/vendor/'
-const PARKING_YRD_SINGEL_VEHICLE_INFO_URL = AppConfig.api.baseUrl + '/parkingYard/'
+const SINGLE_VEHICLE_DOCUMENT_INFO_URL = AppConfig.api.baseUrl + '/DocumentVerification/'
 
 class VendorCreationService {
   // VENDOR CREATION REQUEST
   getVendorCreationTableData() {
     return api.get(DOCS_VERIFY_URL)
   }
-  getSingleVehicleInfoOnParkingYardGate(id) {
-    return api.get(PARKING_YRD_SINGEL_VEHICLE_INFO_URL + id)
+  getVehicleDocumentInfo(vehicle_id) {
+    return api.get(SINGLE_VEHICLE_DOCUMENT_INFO_URL + vehicle_id)
   }
   addDocumentVerificationData(data) {
     return api.post(DOCS_VERIFY_URL, data)

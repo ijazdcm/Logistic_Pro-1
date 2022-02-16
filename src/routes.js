@@ -6,8 +6,8 @@ import DieselVendorMaster from './Pages/Master/DieselVendorMaster/DieselVendorMa
 import ShedMasterEdit from './Pages/Master/ShedMaster/ShedMasterEdit'
 import DriverMaster from './Pages/Master/DriverMaster/DriverMaster'
 import ShedMaster from './Pages/Master/ShedMaster'
-import UserLoginMaster from './Pages/UserLoginMaster/UserLoginMaster'
-import UserLoginMasterTable from './Pages/Master/UserLoginMasterTable'
+import UserLoginMaster from './Pages/Master/UserMaster/UserLoginMaster'
+import UserLoginMasterTable from './Pages/Master/UserMaster/UserLoginMasterTable'
 
 // Sub-Master Pages
 
@@ -94,9 +94,8 @@ import DriverMasterEdit from './Pages/Master/DriverMaster/DriverMasterEdit'
 import BankMasterTable from './Pages/Master/Submaster/Bank/BankMasterTable'
 import DriverMasterTable from './Pages/Master/DriverMaster/DriverMasterTable'
 
-import LocationTable from './Pages/Master/Submaster/LocationTable';
+import LocationTable from './Pages/Master/Submaster/LocationTable'
 import UserLoginMasterEdit from './Pages/Master/UserMaster/UserLoginMasterEdit'
-
 
 const routes = [
   // Master

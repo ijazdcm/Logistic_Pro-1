@@ -20,7 +20,7 @@ const DocsVerify = () => {
 
   const loadDocsVerifyTable = () => {
     DocsVerifyService.getDocsVerifyTableData().then((res) => {
-       tableData = res.data.data
+      tableData = res.data.data
       let rowDataList = []
       const filterData = tableData.filter((data) => data.vehicle_type_id.id == 3)
       // console.log(filterData)
@@ -123,9 +123,13 @@ const DocsVerify = () => {
   return (
     <CCard className="mt-4">
       <CContainer className="mt-2">
-        
-
-        <CustomTable columns={columns} data={rowData} pending={pending}/>
+        <CustomTable
+          columns={columns}
+          data={rowData}
+          fieldName={'Driver_Name'}
+          showSearchFilter={true}
+          pending={pending}
+        />
       </CContainer>
     </CCard>
   )

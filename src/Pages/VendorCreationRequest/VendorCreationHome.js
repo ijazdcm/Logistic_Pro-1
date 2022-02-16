@@ -52,7 +52,7 @@ const VendorCreationHome = () => {
             <CButton className="badge" color="warning">
               <Link
                 className="text-white"
-                to={`VendorCreationRequest/${data.parking_yard_gate_id}`}
+                to={`VendorCreationRequest/${data.vehicle_id}`}
               >
                 Create Vendor
               </Link>

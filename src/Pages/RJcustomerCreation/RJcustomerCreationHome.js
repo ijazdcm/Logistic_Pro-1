@@ -1,9 +1,80 @@
-import { CButton } from '@coreui/react'
-import React from 'react'
-import DataTable from 'react-data-table-component'
+import { React, useState, useEffect } from 'react'
+import {
+  CButton,
+  CCard,
+  CRow,
+  CCol,
+  CAlert,
+  CContainer,
+  CModal,
+  CModalHeader,
+  CModalTitle,
+  CModalBody,
+  CModalFooter,
+} from '@coreui/react'
 import { Link } from 'react-router-dom'
+import CustomTable from 'src/components/customComponent/CustomTable'
+import CustomerCreationService from 'src/Service/CustomerCreation/CustomerCreationService'
+import VehicleMaintenanceValidation from 'src/Utils/TransactionPages/VehicleMaintenance/VehicleMaintenanceValidation'
 
-const RJcustomerCreationHome = () => {
+const CustomerCreation = () => {
+  const [rowData, setRowData] = useState([])
+  const [errorModal, setErrorModal] = useState(false)
+  let tableData = []
+
+  const ACTION = {
+    GATE_IN: 1,
+    GATE_OUT: 2,
+    WAIT_OUTSIDE: 3,
+  }
+
+  const loadCustomerCreationTable = () => {
+    CustomerCreationService.getCustomerCreationData().then((res) => {
+      tableData = res.data.data
+      let rowDataList = []
+      tableData.map((data, index) => {
+        rowDataList.push({
+          sno: index + 1,
+          Tripsheet_No: '',
+          Vehicle_Type: data.vehicle_type_id.type,
+          Vehicle_No: data.vehicle_number,
+          Driver_Name: data.driver_name,
+          Waiting_At: (
+            <span className="badge rounded-pill bg-info">
+              {data.parking_status == ACTION.GATE_IN
+                ? 'Customer Creation'
+                : data.parking_status == ACTION.WAIT_OUTSIDE
+                ? 'Waiting Outside'
+                : 'Gate Out'}
+            </span>
+          ),
+          Screen_Duration: data.updated_at,
+          Overall_Duration: data.created_at,
+          Action: (
+            <span>
+              {data.vehicle_type_id.type != 'Hire' ? (
+                <CButton
+                  className="badge text-white"
+                  color="warning"
+                >
+                <Link to={`RJcustomerCreation/${data.parking_yard_gate_id}`}>
+                 RJ Customer Creation
+                 </Link>
+                </CButton>
+              ) : (
+                ''
+              )}
+            </span>
+          ),
+        })
+      })
+      setRowData(rowDataList)
+    })
+  }
+
+  useEffect(() => {
+    loadCustomerCreationTable()
+  }, [])
 
   const columns = [
     {
@@ -13,14 +84,8 @@ const RJcustomerCreationHome = () => {
       center: true,
     },
     {
-      name: 'VA No',
+      name: 'TripSheet No',
       selector: (row) => row.VA_No,
-      sortable: true,
-      center: true,
-    },
-    {
-      name: 'Tripsheet No',
-      selector: (row) => row.Tripsheet_No,
       sortable: true,
       center: true,
     },
@@ -43,25 +108,21 @@ const RJcustomerCreationHome = () => {
       center: true,
     },
     {
-      name: 'Driver Cell No',
-      selector: (row) => row.Driver_No,
-      sortable: true,
-      center: true,
-    },
-    {
       name: 'Waiting At',
       selector: (row) => row.Waiting_At,
-      sortable: true,
+      // sortable: true,
       center: true,
     },
     {
       name: 'Screen Duration',
       selector: (row) => row.Screen_Duration,
+      sortable: true,
       center: true,
     },
     {
       name: ' Overall Duration',
       selector: (row) => row.Overall_Duration,
+      sortable: true,
       center: true,
     },
     {
@@ -70,83 +131,47 @@ const RJcustomerCreationHome = () => {
       center: true,
     },
   ]
+  return (
+    <CCard className="mt-4">
+      <CContainer className="mt-2">
+        <CustomTable columns={columns} data={rowData} />
+      </CContainer>
+    </CCard>
+  )
 
-  const data = [
-    {
-      id: 1,
-      sno: 1,
-      VA_No: 12000,
-      Tripsheet_No: 102556,
-      Vehicle_Type: 'own',
-      Vehicle_No: 'TN45AT8417',
-      Driver_Name: 'Saravana',
-      Driver_No: '8867162629',
-      Waiting_At: <span className="badge rounded-pill bg-info">Sample</span>,
-      Screen_Duration: '0 Hrs 07 Mins',
-      Overall_Duration: '0 Hrs 55 Mins',
-      Action: (
-        <CButton className="badge text-white" color="warning">
-          <Link className="text-white" to="/RJcustomerCreationHome/RJcustomerCreation">
-            RJ Customer Creation
-          </Link>
-        </CButton>
-      ),
-    },
-    {
-      id: 2,
-      sno: 2,
-      VA_No: 12070,
-      Tripsheet_No: 102501,
-      Vehicle_Type: 'contract',
-      Vehicle_No: 'TN54AT8417',
-      Driver_Name: 'David',
-      Driver_No: '8995625773',
-      Waiting_At: <span className="badge rounded-pill bg-info">Sample</span>,
-      Screen_Duration: '0 Hrs 07 Mins',
-      Overall_Duration: '0 Hrs 55 Mins',
-      Action: (
-        <CButton className="badge text-white" color="warning">
-          <Link className="text-white" to="RJcustomerCreationHome/RJcustomerCreation">
-            RJ Customer Creation
-          </Link>
-        </CButton>
-      ),
-    },
-  ]
-  const customStyles = {
-    // rdt_TableHeadRow:{
-    //   style:{
-    //     color:'red'
-    //   }
-    // },
-    rows: {
-      style: {
-        minHeight: '2.0rem', // override the row height
-      },
-    },
-    headCells: {
-      style: {
-        padding: '0',
-        margin: '0',
-        paddingLeft: '5px', // override the cell padding for head cells
-        paddingRight: '5px',
-        backgroundColor: '#4d3227',
-        color: '#fff',
-        fontSize: '0.8rem',
-        fontWeight: 'bold',
-        height: '2.2rem',
-      },
-    },
-    cells: {
-      style: {
-        paddingLeft: '8px', // override the cell padding for data cells
-        paddingRight: '8px',
-        fontSize: '0.75rem',
-        textAlign: 'center',
-      },
-    },
-  }
-  return <DataTable columns={columns} data={data} customStyles={customStyles} />
+  // return (
+  //   <>
+  //     <CCard className="mt-4">
+  //       <CContainer className="m-2">
+  //         <CustomTable columns={columns} data={rowData} />
+  //       </CContainer>
+  //     </CCard>
+  //     {/* Error Modal Section */}
+  //     <CModal visible={errorModal} onClose={() => setErrorModal(false)}>
+  //       <CModalHeader>
+  //         <CModalTitle className="h4">Trip STO Confirmation</CModalTitle>
+  //       </CModalHeader>
+  //       <CModalBody>
+  //         <CRow>
+  //           <CCol>
+  //             <CAlert color="danger" data-aos="fade-down">
+  //               {'Are You Sure to Create Return Journey Customer ?'}
+  //             </CAlert>
+  //           </CCol>
+  //         </CRow>
+  //       </CModalBody>
+  //       <CModalFooter>
+  //         <CButton color="primary">
+  //           <Link to="/RJcustomerCreation"> Yes </Link>
+  //         </CButton>
+  //         <CButton onClick={() => setErrorModal(false)} color="primary">
+  //           <Link to=""> No </Link>
+  //         </CButton>
+  //       </CModalFooter>
+  //     </CModal>
+  //     {/* Error Modal Section */}
+  //   </>
+  // )
 }
 
-export default RJcustomerCreationHome
+export default CustomerCreation

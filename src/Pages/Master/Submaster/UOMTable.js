@@ -245,7 +245,7 @@ const UomTable = () => {
           <CustomTable
             columns={columns}
             data={rowData}
-            feildName={'Uom'}
+            fieldName={'Uom'}
             showSearchFilter={true}
           />
         </CCard>

@@ -1,3 +1,4 @@
+//Implemented by David - Exciteon
 import {
   CButton,
   CCard,
@@ -15,17 +16,27 @@ import {
   CRow,
   CFormTextarea,
 } from '@coreui/react'
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
-import useForm from 'src/Hooks/useForm'
+import React, { useState, useEffect } from 'react'
+import { Link, useNavigate, useParams } from 'react-router-dom'
+
+// SERVICES FILE
+import DocumentVerificationService from 'src/Service/DocsVerify/DocsVerifyService'
+import ShedService from 'src/Service/SmallMaster/Shed/ShedService'
+import PanDataService from 'src/Service/SAP/PanDataService'
+
+// VALIDATIONS FILE
+import useForm from 'src/Hooks/useForm.js'
 import validate from 'src/Utils/Validation'
-import VendorRequesrValidation from 'src/Utils/VendorCreation/VendorRequestValidation'
+import VendorRequestValidation from 'src/Utils/VendorCreation/VendorRequestValidation'
 
 const VendorCreationRequest = () => {
+  const { id } = useParams()
+  const navigation = useNavigate()
+  const [visible, setVisible] = useState(false)
+  const [currentInfo, setCurrentInfo] = useState({})
   const [adharvisible, setAdharVisible] = useState(false)
   const [BankPassbook, setBankPassbook] = useState(false)
   const [PanCard, setPanCard] = useState(false)
-
   const [Licence, setLicence] = useState(false)
   const [RcFront, setRcFront] = useState(false)
   const [RcBank, setRcBank] = useState(false)
@@ -44,7 +55,7 @@ const VendorCreationRequest = () => {
   const [tdsfrontdel, setTdsfrontdel] = useState(false)
   const [tdsbackdel, setTdsbackdel] = useState(false)
 
-  // Validations
+  // SET FORM VALUES
   const formValues = {
     shedownerMob: '',
     shedownerWhatsapp: '',
@@ -76,15 +87,38 @@ const VendorCreationRequest = () => {
     GSTtax: '',
     payment: '',
   }
-  const { values, errors, handleChange, onFocus, handleSubmit, enableSubmit, onBlur } = useForm(
-    login,
-    validate,
-    formValues
-  )
 
-  function login() {
-    // alert('No Errors CallBack Called')
-  }
+  // VALIDATIONS
+  function callBack() {}
+  const { values, errors, handleChange, onFocus, handleSubmit, enableSubmit, onBlur, isTouched } =
+    useForm(callBack, VendorRequestValidation, formValues)
+
+  // GET SINGLE VEHICLE DATA
+  useEffect(() => {
+    DocumentVerificationService.getSingleVehicleInfoOnParkingYardGate(id).then((res) => {
+      const resData = res.data.data
+      setCurrentInfo(resData)
+      setFetch(true)
+    })
+    // GET ALL SHED DETAILS
+    ShedService.getAllShedData().then((res) => {
+      setShedNames(res.data.data)
+    })
+  }, [])
+
+  // ERROR VALIDATIONS
+  useEffect(() => {
+    if (Object.keys(isTouched).length == Object.keys(formValues).length) {
+      if (Object.keys(errors).length == 0) {
+        setAcceptBtn(false)
+        setRejectBtn(true)
+      } else {
+        setAcceptBtn(true)
+        setRejectBtn(false)
+      }
+    }
+  }, [values, errors])
+
   return (
     <>
       <CCard>

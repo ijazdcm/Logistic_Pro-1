@@ -200,7 +200,7 @@ const BankMasterTable = () => {
           <CustomTable
             columns={columns}
             data={rowData}
-            feildName={'Bank'}
+            fieldName={'Bank'}
             showSearchFilter={true}
           />
         </CCard>

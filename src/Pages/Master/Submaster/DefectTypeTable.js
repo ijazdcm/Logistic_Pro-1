@@ -246,7 +246,7 @@ const DefectTypeTable = () => {
           <CustomTable
             columns={columns}
             data={rowData}
-            feildName={'DefectType'}
+            fieldName={'DefectType'}
             showSearchFilter={true}
           />
         </CCard>

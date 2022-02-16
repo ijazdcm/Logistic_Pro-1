@@ -240,7 +240,7 @@ const RejectResonTable = () => {
           <CustomTable
             columns={columns}
             data={rowData}
-            feildName={'Rejection'}
+            fieldName={'Rejection'}
             showSearchFilter={true}
           />
         </CCard>

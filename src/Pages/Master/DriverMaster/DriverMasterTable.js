@@ -85,6 +85,7 @@ const DriverMasterTable = () => {
   useEffect(() => {
     DriverMasterService.getDrivers().then((response) => {
       viewData = response.data.data
+      console.log(viewData);
       let rowDataList = []
       viewData.map((data, index) => {
         rowDataList.push({
@@ -310,7 +311,7 @@ const DriverMasterTable = () => {
         <CustomTable
           columns={columns}
           data={rowData}
-          feildName={'Driver_Name'}
+          fieldName={'Driver_Name'}
           showSearchFilter={true}
         />
         <hr></hr>

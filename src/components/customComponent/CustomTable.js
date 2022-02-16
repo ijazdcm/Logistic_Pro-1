@@ -1,8 +1,9 @@
 import DataTable from 'react-data-table-component'
 import React, { useEffect } from 'react'
 import { CButton, CCol, CFormInput, CInputGroup, CInputGroupText, CRow } from '@coreui/react'
+import { CustomLoader } from './CutomLoader'
 
-const CustomTable = ({ columns, data, feildName, showSearchFilter = false }) => {
+const CustomTable = ({ columns, data, fieldName, showSearchFilter, pending = false }) => {
   const [filterText, setFilterText] = React.useState('')
   const [resetPaginationToggle, setResetPaginationToggle] = React.useState(false)
 
@@ -14,7 +15,7 @@ const CustomTable = ({ columns, data, feildName, showSearchFilter = false }) => 
             <CFormInput
               id="search"
               type="text"
-              placeholder={`Search By ${feildName}`}
+              placeholder={`Search By ${fieldName}`}
               aria-label="Search Input"
               onChange={onFilter}
               value={filterText}
@@ -31,7 +32,7 @@ const CustomTable = ({ columns, data, feildName, showSearchFilter = false }) => 
   )
 
   const filteredItems = data.filter(
-    (item) => item[feildName] && item[feildName].toLowerCase().includes(filterText.toLowerCase())
+    (item) => item[fieldName] && item[fieldName].toLowerCase().includes(filterText.toLowerCase())
   )
 
   const subHeaderComponentMemo = React.useMemo(() => {
@@ -80,6 +81,8 @@ const CustomTable = ({ columns, data, feildName, showSearchFilter = false }) => 
     },
   }
 
+  
+
   return showSearchFilter ? (
     <DataTable
       data={filteredItems}
@@ -91,7 +94,14 @@ const CustomTable = ({ columns, data, feildName, showSearchFilter = false }) => 
       customStyles={customStyles}
     />
   ) : (
-    <DataTable data={data} columns={columns} pagination customStyles={customStyles} />
+    <DataTable
+      data={data}
+      columns={columns}
+      pagination
+      customStyles={customStyles}
+      progressPending={pending}
+      progressComponent={<CustomLoader />}
+    />
   )
 }
 

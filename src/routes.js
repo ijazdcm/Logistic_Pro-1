@@ -94,8 +94,7 @@ import DriverMasterEdit from './Pages/Master/DriverMaster/DriverMasterEdit'
 import BankMasterTable from './Pages/Master/Submaster/Bank/BankMasterTable'
 import DriverMasterTable from './Pages/Master/DriverMaster/DriverMasterTable'
 
-import LocationTable from './Pages/Master/Submaster/LocationTable';
-
+import LocationTable from './Pages/Master/Submaster/LocationTable'
 
 const routes = [
   // Master
@@ -213,12 +212,12 @@ const routes = [
     name: 'DocVerifyVendorAvail',
     component: DocVerifyVendorAvail,
   },
-  {
-    path: '/DocsVerify/DocVerifyVendorNotAvail',
-    exact: true,
-    name: 'DocVerifyVendorNotAvail',
-    component: DocVerifyVendorNotAvail,
-  },
+  // {
+  //   path: '/DocsVerify/DocVerifyVendorNotAvail',
+  //   exact: true,
+  //   name: 'DocVerifyVendorNotAvail',
+  //   component: DocVerifyVendorNotAvail,
+  // },
   { path: '/RjSalesOrderCreation', exact: true, name: 'Test', component: RjSalesOrderCreation },
   { path: '/RJcustomerCreationHome', exact: true, name: 'Test', component: RJcustomerCreationHome },
   {
@@ -276,7 +275,7 @@ const routes = [
     component: VendorCreationHome,
   },
   {
-    path: '/VendorCreationHome/VendorCreationRequest',
+    path: '/VendorCreationHome/VendorCreationRequest/:id',
     exact: true,
     name: 'VendorCreationRequest',
     component: VendorCreationRequest,

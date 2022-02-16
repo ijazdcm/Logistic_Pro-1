@@ -408,7 +408,7 @@ const ParkingYardGate = () => {
             <CustomTable
               columns={columns}
               data={rowData}
-              feildName={'Driver_Name'}
+              fieldName={'Driver_Name'}
               showSearchFilter={true}
             />
           </CContainer>

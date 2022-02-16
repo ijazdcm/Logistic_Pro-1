@@ -280,7 +280,7 @@ const VehicleMasterTable = () => {
           <CustomTable
             columns={columns}
             data={rowData}
-            feildName={'vehicle_Number'}
+            fieldName={'vehicle_Number'}
             showSearchFilter={true}
           />
         </CCard>

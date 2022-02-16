@@ -232,7 +232,7 @@ const DesignationTable = () => {
           <CustomTable
             columns={columns}
             data={rowData}
-            feildName={'Designation'}
+            fieldName={'Designation'}
             showSearchFilter={true}
           />
         </CCard>

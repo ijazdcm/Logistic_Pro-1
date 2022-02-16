@@ -180,9 +180,10 @@ const DivisionTable = () => {
       center: true,
     },
     {
-      name: 'Created_at',
+      name: 'Creation date',
       selector: (row) => row.Created_at,
       left: true,
+      sortable:true,
     },
     {
       name: 'Division',

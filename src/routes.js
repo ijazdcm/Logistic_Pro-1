@@ -6,8 +6,8 @@ import DieselVendorMaster from './Pages/Master/DieselVendorMaster/DieselVendorMa
 import ShedMasterEdit from './Pages/Master/ShedMaster/ShedMasterEdit'
 import DriverMaster from './Pages/Master/DriverMaster/DriverMaster'
 import ShedMaster from './Pages/Master/ShedMaster'
-import UserLoginMaster from './Pages/UserLoginMaster/UserLoginMaster'
-import UserLoginMasterTable from './Pages/Master/UserLoginMasterTable'
+import UserLoginMaster from './Pages/Master/UserMaster/UserLoginMaster'
+import UserLoginMasterTable from './Pages/Master/UserMaster/UserLoginMasterTable'
 
 // Sub-Master Pages
 

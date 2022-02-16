@@ -228,11 +228,13 @@ const VehicleMasterTable = () => {
       name: 'Insurance Validity',
       selector: (row) => row.Insurance_Validity,
       center: true,
+      sortable: true,
     },
     {
       name: 'FC Validity',
       selector: (row) => row.FC_Validity,
       center: true,
+      sortable: true,
     },
     {
       name: 'Status',

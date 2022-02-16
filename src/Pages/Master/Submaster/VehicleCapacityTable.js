@@ -1,4 +1,4 @@
-  import {
+import {
   CButton,
   CCard,
   CContainer,
@@ -22,6 +22,8 @@ import CustomTable from 'src/components/customComponent/CustomTable'
 import VehicleCapacityApi from '../../../Service/SubMaster/VehicleCapacityApi'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import VehicleCapacitySubmasterValidation from 'src/Utils/SubMaster/VehicleCapacitySubMasterValidation'
+
 
 const VehicleCapacityTable = () => {
   const [modal, setModal] = useState(false)
@@ -50,7 +52,7 @@ const VehicleCapacityTable = () => {
     onBlur,
     onClick,
     onKeyUp,
-  } = useForm(login, validate, formValues)
+  } = useForm(login, VehicleCapacitySubmasterValidation, formValues)
 
   function login() {
     // alert('No Errors CallBack Called')
@@ -134,7 +136,6 @@ const VehicleCapacityTable = () => {
           Action: (
             <div className="d-flex justify-content-space-between">
               <CButton
-
                 size="sm"
                 color="danger"
                 shape="rounded"
@@ -238,11 +239,7 @@ const VehicleCapacityTable = () => {
         </CRow>
 
         <CCard className="mt-1">
-          <CustomTable
-            columns={columns}
-            data={rowData}
-            
-          />
+          <CustomTable columns={columns} data={rowData} />
         </CCard>
       </CContainer>
 

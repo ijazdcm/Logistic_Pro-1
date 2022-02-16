@@ -175,7 +175,7 @@ const DriverMaster = () => {
                   <CFormInput
                     name="driverName"
                     size="sm"
-                    maxLength={20}
+                    maxLength={30}
                     id="driverName"
                     onChange={handleChange}
                     value={values.driverName}

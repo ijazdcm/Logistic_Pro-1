@@ -172,7 +172,6 @@ const DriverMasterTable = () => {
         })
       })
       setRowData(rowDataList)
-
     })
   }, [mount])
 
@@ -300,7 +299,7 @@ const DriverMasterTable = () => {
             <Link className="text-white" to="/DriverMaster">
               <CButton size="md" color="warning" className="px-3 text-white" type="button">
                 <span className="float-start">
-                  <i className="" aria-hidden="true"></i> &nbsp;New Driver
+                  <i className="" aria-hidden="true"></i> &nbsp;New
                 </span>
               </CButton>
             </Link>

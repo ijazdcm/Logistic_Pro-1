@@ -5,11 +5,15 @@ export default function ShedMasterValidation(values, isTouched) {
   if (isTouched.ShedType && values.ShedType === '0') {
     errors.ShedType = 'Choose Type'
   }
+
+  //shed name validation rule
   if (isTouched.ShedName && !values.ShedName) {
     errors.ShedName = 'Required'
   } else if (isTouched.ShedName && !/^[a-zA-Z ]+$/.test(values.ShedName)) {
     errors.ShedName = 'Must Have Letters & Space'
   }
+  //
+  
   if (isTouched.ShedOwnerName && !values.ShedOwnerName) {
     errors.ShedOwnerName = 'Required'
   } else if (isTouched.ShedOwnerName && !/^[a-zA-Z ]+$/.test(values.ShedOwnerName)) {

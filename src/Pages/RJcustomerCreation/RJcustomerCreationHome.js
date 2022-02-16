@@ -15,6 +15,7 @@ import {
 import { Link } from 'react-router-dom'
 import CustomTable from 'src/components/customComponent/CustomTable'
 import CustomerCreationService from 'src/Service/CustomerCreation/CustomerCreationService'
+import VehicleMaintenanceValidation from 'src/Utils/TransactionPages/VehicleMaintenance/VehicleMaintenanceValidation'
 
 const CustomerCreation = () => {
   const [rowData, setRowData] = useState([])
@@ -28,7 +29,7 @@ const CustomerCreation = () => {
   }
 
   const loadCustomerCreationTable = () => {
-    CustomerCreationService.getVehicleReadyToCustomerCreation().then((res) => {
+    CustomerCreationService.getCustomerCreationData().then((res) => {
       tableData = res.data.data
       let rowDataList = []
       tableData.map((data, index) => {

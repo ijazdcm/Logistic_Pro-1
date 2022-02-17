@@ -226,11 +226,11 @@ const routes = [
   //   component: DocVerifyVendorNotAvail,
   // },
   { path: '/RjSalesOrderCreation', exact: true, name: 'Test', component: RjSalesOrderCreation },
-  { path: '/RJcustomerCreationHome', exact: true, name: 'Test', component: RJcustomerCreationHome },
+  { path: '/RJcustomerCreationHome', exact: true, name: 'RJ Customer Creation', component: RJcustomerCreationHome },
   {
-    path: '/RJcustomerCreationHome/RJcustomerCreation',
+    path: '/RJcustomerCreationHome/RJcustomerCreation/:id',
     exact: true,
-    name: 'Test',
+    name: 'RJ Customer Creation',
     component: RJcustomerCreation,
   },
   {

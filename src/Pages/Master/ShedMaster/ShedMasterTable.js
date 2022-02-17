@@ -30,6 +30,7 @@ const ShedMasterTable = () => {
   const [deleteModal, setDeleteModal] = useState(false)
   const [rowData, setRowData] = useState([])
   const [mount, setMount] = useState(1)
+  const [pending, setPending] = useState(true)
 
   const [documentSrc, setDocumentSrc] = useState('')
   let viewData
@@ -124,6 +125,7 @@ const ShedMasterTable = () => {
         })
       })
       setRowData(rowDataList)
+      setPending(false)
     })
   }, [mount])
   const columns = [
@@ -236,6 +238,7 @@ const ShedMasterTable = () => {
           data={rowData}
           fieldName={'Shed_Name'}
           showSearchFilter={true}
+          pending={pending}
         />
         <hr></hr>
       </CContainer>

@@ -40,6 +40,7 @@ import PerviousLoadDetailComponent from 'src/components/commoncomponent/Pervious
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
+
 const VehicleInspection = () => {
   const formValues = {
     vehicle_id: '',
@@ -100,6 +101,7 @@ const VehicleInspection = () => {
   const [rejectBtn, setRejectBtn] = useState(true)
   const [oldDriver, setOldDriver] = useState('')
   const [fetch, setFetch] = useState(false)
+  const [pending, setPending] = useState(true)
   const VEHICLE_TYPE = {
     OWN: 1,
     CONTRACT: 2,

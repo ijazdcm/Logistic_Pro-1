@@ -20,6 +20,8 @@ import DieselVendorMasterService from 'src/Service/Master/DieselVendorMasterServ
 const DieselVendorMasterTable = () => {
   const [rowData, setRowData] = useState([])
   const [mount, setMount] = useState(1)
+  const [pending, setPending] = useState(true)
+
   let viewData
 
   function changeDieselVendorStatus(id) {
@@ -91,6 +93,7 @@ const DieselVendorMasterTable = () => {
         })
       })
       setRowData(rowDataList)
+      setPending(false)
     })
   }, [mount])
 
@@ -175,7 +178,7 @@ const DieselVendorMasterTable = () => {
           data={rowData}
           fieldName={'diesel_Vendor_Name'}
           showSearchFilter={true}
-          
+          pending={pending}
         />
         <hr></hr>
       </CContainer>

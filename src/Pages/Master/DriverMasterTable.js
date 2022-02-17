@@ -20,6 +20,8 @@ const UserLoginMasterTable = () => {
   const [RCCopyBack, setRCCopyBack] = useState(false)
   const [InsuranceCopyBack, setInsuranceCopyBack] = useState(false)
   const [PANNumber, setPANNumber] = useState(false)
+  const [pending, setPending] = useState(true)
+
   const columns = [
     {
       name: 'S.No',
@@ -299,6 +301,7 @@ const UserLoginMasterTable = () => {
           data={data}
           fieldName={'Driver_Name'}
           showSearchFilter={true}
+          pending={pending}
         />
         <hr></hr>
         <CRow className="mt-3">

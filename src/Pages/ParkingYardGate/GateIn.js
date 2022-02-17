@@ -43,6 +43,7 @@ const ParkingYardGate = () => {
   let tableData = []
 
   const [vehicleType, setVehicleType] = useState([])
+  const [pending, setPending] = useState(true)
 
   const ACTION = {
     GATE_IN: 1,
@@ -211,6 +212,7 @@ const ParkingYardGate = () => {
         })
       })
       setRowData(rowDataList)
+      setPending(false)
     })
   }
 
@@ -410,6 +412,7 @@ const ParkingYardGate = () => {
               data={rowData}
               fieldName={'Driver_Name'}
               showSearchFilter={true}
+              pending={pending}
             />
           </CContainer>
         </CCard>

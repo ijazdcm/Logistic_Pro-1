@@ -28,6 +28,8 @@ const VehicleMasterTable = () => {
 
   const [rowData, setRowData] = useState([])
   const [mount, setMount] = useState(1)
+  const [pending, setPending] = useState(true)
+
 
   const [documentSrc, setDocumentSrc] = useState('')
   let viewData
@@ -162,6 +164,7 @@ const VehicleMasterTable = () => {
         })
       })
       setRowData(rowDataList)
+      setPending(false)
     })
   }, [mount])
 
@@ -284,6 +287,7 @@ const VehicleMasterTable = () => {
             data={rowData}
             fieldName={'vehicle_Number'}
             showSearchFilter={true}
+            pending={pending}
           />
         </CCard>
 

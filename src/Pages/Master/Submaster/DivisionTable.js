@@ -36,6 +36,7 @@ const DivisionTable = () => {
   const [deleted, setDeleted] = useState('')
   const [error, setError] = useState('')
   const [mount, setMount] = useState(1)
+  const [pending, setPending] = useState(true)
   const formValues = {
     division: '',
   }
@@ -161,6 +162,7 @@ const DivisionTable = () => {
         })
       })
       setRowData(rowDataList)
+      setPending(false)
 
       setTimeout(() => {
         setSuccess('')
@@ -240,6 +242,7 @@ const DivisionTable = () => {
             data={rowData || ''}
             fieldName={'Division'}
             showSearchFilter={true}
+            pending={pending}
           />
         </CCard>
       </CContainer>

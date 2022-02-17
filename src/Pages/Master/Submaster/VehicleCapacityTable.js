@@ -36,6 +36,7 @@ const VehicleCapacityTable = () => {
   const [deleted, setDeleted] = useState('')
   const [error, setError] = useState('')
   const [mount, setMount] = useState(1)
+  const [pending, setPending] = useState(true)
 
   const formValues = {
     vehicleCapacity: '',
@@ -163,6 +164,7 @@ const VehicleCapacityTable = () => {
         })
       })
       setRowData(rowDataList)
+      setPending(false)
 
       setTimeout(() => {
         setSuccess('')

@@ -39,6 +39,7 @@ const MaterialDescriptionTable = () => {
   const [deleted, setDeleted] = useState('')
   const [error, setError] = useState('')
   const [mount, setMount] = useState(1)
+  const [pending, setPending] = useState(true)
   const checkRadio = (param) => {
     if (param == 'enab') {
       values.material_description = ''
@@ -170,6 +171,7 @@ const MaterialDescriptionTable = () => {
         })
       })
       setRowData(rowDataList)
+      setPending(false)
 
       setTimeout(() => {
         setSuccess('')
@@ -251,6 +253,7 @@ const MaterialDescriptionTable = () => {
             data={rowData}
             fieldName={'MaterialDescription'}
             showSearchFilter={true}
+            pending={pending}
           />
         </CCard>
       </CContainer>

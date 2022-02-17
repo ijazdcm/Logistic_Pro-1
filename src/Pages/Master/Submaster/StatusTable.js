@@ -25,6 +25,7 @@ import StatusApi from '../../../Service/SubMaster/StatusApi'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import StatusSubMasterValidation from 'src/Utils/SubMaster/StatusSubMasterValidation'
+import { FALSE } from 'sass'
 
 const StatusTable = () => {
   const [modal, setModal] = useState(false)
@@ -38,6 +39,7 @@ const StatusTable = () => {
   const [deleted, setDeleted] = useState('')
   const [error, setError] = useState('')
   const [mount, setMount] = useState(1)
+  const [pending, setPending] = useState(true)
   const formValues = {
     status: '',
   }
@@ -147,7 +149,7 @@ const StatusTable = () => {
                 <i className="fa fa-trash" aria-hidden="true"></i>
               </CButton>
               <CButton
-              disabled={data.status_status === 1 ? false : true}
+                disabled={data.status_status === 1 ? false : true}
                 size="sm"
                 color="secondary"
                 shape="rounded"
@@ -163,6 +165,7 @@ const StatusTable = () => {
         })
       })
       setRowData(rowDataList)
+      setPending(false)
 
       setTimeout(() => {
         setSuccess('')
@@ -243,6 +246,7 @@ const StatusTable = () => {
             data={rowData}
             fieldName={'StatusName'}
             showSearchFilter={true}
+            pending={pending}
           />
         </CCard>
       </CContainer>

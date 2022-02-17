@@ -302,7 +302,7 @@ const VehicleInspection = () => {
                     <CButtonGroup role="group" aria-label="Basic checkbox toggle button group">
                       <CFormCheck
                         type="radio"
-                        button={{ color: 'primary', variant: 'outline' }}
+                        button={{ color: 'success', variant: 'outline' }}
                         name="truck_clean"
                         id="btnradio1"
                         onChange={handleChange}
@@ -312,7 +312,7 @@ const VehicleInspection = () => {
                       />
                       <CFormCheck
                         type="radio"
-                        button={{ color: 'primary', variant: 'outline' }}
+                        button={{ color: 'danger', variant: 'outline' }}
                         name="truck_clean"
                         id="btnradio2"
                         autoComplete="off"
@@ -328,7 +328,7 @@ const VehicleInspection = () => {
                     <CButtonGroup role="group" aria-label="Basic checkbox toggle button group">
                       <CFormCheck
                         type="radio"
-                        button={{ color: 'primary', variant: 'outline' }}
+                        button={{ color: 'danger', variant: 'outline' }}
                         name="bad_smell"
                         id="btnradio3"
                         autoComplete="off"
@@ -338,7 +338,7 @@ const VehicleInspection = () => {
                       />
                       <CFormCheck
                         type="radio"
-                        button={{ color: 'primary', variant: 'outline' }}
+                        button={{ color: 'success', variant: 'outline' }}
                         name="bad_smell"
                         id="btnradio4"
                         autoComplete="off"
@@ -356,7 +356,7 @@ const VehicleInspection = () => {
                     <CButtonGroup role="group" aria-label="Basic checkbox toggle button group">
                       <CFormCheck
                         type="radio"
-                        button={{ color: 'primary', variant: 'outline' }}
+                        button={{ color: 'danger', variant: 'outline' }}
                         name="insect_vevils_presence"
                         id="btnradio5"
                         autoComplete="off"
@@ -366,7 +366,7 @@ const VehicleInspection = () => {
                       />
                       <CFormCheck
                         type="radio"
-                        button={{ color: 'primary', variant: 'outline' }}
+                        button={{ color: 'success', variant: 'outline' }}
                         name="insect_vevils_presence"
                         id="btnradio6"
                         autoComplete="off"
@@ -382,7 +382,7 @@ const VehicleInspection = () => {
                     <CButtonGroup role="group" aria-label="Basic checkbox toggle button group">
                       <CFormCheck
                         type="radio"
-                        button={{ color: 'primary', variant: 'outline' }}
+                        button={{ color: 'danger', variant: 'outline' }}
                         name="tarpaulin_srf"
                         id="btnradio7"
                         autoComplete="off"
@@ -392,7 +392,7 @@ const VehicleInspection = () => {
                       />
                       <CFormCheck
                         type="radio"
-                        button={{ color: 'primary', variant: 'outline' }}
+                        button={{ color: 'danger', variant: 'outline' }}
                         name="tarpaulin_srf"
                         id="btnradio8"
                         autoComplete="off"
@@ -402,7 +402,7 @@ const VehicleInspection = () => {
                       />
                       <CFormCheck
                         type="radio"
-                        button={{ color: 'primary', variant: 'outline' }}
+                        button={{ color: 'success', variant: 'outline' }}
                         name="tarpaulin_srf"
                         id="btnradio9"
                         autoComplete="off"
@@ -420,7 +420,7 @@ const VehicleInspection = () => {
                     <CButtonGroup role="group" aria-label="Basic checkbox toggle button group">
                       <CFormCheck
                         type="radio"
-                        button={{ color: 'primary', variant: 'outline' }}
+                        button={{ color: 'danger', variant: 'outline' }}
                         name="tarpaulin_non_srf"
                         id="btnradio10"
                         autoComplete="off"
@@ -430,7 +430,7 @@ const VehicleInspection = () => {
                       />
                       <CFormCheck
                         type="radio"
-                        button={{ color: 'primary', variant: 'outline' }}
+                        button={{ color: 'danger', variant: 'outline' }}
                         name="tarpaulin_non_srf"
                         id="btnradio11"
                         autoComplete="off"
@@ -440,7 +440,7 @@ const VehicleInspection = () => {
                       />
                       <CFormCheck
                         type="radio"
-                        button={{ color: 'primary', variant: 'outline' }}
+                        button={{ color: 'success', variant: 'outline' }}
                         name="tarpaulin_non_srf"
                         id="btnradio12"
                         autoComplete="off"
@@ -458,7 +458,7 @@ const VehicleInspection = () => {
                     <CButtonGroup role="group" aria-label="Basic checkbox toggle button group">
                       <CFormCheck
                         type="radio"
-                        button={{ color: 'primary', variant: 'outline' }}
+                        button={{ color: 'danger', variant: 'outline' }}
                         name="insect_vevils_presence_in_tar"
                         id="btnradio13"
                         autoComplete="off"
@@ -468,7 +468,7 @@ const VehicleInspection = () => {
                       />
                       <CFormCheck
                         type="radio"
-                        button={{ color: 'primary', variant: 'outline' }}
+                        button={{ color: 'success', variant: 'outline' }}
                         name="insect_vevils_presence_in_tar"
                         id="btnradio14"
                         autoComplete="off"
@@ -484,7 +484,7 @@ const VehicleInspection = () => {
                     <CButtonGroup role="group" aria-label="Basic checkbox toggle button group">
                       <CFormCheck
                         type="radio"
-                        button={{ color: 'primary', variant: 'outline' }}
+                        button={{ color: 'success', variant: 'outline' }}
                         name="truck_platform"
                         id="btnradio15"
                         autoComplete="off"
@@ -494,7 +494,7 @@ const VehicleInspection = () => {
                       />
                       <CFormCheck
                         type="radio"
-                        button={{ color: 'primary', variant: 'outline' }}
+                        button={{ color: 'danger', variant: 'outline' }}
                         name="truck_platform"
                         id="btnradio16"
                         onChange={handleChange}
@@ -519,7 +519,7 @@ const VehicleInspection = () => {
                       onBlur={onBlur}
                       onChange={handleChange}
                       value={values.previous_load_details}
-                      label={'Small select example'}
+                      la={'Small select example'}
                     >
                       <PerviousLoadDetailComponent />
                     </CFormSelect>

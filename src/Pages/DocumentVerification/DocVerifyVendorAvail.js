@@ -81,6 +81,9 @@ const DocVerifyVendorAvail = () => {
     ownerMob: '',
     aadhar: '',
     bankAcc: '',
+    aadharCopy: '',
+    panCopy: '',
+    passCopy: '',
   }
 
   // VALIDATIONS
@@ -132,6 +135,9 @@ const DocVerifyVendorAvail = () => {
     formData.append('insurance_validity', values.insuranceValid)
     formData.append('tds_dec_form_front', values.TDSfront)
     formData.append('tds_dec_form_back', values.TDSback)
+    formData.append('aadhar_copy', values.aadharCopy)
+    formData.append('pan_copy', values.panCopy)
+    formData.append('pass_copy', values.passCopy)
     formData.append('transport_shed_sheet', values.transportShedSheet)
     formData.append('shed_id', shedData && shedData.shed_id)
     formData.append('shed_name', shedData && shedData.shed_name)

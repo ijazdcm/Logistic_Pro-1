@@ -244,7 +244,7 @@ const DepartmentTable = () => {
           <CustomTable
             columns={columns}
             data={rowData}
-            feildName={'Department'}
+            fieldName={'Department'}
             showSearchFilter={true}
           />
         </CCard>

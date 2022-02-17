@@ -297,7 +297,7 @@ const UserLoginMasterTable = () => {
         <CustomTable
           columns={columns}
           data={data}
-          feildName={'Driver_Name'}
+          fieldName={'Driver_Name'}
           showSearchFilter={true}
         />
         <hr></hr>

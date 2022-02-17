@@ -8,7 +8,7 @@ import DocsVerifyService from 'src/Service/DocsVerify/DocsVerifyService'
 
 const DocsVerify = () => {
   const [rowData, setRowData] = useState([])
-  const [spinnerHide, setSpinnerHide] = useState(false)
+  const [pending, setPending] = useState(true)
 
   let tableData = []
 
@@ -17,12 +17,13 @@ const DocsVerify = () => {
     GATE_OUT: 2,
     WAIT_OUTSIDE: 3,
   }
+
   const loadDocsVerifyTable = () => {
     DocsVerifyService.getDocsVerifyTableData().then((res) => {
       tableData = res.data.data
       let rowDataList = []
       const filterData = tableData.filter((data) => data.vehicle_type_id.id == 3)
-      console.log(filterData)
+      // console.log(filterData)
       filterData.map((data, index) => {
         rowDataList.push({
           sno: index + 1,
@@ -43,7 +44,7 @@ const DocsVerify = () => {
           Overall_Duration: data.created_at,
           Action: (
             <CButton className="badge" color="warning">
-              <Link className="text-dark" to={`DocVerifyVendorAvail/${data.parking_yard_gate_id}`}>
+              <Link className="text-white" to={`DocVerifyVendorAvail/${data.parking_yard_gate_id}`}>
                 VERIFY
               </Link>
             </CButton>
@@ -51,7 +52,7 @@ const DocsVerify = () => {
         })
       })
       setRowData(rowDataList)
-      setSpinnerHide(true)
+      setPending(false)
     })
   }
 
@@ -122,11 +123,13 @@ const DocsVerify = () => {
   return (
     <CCard className="mt-4">
       <CContainer className="mt-2">
-        <div className="text-center">
-          <CSpinner color="primary" hidden={spinnerHide} />
-        </div>
-
-        <CustomTable columns={columns} data={rowData} />
+        <CustomTable
+          columns={columns}
+          data={rowData}
+          fieldName={'Driver_Name'}
+          showSearchFilter={true}
+          pending={pending}
+        />
       </CContainer>
     </CCard>
   )

@@ -234,7 +234,7 @@ const ShedMasterTable = () => {
         <CustomTable
           columns={columns}
           data={rowData}
-          feildName={'Shed_Name'}
+          fieldName={'Shed_Name'}
           showSearchFilter={true}
         />
         <hr></hr>

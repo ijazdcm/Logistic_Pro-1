@@ -119,7 +119,7 @@ const DocVerifyVendorAvail = () => {
     formData.append('vehicle_id', currentVehicleInfo.vehicle_id)
     formData.append('vehicle_inspection_id', currentVehicleInfo.vehicle_inspection.inspection_id)
     formData.append('pan_number', values.panNumber || panNumber)
-    formData.append('vendor_code', panData.LIFNR || '000')
+    formData.append('vendor_code', panData.LIFNR || 0)
     formData.append('owner_name', panData.NAME1 || values.ownerName)
     formData.append('owner_number', panData.TELF1 || values.ownerMob)
     formData.append('aadhar_number', panData.IDNUMBER || values.aadhar)
@@ -146,7 +146,7 @@ const DocVerifyVendorAvail = () => {
       console.log(res)
       if (res.status == 200) {
         toast.success('Document Verification Done!')
-        // navigation('/vInspection')
+        navigation('/DocsVerify')
       }
     })
   }
@@ -155,7 +155,6 @@ const DocVerifyVendorAvail = () => {
   useEffect(() => {
     DocumentVerificationService.getSingleVehicleInfoOnParkingYardGate(id).then((res) => {
       const resData = res.data.data
-
       setCurrentVehicleInfo(resData)
       setFetch(true)
     })
@@ -165,6 +164,7 @@ const DocVerifyVendorAvail = () => {
     })
   }, [])
 
+  // ERROR VALIDATIONS
   useEffect(() => {
     if (Object.keys(isTouched).length == Object.keys(formValues).length) {
       if (Object.keys(errors).length == 0) {
@@ -179,13 +179,12 @@ const DocVerifyVendorAvail = () => {
 
   return (
     <>
-      {console.log(errors)}
       <CCard>
         <CTabContent className="m-0 p-0">
           <CNav variant="pills" layout="justified">
             <CNavItem>
               <CNavLink href="#" active>
-                <h5>Hire Vehicle (Vendor Available)</h5>
+                <h5>Hire Vehicle</h5>
               </CNavLink>
             </CNavItem>
           </CNav>
@@ -263,8 +262,13 @@ const DocVerifyVendorAvail = () => {
                     name="inspectionDateTime"
                     size="sm"
                     id="inspectionDateTime"
-                    value={fetch ? currentVehicleInfo.vehicle_inspection.inspection_time : ''}
-                    // value={''}
+                    value={
+                      fetch
+                        ? currentVehicleInfo
+                          ? currentVehicleInfo.vehicle_inspection.inspection_time
+                          : ''
+                        : ''
+                    }
                     readOnly
                   />
                 </CCol>
@@ -409,6 +413,59 @@ const DocVerifyVendorAvail = () => {
                     onBlur={onBlur}
                     onChange={handleChange}
                     readOnly={readOnly}
+                  />
+                </CCol>
+                <CCol xs={12} md={3}>
+                  <CFormLabel htmlFor="aadharCopy">
+                    Aadhar Card Copy*{' '}
+                    {errors.aadharCopy && (
+                      <span className="small text-danger">{errors.aadharCopy}</span>
+                    )}
+                  </CFormLabel>
+                  <CFormInput
+                    type="file"
+                    name="aadharCopy"
+                    size="sm"
+                    id="aadharCopy"
+                    accept=".jpg,.jpeg,.png,.pdf"
+                    onFocus={onFocus}
+                    onBlur={onBlur}
+                    onChange={handleChange}
+                  />
+                </CCol>
+                <CCol xs={12} md={3}>
+                  <CFormLabel htmlFor="panCopy">
+                    PAN Card Copy*{' '}
+                    {errors.panCopy && <span className="small text-danger">{errors.panCopy}</span>}
+                  </CFormLabel>
+                  <CFormInput
+                    type="file"
+                    name="panCopy"
+                    size="sm"
+                    id="panCopy"
+                    accept=".jpg,.jpeg,.png,.pdf"
+                    onFocus={onFocus}
+                    onBlur={onBlur}
+                    onChange={handleChange}
+                  />
+                </CCol>
+
+                <CCol xs={12} md={3}>
+                  <CFormLabel htmlFor="passCopy">
+                    Bank Pass Book Copy*{' '}
+                    {errors.passCopy && (
+                      <span className="small text-danger">{errors.passCopy}</span>
+                    )}
+                  </CFormLabel>
+                  <CFormInput
+                    type="file"
+                    name="passCopy"
+                    size="sm"
+                    id="passCopy"
+                    accept=".jpg,.jpeg,.png,.pdf"
+                    onFocus={onFocus}
+                    onBlur={onBlur}
+                    onChange={handleChange}
                   />
                 </CCol>
                 <CCol xs={12} md={3}>

@@ -94,16 +94,16 @@ const DocVerifyVendorAvail = () => {
   // GET PAN DETAILS FROM SAP
   const getPanData = (e) => {
     e.preventDefault()
-    // PanDataService.getPanData(values.panNumber).then((res) => {
-    //   console.log(res.data)
-    // })
-    let panDetail = PanDataService.getPanData(values.panNumber)
-    if (panDetail != '') {
-      setPanData(panDetail)
-      toast.success('Pan Details Detected!')
-    } else {
-      toast.warning('No Pan Details Detected! Fill Up The Fields')
-    }
+    PanDataService.getPanData(values.panNumber).then((res) => {
+      console.log(res.data)
+    })
+    // let panDetail = PanDataService.getPanData(values.panNumber)
+    // if (panDetail != '') {
+    //   setPanData(panDetail)
+    //   toast.success('Pan Details Detected!')
+    // } else {
+    //   toast.warning('No Pan Details Detected! Fill Up The Fields')
+    // }
 
     setReadOnly(true)
     setWrite(true)

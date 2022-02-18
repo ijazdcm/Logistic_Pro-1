@@ -2,9 +2,10 @@ export default function ShedMasterValidation(values, isTouched) {
   const errors = {}
 
   //vehicle type validation rule
-  if (isTouched.ShedType && values.ShedType === '0') {
-    errors.ShedType = 'Choose Type'
+  if (isTouched.shedType && values.shedType == 0) {
+    errors.shedType = 'Choose Type'
   }
+
   if (isTouched.ShedName && !values.ShedName) {
     errors.ShedName = 'Required'
   } else if (isTouched.ShedName && !/^[a-zA-Z ]+$/.test(values.ShedName)) {
@@ -55,5 +56,7 @@ export default function ShedMasterValidation(values, isTouched) {
   ) {
     errors.GSTNumber = 'Must Have 15 Digit Numeric'
   }
+
+  console.log(errors)
   return errors
 }

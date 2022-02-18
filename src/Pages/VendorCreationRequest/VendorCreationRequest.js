@@ -23,10 +23,8 @@ import 'react-toastify/dist/ReactToastify.css'
 
 // SERVICES FILE
 import VendorCreationService from 'src/Service/VendorCreation/VendorCreationService'
-import DocumentVerificationService from 'src/Service/DocsVerify/DocsVerifyService'
 import ShedService from 'src/Service/SmallMaster/Shed/ShedService'
-import PanDataService from 'src/Service/SAP/PanDataService'
-
+import BankMasterService from 'src/Service/SubMaster/BankMasterService'
 // VALIDATIONS FILE
 import useForm from 'src/Hooks/useForm.js'
 import validate from 'src/Utils/Validation'
@@ -51,6 +49,7 @@ const VendorCreationRequest = () => {
   const [TransporterShedSheet, setTransporterShedSheet] = useState(false)
   const [TDSFormFront, setTDSFormFront] = useState(false)
   const [TDSFormBack, setTDSFormBack] = useState(false)
+
   const [pandel, setPandel] = useState(false)
   const [licensedel, setLicensedel] = useState(false)
   const [rccopybackdel, setRccopybackdel] = useState(false)
@@ -285,7 +284,7 @@ const VendorCreationRequest = () => {
                 id="panCard"
                 className={`${errors.panCard && 'is-invalid'}`}
                 name="panCard"
-                value={values.panCard || ''}
+                value={values.panCard || (fetch && currentInfo.vendor_info.pan_card_number)}
                 onFocus={onFocus}
                 onBlur={onBlur}
                 onChange={handleChange}
@@ -335,12 +334,13 @@ const VendorCreationRequest = () => {
                 id="aadhar"
                 className={`${errors.aadhar && 'is-invalid'}`}
                 name="aadhar"
-                value={values.aadhar || ''}
+                value={values.aadhar || (fetch && currentInfo.vendor_info.aadhar_card_number)}
                 onFocus={onFocus}
                 onBlur={onBlur}
                 onChange={handleChange}
               />
             </CCol>
+            {console.log(fetch && currentInfo.vendor_info.aadhar_card_number)}
           </CRow>
           {/* Row Two------------------------- */}
           {/* Row Three------------------------- */}
@@ -560,7 +560,11 @@ const VendorCreationRequest = () => {
                   <span className="small text-danger">{errors.bankAccount}</span>
                 )}
               </CFormLabel>
-              <CFormInput size="sm" id="bankAccount" />
+              <CFormInput
+                size="sm"
+                id="bankAccount"
+                value={value.bankAccount || fetch || currentInfo.vendor_info.bank_acc_number}
+              />
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="bankAccHolderName">
@@ -768,8 +772,8 @@ const VendorCreationRequest = () => {
           {/* Row Eight------------------------- */}
         </CForm>
       </CCard>
-
-      {/* Modal Area  */}
+      {/* ============================================================= */}
+      {/* ======================= Modal Area ========================== */}
 
       <CModal visible={PanCard} onClose={() => setPanCard(false)}>
         <CModalHeader>

@@ -5,7 +5,7 @@ import VehicleMaster from './Pages/Master/VehicleMaster/VehicleMaster'
 import DieselVendorMaster from './Pages/Master/DieselVendorMaster/DieselVendorMaster'
 import ShedMasterEdit from './Pages/Master/ShedMaster/ShedMasterEdit'
 import DriverMaster from './Pages/Master/DriverMaster/DriverMaster'
-import ShedMaster from './Pages/Master/ShedMaster'
+import ShedMaster from './Pages/Master/ShedMaster/ShedMaster'
 import UserLoginMaster from './Pages/Master/UserMaster/UserLoginMaster'
 import UserLoginMasterTable from './Pages/Master/UserMaster/UserLoginMasterTable'
 

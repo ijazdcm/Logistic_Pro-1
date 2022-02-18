@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { Provider, useDispatch } from 'react-redux'
-import { BrowserRouter, Route,Routes  } from 'react-router-dom'
+import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import Login from './Pages/Auth/Login'
 import './scss/style.scss'
 import store from './store'
@@ -17,17 +17,16 @@ const loading = (
 // Containers
 const DefaultLayout = React.lazy(() => import('./layout/DefaultLayout'))
 
-function App () {
+function App() {
+  const token = LocalStorageService.getLocalstorage('auth_token')
+  let isauth = token ? true : false
 
-   const token=LocalStorageService.getLocalstorage('auth_token')
-   let isauth= token ? true : false
-
-    return (
-      <React.Suspense fallback={loading}>
-         <ToastContainer />
-       {isauth ? <DefaultLayout/>:<Login/>}
-      </React.Suspense>
-    )
-  }
+  return (
+    <React.Suspense fallback={loading}>
+      <ToastContainer />
+      {isauth ? <DefaultLayout /> : <Login />}
+    </React.Suspense>
+  )
+}
 
 export default App

@@ -24,7 +24,6 @@ import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import VehicleCapacitySubmasterValidation from 'src/Utils/SubMaster/VehicleCapacitySubMasterValidation'
 
-
 const VehicleCapacityTable = () => {
   const [modal, setModal] = useState(false)
   const [deleteModal, setDeleteModal] = useState(false)
@@ -241,8 +240,15 @@ const VehicleCapacityTable = () => {
         </CRow>
 
         <CCard className="mt-1">
-          <CustomTable columns={columns} data={rowData} />
+          <CustomTable
+            columns={columns}
+            data={rowData}
+            fieldName={''}
+            showSearchFilter={true}
+            pending={pending}
+          />
         </CCard>
+        <CCard></CCard>
       </CContainer>
 
       {/* View & Edit Modal Section */}

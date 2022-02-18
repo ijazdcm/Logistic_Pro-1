@@ -228,7 +228,7 @@ const routes = [
   { path: '/RjSalesOrderCreation', exact: true, name: 'Test', component: RjSalesOrderCreation },
   { path: '/RJcustomerCreationHome', exact: true, name: 'RJ Customer Creation', component: RJcustomerCreationHome },
   {
-    path: '/RJcustomerCreationHome/RJcustomerCreation/:id',
+    path: '/RJcustomerCreation',
     exact: true,
     name: 'RJ Customer Creation',
     component: RJcustomerCreation,

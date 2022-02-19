@@ -35,6 +35,11 @@ class ParkingYardGateService {
     return api.get(AVAIABLE_DRIVERS_LIST_URL)
    }
 
+   getAllDrivers()
+   {
+    return api.get(DRIVERS_LIST_URL)
+   }
+
    getDriverInfoById(id)
    {
     return api.get(DRIVERS_LIST_URL+id)

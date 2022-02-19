@@ -22,8 +22,10 @@ const DocsVerify = () => {
     DocsVerifyService.getDocsVerifyTableData().then((res) => {
       tableData = res.data.data
       let rowDataList = []
-      const filterData = tableData.filter((data) => data.vehicle_type_id.id == 3)
-      // console.log(filterData)
+      const filterData = tableData.filter(
+        (data) => data.vehicle_type_id.id == 3 && data.vehicle_inspection != null
+      )
+      console.log(filterData)
       filterData.map((data, index) => {
         rowDataList.push({
           sno: index + 1,

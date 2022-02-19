@@ -81,6 +81,9 @@ const DocVerifyVendorAvail = () => {
     ownerMob: '',
     aadhar: '',
     bankAcc: '',
+    aadharCopy: '',
+    panCopy: '',
+    passCopy: '',
   }
 
   // VALIDATIONS
@@ -91,16 +94,16 @@ const DocVerifyVendorAvail = () => {
   // GET PAN DETAILS FROM SAP
   const getPanData = (e) => {
     e.preventDefault()
-    // PanDataService.getPanData(values.panNumber).then((res) => {
-    //   console.log(res.data)
-    // })
-    let panDetail = PanDataService.getPanData(values.panNumber)
-    if (panDetail != '') {
-      setPanData(panDetail)
-      toast.success('Pan Details Detected!')
-    } else {
-      toast.warning('No Pan Details Detected! Fill Up The Fields')
-    }
+    PanDataService.getPanData(values.panNumber).then((res) => {
+      console.log(res.data)
+    })
+    // let panDetail = PanDataService.getPanData(values.panNumber)
+    // if (panDetail != '') {
+    //   setPanData(panDetail)
+    //   toast.success('Pan Details Detected!')
+    // } else {
+    //   toast.warning('No Pan Details Detected! Fill Up The Fields')
+    // }
 
     setReadOnly(true)
     setWrite(true)
@@ -132,6 +135,9 @@ const DocVerifyVendorAvail = () => {
     formData.append('insurance_validity', values.insuranceValid)
     formData.append('tds_dec_form_front', values.TDSfront)
     formData.append('tds_dec_form_back', values.TDSback)
+    formData.append('aadhar_copy', values.aadharCopy)
+    formData.append('pan_copy', values.panCopy)
+    formData.append('pass_copy', values.passCopy)
     formData.append('transport_shed_sheet', values.transportShedSheet)
     formData.append('shed_id', shedData && shedData.shed_id)
     formData.append('shed_name', shedData && shedData.shed_name)

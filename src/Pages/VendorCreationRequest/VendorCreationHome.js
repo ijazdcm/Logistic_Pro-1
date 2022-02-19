@@ -50,10 +50,7 @@ const VendorCreationHome = () => {
           Overall_Duration: data.created_at,
           Action: (
             <CButton className="badge" color="warning">
-              <Link
-                className="text-white"
-                to={`VendorCreationRequest/${data.vehicle_id}`}
-              >
+              <Link className="text-white" to={`VendorCreationRequest/${data.vehicle_id}`}>
                 Create Vendor
               </Link>
             </CButton>

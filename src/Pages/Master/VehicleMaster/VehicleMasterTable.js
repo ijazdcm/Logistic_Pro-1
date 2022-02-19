@@ -256,32 +256,23 @@ const VehicleMasterTable = () => {
 
   return (
     <>
-      <CContainer className="mt-2">
-        <CRow className="mt-3">
-          <CCol
-            className="offset-md-6"
-            xs={15}
-            sm={15}
-            md={6}
-            style={{ display: 'flex', justifyContent: 'end' }}
-          >
-            <Link className="text-white" to="/VehicleMaster">
-              <CButton
-                size="md"
-                color="warning"
-                // disabled={enableSubmit}
-                className="px-3 text-white"
-                type="button"
-              >
-                <span className="float-start">
-                  <i className="" aria-hidden="true"></i> &nbsp;New
-                </span>
-              </CButton>
-            </Link>
-          </CCol>
-        </CRow>
-
-        <CCard className="mt-1">
+      <CRow className="mt-1 mb-1">
+        <CCol
+          className="offset-md-6"
+          xs={15}
+          sm={15}
+          md={6}
+          style={{ display: 'flex', justifyContent: 'end' }}
+        >
+          <Link className="text-white" to="/VehicleMaster">
+            <CButton size="sm" color="warning" className="px-5 text-white" type="button">
+              NEW
+            </CButton>
+          </Link>
+        </CCol>
+      </CRow>
+      <CCard>
+        <CContainer>
           <CustomTable
             columns={columns}
             data={rowData}
@@ -289,7 +280,7 @@ const VehicleMasterTable = () => {
             showSearchFilter={true}
             pending={pending}
           />
-        </CCard>
+        </CContainer>
 
         {/*Rc copy front model*/}
         <CModal visible={RCCopyFront} onClose={() => setRCCopyFront(false)}>
@@ -353,7 +344,7 @@ const VehicleMasterTable = () => {
           </CModalFooter>
         </CModal>
         {/*Insurance copy back*/}
-      </CContainer>
+      </CCard>
     </>
   )
 }

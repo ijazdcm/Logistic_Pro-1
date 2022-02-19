@@ -4,8 +4,8 @@ export const FilterComponent = ({ filterText, onFilter, onClear, fieldName }) =>
   return (
     <>
       <CRow>
-        <CCol className="display-flex">
-          <CInputGroup>
+        <CCol className="display-flex p-0">
+          <CInputGroup className="">
             <CFormInput
               size="sm"
               id="search"
@@ -17,7 +17,7 @@ export const FilterComponent = ({ filterText, onFilter, onClear, fieldName }) =>
               value={filterText}
             />
             <CInputGroupText>
-              <CButton size="sm" className="m-0" color="secondary" type="button" onClick={onClear}>
+              <CButton size="sm" color="secondary" type="button" onClick={onClear}>
                 X
               </CButton>
             </CInputGroupText>

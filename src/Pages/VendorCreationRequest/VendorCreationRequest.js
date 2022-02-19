@@ -23,10 +23,8 @@ import 'react-toastify/dist/ReactToastify.css'
 
 // SERVICES FILE
 import VendorCreationService from 'src/Service/VendorCreation/VendorCreationService'
-import DocumentVerificationService from 'src/Service/DocsVerify/DocsVerifyService'
 import ShedService from 'src/Service/SmallMaster/Shed/ShedService'
-import PanDataService from 'src/Service/SAP/PanDataService'
-
+import BankMasterService from 'src/Service/SubMaster/BankMasterService'
 // VALIDATIONS FILE
 import useForm from 'src/Hooks/useForm.js'
 import validate from 'src/Utils/Validation'
@@ -41,16 +39,17 @@ const VendorCreationRequest = () => {
   const [currentInfo, setCurrentInfo] = useState({})
   const [shedData, setShedData] = useState({})
 
+  const [PanCard, setPanCard] = useState(false)
   const [adharvisible, setAdharVisible] = useState(false)
   const [BankPassbook, setBankPassbook] = useState(false)
-  const [PanCard, setPanCard] = useState(false)
   const [Licence, setLicence] = useState(false)
   const [RcFront, setRcFront] = useState(false)
-  const [RcBank, setRcBank] = useState(false)
+  const [RcBack, setRcBack] = useState(false)
   const [Insurance, setInsurance] = useState(false)
   const [TransporterShedSheet, setTransporterShedSheet] = useState(false)
   const [TDSFormFront, setTDSFormFront] = useState(false)
   const [TDSFormBack, setTDSFormBack] = useState(false)
+
   const [pandel, setPandel] = useState(false)
   const [licensedel, setLicensedel] = useState(false)
   const [rccopybackdel, setRccopybackdel] = useState(false)
@@ -247,6 +246,7 @@ const VendorCreationRequest = () => {
                   <span className="small text-danger">{errors.panCardAttachment}</span>
                 )}
               </CFormLabel>
+
               <CButton
                 // onClick={() => setAdharVisible(!adharvisible)}
                 className="w-100 m-0"
@@ -254,7 +254,7 @@ const VendorCreationRequest = () => {
                 size="sm"
                 id="panCardattachment"
               >
-                <span className="float-start" onClick={() => setAdharVisible(!adharvisible)}>
+                <span className="float-start" onClick={() => setPanCard(!PanCard)}>
                   <i className="fa fa-eye" aria-hidden="true"></i> &nbsp;View
                 </span>
                 <span
@@ -284,7 +284,7 @@ const VendorCreationRequest = () => {
                 id="panCard"
                 className={`${errors.panCard && 'is-invalid'}`}
                 name="panCard"
-                value={values.panCard || ''}
+                value={values.panCard || (fetch && currentInfo.vendor_info.pan_card_number)}
                 onFocus={onFocus}
                 onBlur={onBlur}
                 onChange={handleChange}
@@ -334,12 +334,13 @@ const VendorCreationRequest = () => {
                 id="aadhar"
                 className={`${errors.aadhar && 'is-invalid'}`}
                 name="aadhar"
-                value={values.aadhar || ''}
+                value={values.aadhar || (fetch && currentInfo.vendor_info.aadhar_card_number)}
                 onFocus={onFocus}
                 onBlur={onBlur}
                 onChange={handleChange}
               />
             </CCol>
+            {console.log(fetch && currentInfo.vendor_info.aadhar_card_number)}
           </CRow>
           {/* Row Two------------------------- */}
           {/* Row Three------------------------- */}
@@ -404,13 +405,13 @@ const VendorCreationRequest = () => {
                 {errors.rcBack && <span className="small text-danger">{errors.rcBack}</span>}
               </CFormLabel>
               <CButton
-                // onClick={() => setRcBank(!RcBank)}
+                // onClick={() => setRcBack(!RcBack)}
                 className="w-100 m-0"
                 color="info"
                 size="sm"
                 id="rcBack"
               >
-                <span className="float-start" onClick={() => setRcBank(!RcBank)}>
+                <span className="float-start" onClick={() => setRcBack(!RcBack)}>
                   <i className="fa fa-eye" aria-hidden="true"></i> &nbsp;View
                 </span>
                 <span
@@ -559,7 +560,11 @@ const VendorCreationRequest = () => {
                   <span className="small text-danger">{errors.bankAccount}</span>
                 )}
               </CFormLabel>
-              <CFormInput size="sm" id="bankAccount" />
+              <CFormInput
+                size="sm"
+                id="bankAccount"
+                value={value.bankAccount || fetch || currentInfo.vendor_info.bank_acc_number}
+              />
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="bankAccHolderName">
@@ -746,7 +751,7 @@ const VendorCreationRequest = () => {
                 Remarks
                 {errors.remarks && <span className="small text-danger">{errors.remarks}</span>}
               </CFormLabel>
-              <CFormInput size="sm" id="remarks" readOnly />
+              <CFormInput size="sm" id="remarks" />
             </CCol>
           </CRow>
           {/* Row Nine------------------------- */}
@@ -767,24 +772,38 @@ const VendorCreationRequest = () => {
           {/* Row Eight------------------------- */}
         </CForm>
       </CCard>
+      {/* ============================================================= */}
+      {/* ======================= Modal Area ========================== */}
 
-      {/* Modal Area  */}
+      <CModal visible={PanCard} onClose={() => setPanCard(false)}>
+        <CModalHeader>
+          <CModalTitle>Pan Card</CModalTitle>
+        </CModalHeader>
+        <CModalBody>
+          <CCardImage orientation="top" src={fetch ? currentInfo.pan_copy : ''} />
+        </CModalBody>
+        <CModalFooter>
+          <CButton color="secondary" onClick={() => setPanCard(false)}>
+            Close
+          </CButton>
+          {/* <CButton color="primary">Save changes</CButton> */}
+        </CModalFooter>
+      </CModal>
+
+      {/* *********************************************************** */}
 
       <CModal visible={adharvisible} onClose={() => setAdharVisible(false)}>
         <CModalHeader>
           <CModalTitle>Aadhar Card</CModalTitle>
         </CModalHeader>
         <CModalBody>
-          <CCardImage
-            orientation="top"
-            src="https://dmv.ny.gov/sites/default/files/resize/styles/panopoly_image_original/public/old_dl_for_sample_docs-653x325.png?itok=a8hCofjR"
-          />
+          <CCardImage orientation="top" src={fetch ? currentInfo.aadhar_copy : ''} />
         </CModalBody>
         <CModalFooter>
           <CButton color="secondary" onClick={() => setAdharVisible(false)}>
             Close
           </CButton>
-          <CButton color="primary">Save changes</CButton>
+          {/* <CButton color="primary">Save changes</CButton> */}
         </CModalFooter>
       </CModal>
 
@@ -795,50 +814,13 @@ const VendorCreationRequest = () => {
           <CModalTitle>Bank Passbook</CModalTitle>
         </CModalHeader>
         <CModalBody>
-          <CCardImage
-            orientation="top"
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRy8_NeahwoKut3zeWbVAhUWS59XaqVah0mYMotQ08scOqWrXWsZy39GGRedOzSV1Ao8qk&usqp=CAU"
-          />
+          <CCardImage orientation="top" src={fetch ? currentInfo.bank_pass_copy : ''} />
         </CModalBody>
         <CModalFooter>
-          <CButton color="secondary" onClick={() => setAdharVisible(false)}>
+          <CButton color="secondary" onClick={() => setBankPassbook(false)}>
             Close
           </CButton>
-          <CButton color="primary">Save changes</CButton>
-        </CModalFooter>
-      </CModal>
-
-      {/* *********************************************************** */}
-
-      <CModal visible={TDSFormBack} onClose={() => setTDSFormBack(false)}>
-        <CModalHeader>
-          <CModalTitle>TDS Declaration Form Back</CModalTitle>
-        </CModalHeader>
-        <CModalBody>
-          <CCardImage orientation="top" src="" />
-        </CModalBody>
-        <CModalFooter>
-          <CButton color="secondary" onClick={() => setTDSFormBack(false)}>
-            Close
-          </CButton>
-          <CButton color="primary">Save changes</CButton>
-        </CModalFooter>
-      </CModal>
-
-      {/* *********************************************************** */}
-
-      <CModal visible={PanCard} onClose={() => setPanCard(false)}>
-        <CModalHeader>
-          <CModalTitle>Pan Card</CModalTitle>
-        </CModalHeader>
-        <CModalBody>
-          <CCardImage orientation="top" src={fetch ? currentInfo : ''} />
-        </CModalBody>
-        <CModalFooter>
-          <CButton color="secondary" onClick={() => setPanCard(false)}>
-            Close
-          </CButton>
-          <CButton color="primary">Save changes</CButton>
+          {/* <CButton color="primary">Save changes</CButton> */}
         </CModalFooter>
       </CModal>
 
@@ -846,7 +828,7 @@ const VendorCreationRequest = () => {
 
       <CModal visible={Licence} onClose={() => setLicence(false)}>
         <CModalHeader>
-          <CModalTitle>Pan Card</CModalTitle>
+          <CModalTitle>License</CModalTitle>
         </CModalHeader>
         <CModalBody>
           <CCardImage orientation="top" src={fetch ? currentInfo.license_copy : ''} />
@@ -855,7 +837,7 @@ const VendorCreationRequest = () => {
           <CButton color="secondary" onClick={() => setLicence(false)}>
             Close
           </CButton>
-          <CButton color="primary">Save changes</CButton>
+          {/* <CButton color="primary">Save changes</CButton> */}
         </CModalFooter>
       </CModal>
 
@@ -863,16 +845,33 @@ const VendorCreationRequest = () => {
 
       <CModal visible={RcFront} onClose={() => setRcFront(false)}>
         <CModalHeader>
-          <CModalTitle>Pan Card</CModalTitle>
+          <CModalTitle>RC Front Copy</CModalTitle>
         </CModalHeader>
         <CModalBody>
-          <CCardImage orientation="top" src="" />
+          <CCardImage orientation="top" src={fetch ? currentInfo.rc_copy_front : ''} />
         </CModalBody>
         <CModalFooter>
           <CButton color="secondary" onClick={() => setRcFront(false)}>
             Close
           </CButton>
-          <CButton color="primary">Save changes</CButton>
+          {/* <CButton color="primary">Save changes</CButton> */}
+        </CModalFooter>
+      </CModal>
+
+      {/* *********************************************************** */}
+
+      <CModal visible={RcBack} onClose={() => setRcBack(false)}>
+        <CModalHeader>
+          <CModalTitle>RC Back Copy </CModalTitle>
+        </CModalHeader>
+        <CModalBody>
+          <CCardImage orientation="top" src={fetch ? currentInfo.rc_copy_back : ''} />
+        </CModalBody>
+        <CModalFooter>
+          <CButton color="secondary" onClick={() => setRcBack(false)}>
+            Close
+          </CButton>
+          {/* <CButton color="primary">Save changes</CButton> */}
         </CModalFooter>
       </CModal>
 
@@ -883,13 +882,13 @@ const VendorCreationRequest = () => {
           <CModalTitle>Insurance</CModalTitle>
         </CModalHeader>
         <CModalBody>
-          <CCardImage orientation="top" src="" />
+          <CCardImage orientation="top" src={fetch ? currentInfo.insurance_copy_front : ''} />
         </CModalBody>
         <CModalFooter>
           <CButton color="secondary" onClick={() => setInsurance(false)}>
             Close
           </CButton>
-          <CButton color="primary">Save changes</CButton>
+          {/* <CButton color="primary">Save changes</CButton> */}
         </CModalFooter>
       </CModal>
 
@@ -900,33 +899,13 @@ const VendorCreationRequest = () => {
           <CModalTitle>Transporter Shed Sheet</CModalTitle>
         </CModalHeader>
         <CModalBody>
-          <CCardImage orientation="top" src="" />
+          <CCardImage orientation="top" src={fetch ? currentInfo.transport_shed_sheet : ''} />
         </CModalBody>
         <CModalFooter>
           <CButton color="secondary" onClick={() => setTransporterShedSheet(false)}>
             Close
           </CButton>
-          <CButton color="primary">Save changes</CButton>
-        </CModalFooter>
-      </CModal>
-
-      {/* *********************************************************** */}
-
-      <CModal visible={RcBank} onClose={() => setRcBank(false)}>
-        <CModalHeader>
-          <CModalTitle>Rc Copy Back</CModalTitle>
-        </CModalHeader>
-        <CModalBody>
-          <CCardImage
-            orientation="top"
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRy8_NeahwoKut3zeWbVAhUWS59XaqVah0mYMotQ08scOqWrXWsZy39GGRedOzSV1Ao8qk&usqp=CAU"
-          />
-        </CModalBody>
-        <CModalFooter>
-          <CButton color="secondary" onClick={() => setRcBank(false)}>
-            Close
-          </CButton>
-          <CButton color="primary">Save changes</CButton>
+          {/* <CButton color="primary">Save changes</CButton> */}
         </CModalFooter>
       </CModal>
 
@@ -934,16 +913,33 @@ const VendorCreationRequest = () => {
 
       <CModal visible={TDSFormFront} onClose={() => setTDSFormFront(false)}>
         <CModalHeader>
-          <CModalTitle>TDS Declaration Fomr</CModalTitle>
+          <CModalTitle>TDS Declaration Form Front</CModalTitle>
         </CModalHeader>
         <CModalBody>
-          <CCardImage orientation="top" src="" />
+          <CCardImage orientation="top" src={fetch ? currentInfo.tds_dec_form_front : ''} />
         </CModalBody>
         <CModalFooter>
           <CButton color="secondary" onClick={() => setTDSFormFront(false)}>
             Close
           </CButton>
-          <CButton color="primary">Save changes</CButton>
+          {/* <CButton color="primary">Save changes</CButton> */}
+        </CModalFooter>
+      </CModal>
+
+      {/* *********************************************************** */}
+
+      <CModal visible={TDSFormBack} onClose={() => setTDSFormBack(false)}>
+        <CModalHeader>
+          <CModalTitle>TDS Declaration Form Back</CModalTitle>
+        </CModalHeader>
+        <CModalBody>
+          <CCardImage orientation="top" src={fetch ? currentInfo.tds_dec_form_back : ''} />
+        </CModalBody>
+        <CModalFooter>
+          <CButton color="secondary" onClick={() => setTDSFormBack(false)}>
+            Close
+          </CButton>
+          {/* <CButton color="primary">Save changes</CButton> */}
         </CModalFooter>
       </CModal>
 

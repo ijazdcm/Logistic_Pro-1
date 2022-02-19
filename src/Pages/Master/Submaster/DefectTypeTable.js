@@ -206,18 +206,20 @@ const DefectTypeTable = () => {
       name: 'Status',
       selector: (row) => row.Status,
       left: true,
+      sortable: true,
     },
     {
       name: 'Action',
       selector: (row) => row.Action,
-      center: true,
+      left: true,
+      sortable: true,
     },
   ]
 
   return (
     <>
-      <CContainer className="mt-2">
-        <CRow className="mt-3">
+      <CContainer>
+        <CRow>
           <CCol
             className="offset-md-6"
             xs={15}
@@ -226,9 +228,9 @@ const DefectTypeTable = () => {
             style={{ display: 'flex', justifyContent: 'end' }}
           >
             <CButton
-              size="md"
+              size="sm"
               color="warning"
-              className="px-3 text-white"
+              className="px-5 text-white"
               onClick={() => {
                 values.defect_type = ''
                 setSuccess('')

@@ -3,7 +3,7 @@ export default function VehicleInspectionValidation(values, isTouched) {
 
   //truck clean validation rule
 
-  if (isTouched.truck_clean && !values.truck_clean == '1') {
+  if (isTouched.truck_clean && values.truck_clean == '0') {
     errors.truck_clean = 'truck is not clean'
   }
 

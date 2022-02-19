@@ -2,8 +2,8 @@ export default function ShedMasterValidation(values, isTouched) {
   const errors = {}
 
   //vehicle type validation rule
-  if (isTouched.ShedType && values.ShedType === '0') {
-    errors.ShedType = 'Choose Type'
+  if (isTouched.shedType && values.shedType == 0) {
+    errors.shedType = 'Choose Type'
   }
 
   //shed name validation rule
@@ -13,7 +13,7 @@ export default function ShedMasterValidation(values, isTouched) {
     errors.ShedName = 'Must Have Letters & Space'
   }
   //
-  
+
   if (isTouched.ShedOwnerName && !values.ShedOwnerName) {
     errors.ShedOwnerName = 'Required'
   } else if (isTouched.ShedOwnerName && !/^[a-zA-Z ]+$/.test(values.ShedOwnerName)) {
@@ -59,5 +59,7 @@ export default function ShedMasterValidation(values, isTouched) {
   ) {
     errors.GSTNumber = 'Must Have 15 Digit Numeric'
   }
+
+  console.log(errors)
   return errors
 }

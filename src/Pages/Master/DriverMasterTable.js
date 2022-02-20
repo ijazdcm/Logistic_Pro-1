@@ -278,18 +278,46 @@ const UserLoginMasterTable = () => {
         </span>
       ),
       Driver_Address: 'Dindigul',
-      Status:
-       <span className="badge rounded-pill bg-info">Active</span>,
-      Action: (
-        <span>
-          <CButton className="btn btn-danger" color="">
-            <i className="fa fa-trash" aria-hidden="true"></i>
-          </CButton>
-          <CButton className="btn btn-dark" color="white">
-            <i className="fa fa-edit" aria-hidden="true"></i>
-          </CButton>
+      Status: (
+        <span
+          className={`badge rounded-pill bg-${data.vehicle_status === 1 ? 'info' : 'danger'}`}
+        >
+          {data.vehicle_status === 1 ? 'Active' : 'Inactive'}
         </span>
       ),
+      Action: (
+            <div className="d-flex justify-content-space-between">
+              <CButton
+                size="sm"
+                color="danger"
+                shape="rounded"
+                id={data.id}
+                onClick={() => {
+                  changeVehicleStatus(data.vehicle_id)
+                }}
+                className="m-1"
+              >
+                {/* Delete */}
+                <i className="fa fa-trash" aria-hidden="true"></i>
+              </CButton>
+
+              <Link to={data.vehicle_status === 1 ? `VehicleMaster/${data.vehicle_id}` : ''}>
+                <CButton
+                  disabled={data.vehicle_status === 1 ? false : true}
+                  size="sm"
+                  color="secondary"
+                  shape="rounded"
+                  id={data.id}
+                  className="m-1"
+                  type="button"
+                >
+                  {/* Edit */}
+                  <i className="fa fa-edit" aria-hidden="true"></i>
+                </CButton>
+              </Link>
+            </div>
+          ),
+
     },
   ]
 

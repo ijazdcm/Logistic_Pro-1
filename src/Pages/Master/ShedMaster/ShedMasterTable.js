@@ -214,45 +214,48 @@ const ShedMasterTable = () => {
     },
   ]
   return (
-    <CCard>
-      <CContainer className="mt-1">
-        <CRow className="mt-1 mb-1">
-          <CCol
-            className="offset-md-6"
-            xs={15}
-            sm={15}
-            md={6}
-            style={{ display: 'flex', justifyContent: 'end' }}
-          >
-            <Link className="text-white" to="/ShedMaster">
-              <CButton size="sm" color="warning" className="px-5 text-white" type="button">
-                New
-              </CButton>
-            </Link>
-          </CCol>
-        </CRow>
-        <CustomTable
-          columns={columns}
-          data={rowData}
-          fieldName={'Shed_Name'}
-          showSearchFilter={true}
-          pending={pending}
-        />
-      </CContainer>
-      <CModal visible={ShedOwnerPhoto} onClose={() => setShedOwnerPhoto(false)}>
-        <CModalHeader>
-          <CModalTitle>Shed Owner Photo</CModalTitle>
-        </CModalHeader>
-        <CModalBody>
-          <CCardImage orientation="top" src={documentSrc} />
-        </CModalBody>
-        <CModalFooter>
-          <CButton color="secondary" onClick={() => setShedOwnerPhoto(false)}>
-            Close
-          </CButton>
-        </CModalFooter>
-      </CModal>
-    </CCard>
+    <>
+      <CRow className="mt-1 mb-1">
+        <CCol
+          className="offset-md-6"
+          xs={15}
+          sm={15}
+          md={6}
+          style={{ display: 'flex', justifyContent: 'end' }}
+        >
+          <Link className="text-white" to="/ShedMaster">
+            <CButton size="sm" color="warning" className="px-5 text-white" type="button">
+              NEW
+            </CButton>
+          </Link>
+        </CCol>
+      </CRow>
+      <CCard>
+        <CContainer>
+          <CustomTable
+            columns={columns}
+            data={rowData}
+            fieldName={'Shed_Name'}
+            showSearchFilter={true}
+            pending={pending}
+          />
+        </CContainer>
+
+        <CModal visible={ShedOwnerPhoto} onClose={() => setShedOwnerPhoto(false)}>
+          <CModalHeader>
+            <CModalTitle>Shed Owner Photo</CModalTitle>
+          </CModalHeader>
+          <CModalBody>
+            <CCardImage orientation="top" src={documentSrc} />
+          </CModalBody>
+          <CModalFooter>
+            <CButton color="secondary" onClick={() => setShedOwnerPhoto(false)}>
+              Close
+            </CButton>
+          </CModalFooter>
+        </CModal>
+      </CCard>
+    </>
   )
 }
 export default ShedMasterTable

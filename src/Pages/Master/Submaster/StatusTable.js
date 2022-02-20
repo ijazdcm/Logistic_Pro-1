@@ -230,7 +230,7 @@ const StatusTable = () => {
               }}
             >
               <span className="float-start">
-                <i className="" aria-hidden="true"></i> &nbsp;New Status
+                <i className="" aria-hidden="true"></i> &nbsp;NEW
               </span>
             </CButton>
           </CCol>

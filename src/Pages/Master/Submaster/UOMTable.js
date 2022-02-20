@@ -235,7 +235,7 @@ const UomTable = () => {
               // onClick={() => setModal(!modal)}
             >
               <span className="float-start">
-                <i className="" aria-hidden="true"></i> &nbsp;New UOM
+                <i className="" aria-hidden="true"></i> &nbsp;NEW UOM
               </span>
             </CButton>
           </CCol>

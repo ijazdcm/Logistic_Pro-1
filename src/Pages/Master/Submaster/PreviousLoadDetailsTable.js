@@ -238,7 +238,7 @@ const PreviousLoadDetails = () => {
               }}
             >
               <span className="float-start">
-                <i className="" aria-hidden="true"></i> &nbsp;New Previous Load Details
+                <i className="" aria-hidden="true"></i> &nbsp;NEW
               </span>
             </CButton>
           </CCol>

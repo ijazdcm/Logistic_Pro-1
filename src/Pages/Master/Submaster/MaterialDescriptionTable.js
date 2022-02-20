@@ -241,7 +241,7 @@ const MaterialDescriptionTable = () => {
               // onClick={() => setModal(!modal)}
             >
               <span className="float-start">
-                <i className="" aria-hidden="true"></i> &nbsp;New Material Description
+                <i className="" aria-hidden="true"></i> &nbsp;NEW
               </span>
             </CButton>
           </CCol>

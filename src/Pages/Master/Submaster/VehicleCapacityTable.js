@@ -198,6 +198,7 @@ const VehicleCapacityTable = () => {
     {
       name: 'Status',
       selector: (row) => row.Status,
+      sortable: true,
       left: true,
     },
     {
@@ -233,7 +234,7 @@ const VehicleCapacityTable = () => {
               }}
             >
               <span className="float-start">
-                <i className="" aria-hidden="true"></i> &nbsp;New
+                <i className="" aria-hidden="true"></i> &nbsp;NEW
               </span>
             </CButton>
           </CCol>
@@ -243,12 +244,11 @@ const VehicleCapacityTable = () => {
           <CustomTable
             columns={columns}
             data={rowData}
-            fieldName={''}
+            fieldName={'Vehicle_Capacitys'}
             showSearchFilter={true}
             pending={pending}
           />
         </CCard>
-        <CCard></CCard>
       </CContainer>
 
       {/* View & Edit Modal Section */}

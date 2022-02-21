@@ -6,7 +6,11 @@ const token = localStorage.getItem('auth_token')
 const api = axios.create({
   baseURL: AppConfig.api.baseUrl,
   timeout: 100000,
-  headers: { 'X-Custom-Header': 'foobar', Authorization: `Bearer ${token}` },
+  headers: {
+    'Accept': 'application/json',
+    'Authorization': `Bearer ${token}`
+  }
+
 })
 
 export default api

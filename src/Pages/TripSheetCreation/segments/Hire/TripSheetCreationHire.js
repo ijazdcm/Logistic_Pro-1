@@ -1,5 +1,5 @@
 import { CCol, CFormInput, CFormLabel, CFormSelect, CFormTextarea, CRow } from '@coreui/react'
-import React from 'react'
+import React, { useEffect } from 'react'
 import DivisonListComponent from 'src/components/commoncomponent/DivisonListComponent'
 
 const TripSheetCreationHire = ({
@@ -10,110 +10,144 @@ const TripSheetCreationHire = ({
   handleSubmit,
   enableSubmit,
   onBlur,
+  singleVehicleInfo,
+  isTouched
 }) => {
+
+
+
+  useEffect(() => {
+    isTouched.expected_return_date_time = true
+    isTouched.remarks = true
+    isTouched.driveMobile = true
+    isTouched.Vehicle_Sourced_by = true
+    isTouched.advance_payment_diesel = true
+  }, [])
+
+
+
   return (
     <>
       <CRow>
         <CCol xs={12} md={3}>
-          <CFormLabel htmlFor="vType">
-            Vehicle Type
-            {errors.vehicleType && <span className="small text-danger">{errors.vehicleType}</span>}
-          </CFormLabel>
-          <CFormInput size="sm" id="vType" readOnly />
+          <CFormLabel htmlFor="vType">Vehicle Type</CFormLabel>
+          <CFormInput
+            size="sm"
+            name="vehicle_type"
+            value={singleVehicleInfo.vehicle_type_id.type}
+            id="vType"
+            readOnly
+          />
         </CCol>
         <CCol xs={12} md={3}>
-          <CFormLabel htmlFor="vNum">
-            Vehicle Number
-            {errors.vNum && <span className="small text-danger">{errors.vNum}</span>}
-          </CFormLabel>
-          <CFormInput size="sm" id="vNum" readOnly />
+          <CFormLabel htmlFor="vNum">Vehicle Number</CFormLabel>
+          <CFormInput size="sm" id="vNum" value={singleVehicleInfo.vehicle_number} readOnly />
         </CCol>
         <CCol xs={12} md={3}>
-          <CFormLabel htmlFor="vCap">
-            Vehicle Capacity
-            {errors.vCap && <span className="small text-danger">{errors.vCap}</span>}
-          </CFormLabel>
-          <CFormInput size="sm" id="vCap" readOnly />
+          <CFormLabel htmlFor="vCap">Vehicle Capacity</CFormLabel>
+          <CFormInput
+            size="sm"
+            id="vCap"
+            value={singleVehicleInfo.vehicle_capacity_id.capacity + '-TON'}
+            readOnly
+          />
         </CCol>
         <CCol xs={12} md={3}>
-          <CFormLabel htmlFor="driverName">
-            Driver Name
-            {errors.driverName && <span className="small text-danger">{errors.driverName}</span>}
-          </CFormLabel>
-          <CFormInput size="sm" id="driverName" readOnly />
-        </CCol>
-      </CRow>
-      <CRow>
-        <CCol xs={12} md={3}>
-          <CFormLabel htmlFor="dMob">
-            Driver Mobile Number
-            {errors.dMob && <span className="small text-danger">{errors.dMob}</span>}
-          </CFormLabel>
-          <CFormInput size="sm" id="dMob" readOnly />
-        </CCol>
-        <CCol xs={12} md={3}>
-          <CFormLabel htmlFor="gateInDateTime">
-            Gate-In Date & Time
-            {errors.gateInDateTime && (
-              <span className="small text-danger">{errors.gateInDateTime}</span>
-            )}
-          </CFormLabel>
-          <CFormInput size="sm" id="gateInDateTime" type="datetime-local" readOnly />
-        </CCol>
-        <CCol xs={12} md={3}>
-          <CFormLabel htmlFor="inspectionDateTime">
-            Inspection Date & Time
-            {errors.inspectionDateTime && (
-              <span className="small text-danger">{errors.inspectionDateTime}</span>
-            )}
-          </CFormLabel>
-          <CFormInput size="sm" id="inspectionDateTime" type="datetime-local" readOnly />
-        </CCol>
-        <CCol xs={12} md={3}>
-          <CFormLabel htmlFor="verifyDate">
-            Doc. Verification Date & Time
-            {errors.verifyDate && <span className="small text-danger">{errors.verifyDate}</span>}
-          </CFormLabel>
-          <CFormInput size="sm" type="datetime-local" id="verifyDate" readOnly />
+          <CFormLabel htmlFor="driverNameHire">Driver Name</CFormLabel>
+          <CFormInput
+            size="sm"
+            id="driverNameHire"
+            value={singleVehicleInfo.driver_name}
+            readOnly
+          />
         </CCol>
       </CRow>
       <CRow>
         <CCol xs={12} md={3}>
-          <CFormLabel htmlFor="shedName">
-            Shed Name
-            {errors.shedName && <span className="small text-danger">{errors.shedName}</span>}
-          </CFormLabel>
-          <CFormInput size="sm" id="shedName" readOnly />
+          <CFormLabel htmlFor="dMob">Driver Mobile Number</CFormLabel>
+          <CFormInput
+            size="sm"
+            id="dMob"
+            value={singleVehicleInfo.driver_contact_number}
+            readOnly
+          />
         </CCol>
         <CCol xs={12} md={3}>
-          <CFormLabel htmlFor="ownerName">
-            Owner Name
-            {errors.ownerName && <span className="small text-danger">{errors.ownerName}</span>}
-          </CFormLabel>
-          <CFormInput size="sm" id="ownerName" type="text" readOnly />
+          <CFormLabel htmlFor="gateInDateTime">Gate-In Date & Time</CFormLabel>
+          <CFormInput
+            size="sm"
+            id="gateInDateTime"
+            type="text"
+            value={singleVehicleInfo.gate_in_date_time_string}
+            readOnly
+          />
         </CCol>
         <CCol xs={12} md={3}>
-          <CFormLabel htmlFor="ownerMob">
-            Owner Mobile Number
-            {errors.ownerMob && <span className="small text-danger">{errors.ownerMob}</span>}
-          </CFormLabel>
-          <CFormInput size="sm" id="ownerMob" type="text" readOnly />
+          <CFormLabel htmlFor="inspectionDateTime">Inspection Date & Time</CFormLabel>
+          <CFormInput
+            size="sm"
+            id="inspectionDateTime"
+            type="text"
+            value={singleVehicleInfo.vehicle_inspection_trip.inspection_time_string}
+            readOnly
+          />
         </CCol>
         <CCol xs={12} md={3}>
-          <CFormLabel htmlFor="Division">
-            Division
-            {errors.Division && <span className="small text-danger">{errors.Division}</span>}
+          <CFormLabel htmlFor="verifyDate">Doc. Verification Date & Time</CFormLabel>
+          <CFormInput
+            size="sm"
+            type="inspection_time_string"
+            id="verifyDate"
+            value={singleVehicleInfo.vehicle_inspection_trip.inspection_time_string}
+            readOnly
+          />
+        </CCol>
+      </CRow>
+      <CRow>
+        <CCol xs={12} md={3}>
+          <CFormLabel htmlFor="shedName">Shed Name</CFormLabel>
+          <CFormInput
+            size="sm"
+            id="shedName"
+            value={singleVehicleInfo.vehicle_vendor_info.shed_info.shed_name}
+            readOnly
+          />
+        </CCol>
+        <CCol xs={12} md={3}>
+          <CFormLabel htmlFor="ownerName">Owner Name</CFormLabel>
+          <CFormInput
+            size="sm"
+            id="ownerName"
+            type="text"
+            value={singleVehicleInfo.vehicle_vendor_info.owner_name}
+            readOnly
+          />
+        </CCol>
+        <CCol xs={12} md={3}>
+          <CFormLabel htmlFor="ownerMob">Owner Mobile Number</CFormLabel>
+          <CFormInput
+            size="sm"
+            id="ownerMob"
+            value={singleVehicleInfo.vehicle_vendor_info.shed_info.shed_owner_phone_1}
+            type="text"
+            readOnly
+          />
+        </CCol>
+        <CCol xs={12} md={3}>
+          <CFormLabel htmlFor="division_id">
+            Divison
+            {errors.division_id && <span className="small text-danger">{errors.division_id}</span>}
           </CFormLabel>
           <CFormSelect
             size="sm"
-            name=""
+            name="division_id"
             onFocus={onFocus}
             onBlur={onBlur}
             onChange={handleChange}
-            value={values.Division}
-            className={`${errors.Division && 'is-invalid'}`}
+            value={values.division_id}
+            className={`${errors.division_id && 'is-invalid'}`}
             aria-label="Small select example"
-            id="Division"
+            id="division_id"
           >
             <DivisonListComponent />
           </CFormSelect>
@@ -121,114 +155,142 @@ const TripSheetCreationHire = ({
       </CRow>
       <CRow>
         <CCol xs={12} md={3}>
-          <CFormLabel htmlFor="freigthRate">
+          <CFormLabel htmlFor="freight_rate_per_tone">
             Freight Rate Per TON
-            {errors.freigthRate && <span className="small text-danger">{errors.freigthRate}</span>}
+            {errors.freight_rate_per_tone && (
+              <span className="small text-danger">{errors.freight_rate_per_tone}</span>
+            )}
           </CFormLabel>
-          <CFormInput size="sm" id="freigthRate" type="text" />
+          <CFormInput
+            size="sm"
+            onFocus={onFocus}
+            onBlur={onBlur}
+            onChange={handleChange}
+            value={values.freight_rate_per_tone}
+            id="freight_rate_per_tone"
+            name="freight_rate_per_tone"
+            type="number"
+          />
         </CCol>
         <CCol xs={12} md={3}>
-          <CFormLabel htmlFor="AdvanceEligibility">
+          <CFormLabel htmlFor="trip_advance_eligiblity">
             Trip Advance Eligibility
-            {errors.AdvanceEligibility && (
-              <span className="small text-danger">{errors.AdvanceEligibility}</span>
+            {errors.trip_advance_eligiblity && (
+              <span className="small text-danger">{errors.trip_advance_eligiblity}</span>
             )}
           </CFormLabel>
           <CFormSelect
             size="sm"
-            name=""
+            name="trip_advance_eligiblity"
             onFocus={onFocus}
             onBlur={onBlur}
             onChange={handleChange}
-            value={values.AdvanceEligibility}
-            className={`${errors.AdvanceEligibility && 'is-invalid'}`}
+            value={values.trip_advance_eligiblity}
+            className={`${errors.trip_advance_eligiblity && 'is-invalid'}`}
             aria-label="Small select example"
-            id="AdvanceEligibility"
+            id="trip_advance_eligiblity"
           >
-            <option hidden>Select...</option>
+            <option value="">Select...</option>
             <option value="1">Yes</option>
             <option value="2">No</option>
           </CFormSelect>
         </CCol>
-        <CCol xs={12} md={3}>
-          <CFormLabel htmlFor="advancepayBank">
-            Advance Payment Bank*
-            {errors.advancepayBank && (
-              <span className="small text-danger">{errors.advancepayBank}</span>
-            )}
-          </CFormLabel>
-          <CFormInput size="sm" type="" id="advancepayBank" />
-        </CCol>
-        <CCol xs={12} md={3}>
-          <CFormLabel htmlFor="advancepayDiesel">
-            Advance Payment Diesel*
-            {errors.advancepayDiesel && (
-              <span className="small text-danger">{errors.advancepayDiesel}</span>
-            )}
-          </CFormLabel>
-          <CFormInput size="sm" type="" id="advancepayDiesel" />
-        </CCol>
+        {values.trip_advance_eligiblity == 1 ? (
+          <>
+            <CCol xs={12} md={3}>
+              <CFormLabel htmlFor="advance_amount">
+                Advance Payment Bank*
+                {errors.advance_amount && (
+                  <span className="small text-danger">{errors.advance_amount}</span>
+                )}
+              </CFormLabel>
+              <CFormInput
+                size="sm"
+                type="number"
+                onFocus={onFocus}
+                onBlur={onBlur}
+                onChange={handleChange}
+                value={values.advance_amount}
+                name="advance_amount"
+                id="advance_amount"
+              />
+            </CCol>
+            <CCol xs={12} md={3}>
+              <CFormLabel htmlFor="advance_payment_diesel">
+                Advance Payment Diesel*
+                {errors.advance_payment_diesel && (
+                  <span className="small text-danger">{errors.advance_payment_diesel}</span>
+                )}
+              </CFormLabel>
+              <CFormInput size="sm" name='advance_payment_diesel' type="number" onFocus={onFocus}
+                onBlur={onBlur}
+                onChange={handleChange}
+                value={values.advance_payment_diesel} id="advance_payment_diesel" />
+            </CCol>
+          </>
+        ) : (
+          <></>
+        )}
       </CRow>
       <CRow>
         <CCol xs={12} md={3}>
           <CFormLabel htmlFor="Purpose">
             Purpose
-            {errors.Purpose && <span className="small text-danger">{errors.Purpose}</span>}
+            {errors.purpose && <span className="small text-danger">{errors.purpose}</span>}
           </CFormLabel>
           <CFormSelect
             size="sm"
-            name="Purpose"
+            name="purpose"
             onFocus={onFocus}
             onBlur={onBlur}
             onChange={handleChange}
-            value={values.Purpose}
-            className={`${errors.Purpose && 'is-invalid'}`}
+            value={values.purpose}
+            className={`${errors.purpose && 'is-invalid'}`}
             aria-label="Small select example"
             id="Purpose"
           >
-            <option hidden>Select...</option>
+            <option value="">Select...</option>
             <option value="1">FG Sales</option>
             <option value="2">STO</option>
             <option value="3">Others</option>
           </CFormSelect>
         </CCol>
 
-        {values.Purpose == 2 && (
+        {values.purpose == 2 && (
           <CCol xs={12} md={3}>
-            <CFormLabel htmlFor="vSourced">
+            <CFormLabel htmlFor="Vehicle_Sourced_by">
               Vehicle sourced by
-              {errors.vSourced && <span className="small text-danger">{errors.vSourced}</span>}
+              {errors.Vehicle_Sourced_by && <span className="small text-danger">{errors.Vehicle_Sourced_by}</span>}
             </CFormLabel>
             <CFormSelect
               size="sm"
-              name="vSourced"
+              name="Vehicle_Sourced_by"
               onFocus={onFocus}
               onBlur={onBlur}
               onChange={handleChange}
-              value={values.vSourced}
-              className={`${errors.vSourced && 'is-invalid'}`}
+              value={values.Vehicle_Sourced_by}
+              className={`${errors.Vehicle_Sourced_by && 'is-invalid'}`}
               aria-label="Small select example"
-              id="vSourced"
+              id="Vehicle_Sourced_by"
             >
-              <option hidden>Select...</option>
-              <option value="1">Logistics</option>
-              <option value="2">WM-Team</option>
-              <option value="3">Inventry Team</option>
+              <option value="">Select...</option>
+              <option value="Logistics">Logistics</option>
+              <option value="WM-Team">WM-Team</option>
+              <option value="Inventry Team">Inventry Team</option>
             </CFormSelect>
           </CCol>
         )}
         <CCol xs={12} md={3}>
-          <CFormLabel htmlFor="expectDelivery">
+          <CFormLabel htmlFor="expected_date_time">
             Expected Delivery Date & Time*
-            {errors.expectDelivery && (
-              <span className="small text-danger">{errors.expectDelivery}</span>
+            {errors.expected_date_time && (
+              <span className="small text-danger">{errors.expected_date_time}</span>
             )}
           </CFormLabel>
-          <CFormInput size="sm" type="datetime-local" id="expectDelivery" />
-        </CCol>
-        <CCol xs={12} md={3}>
-          <CFormLabel htmlFor="remarks">Remarks</CFormLabel>
-          <CFormTextarea id="remarks" rows="1"></CFormTextarea>
+          <CFormInput size="sm" onFocus={onFocus}
+              onBlur={onBlur}
+              onChange={handleChange}
+              value={values.expected_date_time} type="date" name='expected_date_time' id="expected_date_time" />
         </CCol>
       </CRow>
     </>

@@ -14,12 +14,9 @@ class TripSheetCreationService {
     return api.get(TRIP_SHEET_BASE_URL+'ready-to-trip/vehicle-info/'+parkingYardID)
   }
 
-  getBankById(BankId) {
-    return api.get(TRIP_SHEET_BASE_URL + '/' + BankId)
-  }
 
-  updateBank(BankId, BankData) {
-    return api.post(TRIP_SHEET_BASE_URL + '/' + BankId, BankData)
+  createTripSheet(data) {
+    return api.post(TRIP_SHEET_BASE_URL , data)
   }
 
   deleteBank(BankId) {

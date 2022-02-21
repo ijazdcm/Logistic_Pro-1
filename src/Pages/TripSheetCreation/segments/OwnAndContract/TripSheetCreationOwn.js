@@ -38,9 +38,11 @@ const TripSheetCreationOwn = ({
 
   useEffect(() => {
     isTouched.freight_rate_per_tone = true
-    isTouched.advance_payment_bank = true
     isTouched.advance_payment_diesel = true
     isTouched.driveMobile = true
+    isTouched.Vehicle_Sourced_by = true
+    isTouched.remarks = true
+    isTouched.driver_id = true
   }, [])
 
   useEffect(() => {
@@ -219,7 +221,7 @@ const TripSheetCreationOwn = ({
             </CFormLabel>
             <CFormInput size="sm" name="advance_amount" onFocus={onFocus}
             onBlur={onBlur}
-            onChange={handleChange} value={values.advance_amount} id="advance_amount" type="text" />
+            onChange={handleChange} value={values.advance_amount} id="advance_amount" type="number" />
           </CCol>
         ) : (
           <></>
@@ -243,8 +245,8 @@ const TripSheetCreationOwn = ({
             aria-label="Small select example"
           >
             <option hidden>Select...</option>
-            <option value="1">FG Sales</option>
-            <option value="2">Others</option>
+            <option value="FG SALES">FG Sales</option>
+            <option value="OTHERS">Others</option>
           </CFormSelect>
         </CCol>
         <CCol xs={12} md={3}>

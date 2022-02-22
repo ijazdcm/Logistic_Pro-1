@@ -50,7 +50,7 @@ import DocVerify from './Pages/DocumentVerification/DocsVerify'
 import DocVerifyVendorAvail from './Pages/DocumentVerification/DocVerifyVendorAvail'
 import DocVerifyVendorNotAvail from './Pages/DocumentVerification/DocVerifyVendorNotAvail'
 import TripSheetCreationFG from './Pages/TripSheetCreation/TripSheetCreationFG'
-import TripSheetCreationOwnFG from './Pages/TripSheetCreation/TripSheetCreationOwnFG'
+import TripSheetCreationOwnFG from './Pages/TripSheetCreation/TripSheetCreation'
 import TripSheetCreationHome from './Pages/TripSheetCreation/TripSheetCreationHome'
 import TripSheetCreationSTO from './Pages/TripSheetCreation/TripSheetCreationSTO'
 import TripSTO from './Pages/TripSTO/TripSto'
@@ -96,6 +96,7 @@ import DriverMasterTable from './Pages/Master/DriverMaster/DriverMasterTable'
 
 import LocationTable from './Pages/Master/Submaster/LocationTable'
 import UserLoginMasterEdit from './Pages/Master/UserMaster/UserLoginMasterEdit'
+import TripSheetCreation from './Pages/TripSheetCreation/TripSheetCreation'
 
 const routes = [
   // Master
@@ -324,10 +325,10 @@ const routes = [
     component: TripSheetCreationFG,
   },
   {
-    path: '/TripSheetCreation/own',
+    path: '/TripSheetCreation/:id',
     exact: true,
-    name: '/TripSheetCreationOwnFG',
-    component: TripSheetCreationOwnFG,
+    name: '/TripSheetCreation',
+    component: TripSheetCreation,
   },
 
   {

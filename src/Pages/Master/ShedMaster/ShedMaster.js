@@ -74,7 +74,7 @@ const ShedMaster = () => {
         console.log(response)
         console.log('asd')
         const formData = new FormData()
-        formData.append('shed_type_id', values.ShedType)
+        formData.append('shed_type_id', values.shedType)
         formData.append('shed_name', values.ShedName)
         formData.append('shed_owner_name', values.ShedOwnerName)
         formData.append('shed_owner_phone_1', values.ShedOwnerMobileNumber1)
@@ -120,10 +120,10 @@ const ShedMaster = () => {
             <CForm className="row g-3 m-2 p-1" onSubmit={handleSubmit}>
               <CRow className="">
                 <CCol md={3}>
-                  <CFormLabel htmlFor="sType">
+                  <CFormLabel htmlFor="shedType">
                     Shed Type*{' '}
-                    {errors.ShedType && (
-                      <span className="small text-danger">{errors.ShedType}</span>
+                    {errors.shedType && (
+                      <span className="small text-danger">{errors.shedType}</span>
                     )}
                   </CFormLabel>
 
@@ -134,8 +134,8 @@ const ShedMaster = () => {
                     onFocus={onFocus}
                     onBlur={onBlur}
                     onChange={handleChange}
-                    value={values.ShedType}
-                    className={`mb-1 ${errors.ShedType && 'is-invalid'}`}
+                    value={values.shedType}
+                    className={`mb-1 ${errors.shedType && 'is-invalid'}`}
                     aria-label="Small select example"
                   >
                     <option value="0">Select ...</option>

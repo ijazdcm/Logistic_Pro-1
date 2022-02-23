@@ -40,7 +40,6 @@ import PerviousLoadDetailComponent from 'src/components/commoncomponent/Pervious
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
-
 const VehicleInspection = () => {
   const formValues = {
     vehicle_id: '',
@@ -587,20 +586,20 @@ const VehicleInspection = () => {
                       color="warning"
                       className="mx-1 px-2 text-white"
                       type="button"
-                      disabled={acceptBtn}
+                      // disabled={acceptBtn}
                       onClick={() => addVehicleInspection(1)}
                     >
                       Accept
                     </CButton>
 
-                    {currentVehicleInfo.vehicle_type_id.id == VEHICLE_TYPE.HIRE ||
-                    currentVehicleInfo.vehicle_type_id.id == VEHICLE_TYPE.PARTY ? (
+                    {(!changeDriver && currentVehicleInfo.vehicle_type_id.id == VEHICLE_TYPE.OWN) ||
+                    currentVehicleInfo.vehicle_type_id.id == VEHICLE_TYPE.CONTRACT ? (
                       <CButton
                         size="sm"
                         color="warning"
                         className="mx-1 px-2 text-white"
                         type="button"
-                        disabled={rejectBtn}
+                        // disabled={rejectBtn}
                         onClick={() => addVehicleInspection(0)}
                       >
                         Reject

@@ -1,4 +1,4 @@
- import {
+import {
   CButton,
   CCard,
   CContainer,
@@ -19,6 +19,8 @@ import { useNavigate } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import CustomSpanButton from 'src/components/customComponent/CustomSpanButton'
+//date format
+import { format } from 'date-fns'
 
 const VehicleMasterTable = () => {
   const [RCCopyFront, setRCCopyFront] = useState(false)
@@ -29,7 +31,6 @@ const VehicleMasterTable = () => {
   const [rowData, setRowData] = useState([])
   const [mount, setMount] = useState(1)
   const [pending, setPending] = useState(true)
-
 
   const [documentSrc, setDocumentSrc] = useState('')
   let viewData
@@ -232,6 +233,7 @@ const VehicleMasterTable = () => {
       selector: (row) => row.Insurance_Validity,
       center: true,
       sortable: true,
+      cell:({row})=>{return format(row,'dd/MM/yyyy')},
     },
     {
       name: 'FC Validity',

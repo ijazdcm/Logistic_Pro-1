@@ -94,16 +94,16 @@ const DocVerifyVendorAvail = () => {
   // GET PAN DETAILS FROM SAP
   const getPanData = (e) => {
     e.preventDefault()
-    PanDataService.getPanData(values.panNumber).then((res) => {
-      console.log(res.data)
-    })
-    // let panDetail = PanDataService.getPanData(values.panNumber)
-    // if (panDetail != '') {
-    //   setPanData(panDetail)
-    //   toast.success('Pan Details Detected!')
-    // } else {
-    //   toast.warning('No Pan Details Detected! Fill Up The Fields')
-    // }
+    // PanDataService.getPanData(values.panNumber).then((res) => {
+    //   console.log(res.data)
+    // })
+    let panDetail = PanDataService.getPanData(values.panNumber)
+    if (panDetail != '') {
+      setPanData(panDetail)
+      toast.success('Pan Details Detected!')
+    } else {
+      toast.warning('No Pan Details Detected! Fill Up The Fields')
+    }
 
     setReadOnly(true)
     setWrite(true)
@@ -148,13 +148,17 @@ const DocVerifyVendorAvail = () => {
     formData.append('remarks', values.remarks ? values.remarks : 'NO REMARKS')
     formData.append('document_status', status)
 
-    DocumentVerificationService.addDocumentVerificationData(formData).then((res) => {
-      console.log(res)
-      if (res.status == 200) {
-        toast.success('Document Verification Done!')
-        navigation('/DocsVerify')
-      }
-    })
+    DocumentVerificationService.addDocumentVerificationData(formData)
+      .then((res) => {
+        console.log(res)
+        if (res.status == 200) {
+          toast.success('Document Verification Done!')
+          navigation('/DocsVerify')
+        }
+      })
+      .catch((err) => {
+        toast.warning(err)
+      })
   }
 
   // GET SINGLE VEHICLE DATA

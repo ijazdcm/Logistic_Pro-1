@@ -1,5 +1,13 @@
 import React, { useEffect } from 'react'
-import { CButton, CCol, CFormInput, CInputGroup, CInputGroupText, CRow } from '@coreui/react'
+import {
+  CButton,
+  CCol,
+  CFormInput,
+  CInputGroup,
+  CInputGroupText,
+  CRow,
+  CSpinner,
+} from '@coreui/react'
 export const FilterComponent = ({ filterText, onFilter, onClear, fieldName }) => {
   return (
     <>

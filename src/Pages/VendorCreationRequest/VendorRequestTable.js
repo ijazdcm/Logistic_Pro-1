@@ -10,7 +10,6 @@ const VendorCreationHome = () => {
   const [pending, setPending] = useState(true)
 
   let tableData = []
-
   const ACTION = {
     GATE_IN: 1,
     GATE_OUT: 2,
@@ -18,16 +17,16 @@ const VendorCreationHome = () => {
   }
 
   const loadVendorCreationTable = () => {
-    VendorCreationService.getVendorCreationTableData().then((res) => {
+    VendorCreationService.getVendorRequestTableData().then((res) => {
       tableData = res.data.data
+      
       let rowDataList = []
       const filterData = tableData.filter(
         (data) =>
           data.vehicle_document != null &&
           data.vehicle_type_id.id == 3 &&
-          data.vehicle_document.vendor_flag == 0
+          data.vendor_info.vendor_status == 1
       )
-      console.log(filterData)
 
       filterData.map((data, index) => {
         // if (data.vehicle_document != null) {
@@ -133,7 +132,13 @@ const VendorCreationHome = () => {
   return (
     <CCard className="mt-4">
       <CContainer className="mt-2">
-        <CustomTable columns={columns} data={rowData} pending={pending} />
+        <CustomTable
+          columns={columns}
+          data={rowData}
+          fieldName={'Driver_Name'}
+          showSearchFilter={true}
+          pending={pending}
+        />
       </CContainer>
     </CCard>
   )

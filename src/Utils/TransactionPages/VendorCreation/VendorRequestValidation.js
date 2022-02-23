@@ -7,6 +7,37 @@ export default function VendorRequestValidation(values, isTouched) {
     errors.panNumber = 'Must Like "AMIPR8417L"'
   }
 
+  if (isTouched.aadhar && !values.aadhar) {
+    errors.aadhar = 'Required'
+  } else if (isTouched.aadhar && !/^[\d]{12}$/.test(values.aadhar)) {
+    errors.aadhar = 'Must Have 12 Digit Numeric'
+  }
+
+  if (isTouched.GSTNumber && !values.GSTNumber) {
+    errors.GSTNumber = 'Required'
+  } else if (
+    isTouched.GSTNumber &&
+    !/^[\d]{2}[A-Z]{5}[\d]{4}[A-Z]{1}[\d]{1}[A-Z]{1}[A-Z\d]{1}$/.test(values.GSTNumber)
+  ) {
+    errors.GSTNumber = 'Must Like 07AAGFF2194N1Z1'
+  }
+
+  if (isTouched.bankName && !values.bankName) {
+    errors.bankName = 'Required'
+  }
+
+  if (isTouched.bankBranch && !values.bankBranch) {
+    errors.bankBranch = 'Required'
+  }
+
+  if (isTouched.bankAccHolderName && !values.bankAccHolderName) {
+    errors.bankAccHolderName = 'Required'
+  }
+
+  if (isTouched.GSTreg && !values.GSTreg) {
+    errors.GSTreg = 'Required'
+  }
+
   if (isTouched.license && !values.license) {
     errors.license = 'Required'
   }
@@ -52,15 +83,7 @@ export default function VendorRequestValidation(values, isTouched) {
     errors.ownerMob = 'Must Have 10 Digit Numeric'
   }
 
-  if (isTouched.aadhar && !values.aadhar) {
-    errors.aadhar = 'Required'
-  } else if (isTouched.aadhar && !/^[\d]{12}$/.test(values.aadhar)) {
-    errors.aadhar = 'Must Have 12 Digit Numeric'
-  }
-
-  if (isTouched.bankAcc && !values.bankAcc) {
-    errors.bankAcc = 'Required'
-  }
+  // console.log(errors)
 
   return errors
 }

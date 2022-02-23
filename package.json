@@ -51,6 +51,7 @@
     "react-confirm-alert": "^2.7.0",
     "react-data-table-component": "^7.4.5",
     "react-dom": "^17.0.2",
+    "react-india-state-region-selector": "^6.1.0",
     "react-input-mask": "^2.0.4",
     "react-multi-select-component": "^4.1.14",
     "react-multiselect-dropdown-bootstrap": "^1.1.0",

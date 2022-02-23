@@ -68,7 +68,7 @@ import TSClossure from './Pages/TripsheetClossure/TSClossure'
 import TSClossureSto from './Pages/TripsheetClossure/TSClossureSto'
 import ShipmentCreation from './Pages/ShipmentCreation/ShipmentCreation'
 import ShipmentCreationConsumer from './Pages/ShipmentCreation/ShipmentCreationConsumer'
-// import VendorCreationConfrimationOwn from './Pages/VendorCreationConfrimation/VendorCreationConfrimationOwn'
+import VendorCreationConfrimationOwn from './Pages/VendorCreationConfrimation/VendorCreationConfrimationOwn'
 import DiApprovalHome from './Pages/DiApproval/DiApprovalHome'
 import DiApproval from './Pages/DiApproval/DiApproval'
 import RJcustomerCreationHome from './Pages/RJcustomerCreation/RJcustomerCreationHome'
@@ -228,7 +228,7 @@ const routes = [
   { path: '/RjSalesOrderCreation', exact: true, name: 'Test', component: RjSalesOrderCreation },
   { path: '/RJcustomerCreationHome', exact: true, name: 'RJ Customer Creation', component: RJcustomerCreationHome },
   {
-    path: '/RJcustomerCreation',
+    path: '/RJcustomerCreationHome/RJcustomerCreation',
     exact: true,
     name: 'RJ Customer Creation',
     component: RJcustomerCreation,

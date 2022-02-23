@@ -10,6 +10,12 @@ import {
   CRow,
   CTabContent,
   CTabPane,
+  CModal,
+  CModalHeader,
+  CModalTitle,
+  CModalBody,
+  CAlert,
+  CModalFooter
 } from '@coreui/react'
 import CustomerCreationService from 'src/Service/CustomerCreation/CustomerCreationService'
 import { Link, useNavigate, useParams } from 'react-router-dom'
@@ -17,11 +23,13 @@ import useForm from 'src/Hooks/useForm'
 import 'react-toastify/dist/ReactToastify.css'
 import { ToastContainer, toast } from 'react-toastify'
 import { React, useState, useEffect } from 'react'
-import VehicleMaintenanceValidation from 'src/Utils/TransactionPages/VehicleMaintenance/VehicleMaintenanceValidation'
+import RJCustomerValidation from 'src/Utils/TransactionPages/RJCustomerCreation/RJCustomerValidation'
 import BankComponent from 'src/components/commoncomponent/BankComponent'
+
 
 const RJcustomerCreation = () => {
 const formValues = {
+  createdtype: '',
   customer_name: '',
   cMob: '',
   panCardattachment: '',
@@ -35,7 +43,7 @@ const formValues = {
   ifscCode: '',
   street: '',
   area: '',
-  city: '',
+  City: '',
   district: '',
   state: '',
   postalCode: '',
@@ -43,32 +51,44 @@ const formValues = {
   GST: '',
   payment: '',
 }
-const { values, errors, handleChange, onFocus, handleSubmit, enableSubmit, onBlur,isTouched } = useForm(
-  CustomerCreation,
-  VehicleMaintenanceValidation,
-  formValues
-)
-const navigation = useNavigate()
-function CustomerCreation () {
 
+
+  const navigation = useNavigate()
+  const [errorModal, setErrorModal] = useState(false)
+  const [error, setError] = useState({})
+
+  const { values, errors, handleChange, onFocus, handleSubmit, enableSubmit, onBlur } = useForm(
+    CustomerCreation,
+    RJCustomerValidation,
+    formValues
+)
+function getCurrentDate(separator = '') {
+  let newDate = new Date()
+  let date = newDate.getDate()
+  let month = newDate.getMonth() + 1
+  let year = newDate.getFullYear()
+
+  return `${year}${separator}${month < 10 ? `0${month}` : `${month}`}${separator}${date}`
 }
-const addCustomerCreation = (status) => {
+
+function CustomerCreation() {
   const formData = new FormData()
+  formData.append('creation_type', values.createdtype)
   formData.append('customer_name', values.customer_name)
   formData.append('customer_mobile_number', values.cMob)
-  formData.append('customer_PAN_card_number', values.panCardattachment)
-  formData.append('customer_PAN_card', values.panCard)
-  formData.append('customer_Aadhar_card_number', values.AadharCopy)
-  formData.append('customer_Aadhar_card', values.aadharCard)
+  formData.append('customer_PAN_card_number', values.panCard)
+  formData.append('customer_PAN_card', values.panCardattachment)
+  formData.append('customer_Aadhar_card_number', values.aadharCard)
+  formData.append('customer_Aadhar_card', values.AadharCopy)
   formData.append('customer_bank_passbook', values.bankPass)
   formData.append('customer_bank_id', values.bankName)
   formData.append('customer_bank_branch', values.bankBranch)
   formData.append('customer_bank_ifsc_code', values.ifscCode)
   formData.append('customer_bank_account_number', values.bankAccount)
   formData.append('customer_street_name', values.street)
-  formData.append('customer_city',values.area)
-  formData.append('customer_district', values.city)
-  formData.append('customer_area', values.district)
+  formData.append('customer_city',values.City)
+  formData.append('customer_district', values.district)
+  formData.append('customer_area', values.area)
   formData.append('customer_state', values.state)
   formData.append('customer_postal_code', values.postalCode)
   formData.append('customer_region', values.region)
@@ -77,55 +97,28 @@ const addCustomerCreation = (status) => {
   formData.append('customer_remarks', values.customer_remarks ? values.customer_remarks : 'NO REMARKS')
   formData.append('customer_status', status)
 
-CustomerCreationService.addCustomerCreationData(formData).then((res) => {
-  console.log(res)
-  if (res.status == 200) {
-    toast.success('Document Verification Done!')
-    navigation('/vInspection')
-  }
-})
+CustomerCreationService.createCustomer(formData).then((res) => {
+
+        console.log(res)
+        if (res.status === 201) {
+          toast.success('Customer Created Successfully!')
+
+          setTimeout(() => {
+            navigation('/RJcustomerCreationHome')
+          }, 1000)
+        }
+      })
+      .catch((error) => {
+        var object = error.response.data.errors
+        var output = ''
+        for (var property in object) {
+          output += '*' + object[property] + '\n'
+        }
+        setError(output)
+        setErrorModal(true)
+      })
 }
-const [visible, setVisible] = useState(false)
-const [currentVehicleInfo, setCurrentVehicleInfo] = useState({})
-const [changeDriver, setChangeDriver] = useState(false)
-const [fitForLoad, setFitForLoad] = useState('')
-const [acceptBtn, setAcceptBtn] = useState(true)
-const [rejectBtn, setRejectBtn] = useState(true)
-const [oldDriver, setOldDriver] = useState('')
-const [fetch, setFetch] = useState(false)
-const VEHICLE_TYPE = {
-  OWN: 1,
-  CONTRACT: 2,
-  HIRE: 3,
-  PARTY: 4,
-}
 
-const { id } = useParams()
-
-console.log(values)
-
-useEffect(() => {
-  CustomerCreationService.getSingleVehicleInfoOnParkingYardGate(id).then((res) => {
-    values.customer_id = res.data.data.customer_id
-    isTouched.customer_id = true
-    isTouched.remarks = true
-    setCurrentVehicleInfo(res.data.data)
-    setFetch(true)
-  })
-}, [id])
-useEffect(() => {
-  if (Object.keys(isTouched).length == Object.keys(formValues).length) {
-    if (Object.keys(errors).length == 0) {
-      setFitForLoad('YES')
-      setAcceptBtn(false)
-      setRejectBtn(true)
-    } else {
-      setFitForLoad('NO')
-      setAcceptBtn(true)
-      setRejectBtn(false)
-    }
-  }
-}, [values, errors])
   return (
     <>
       <CCard>
@@ -134,129 +127,395 @@ useEffect(() => {
             <CForm className="container p-3"onSubmit={handleSubmit}>
               <CRow className="">
               <CCol xs={12} md={3}>
+                  <CFormLabel htmlFor="createdtype">
+                  Created Type*
+                    {errors.createdby && (
+                      <span className="small text-danger">{errors.createdtype}</span>
+                    )}
+                  </CFormLabel>
+
+                  <CFormSelect
+                    size="sm"
+                    id="createdtype"
+                    className={`${errors.createdtype && 'is-invalid'}`}
+                    name="createdtype"
+                    value={values.createdtype}
+                    onFocus={onFocus}
+                    onBlur={onBlur}
+                    onChange={handleChange}
+                  >
+                    <option value="" hidden selected>
+                      Select ...
+                    </option>
+                    <option value="shed">RJ Shed</option>
+                    <option value="customer">RJ Customer</option>
+                  </CFormSelect>
+                </CCol>
+
+              <CCol xs={12} md={3}>
                 <CFormLabel htmlFor="customer_name">
-                  Customer Name*
+                 Name*
                   {errors.customer_name && (
                     <span className="small text-danger">{errors.customer_name}</span>
                   )}
+
                 </CFormLabel>
                 <CFormInput
-                  size="sm"
-                  name="customer_name"
-                  id="customer_name"
-                  maxLength={30}
-                  onFocus={onFocus}
-                  onBlur={onBlur}
+                   name="customer_name"
+                   size="sm"
+                   maxLength={30}
+                   id="customer_name"
+                   onChange={handleChange}
+                   value={values.customer_name}
+                   onFocus={onFocus}
+                   onBlur={onBlur}
+                   placeholder=""
                 />
               </CCol>
                 <CCol xs={12} md={3}>
-                  <CFormLabel htmlFor="cMob">Customer Mobile Number</CFormLabel>
+                  <CFormLabel htmlFor="cMob">Mobile Number*
+                  {errors.cMob && (
+                    <span className="small text-danger">{errors.cMob}</span>
+                  )}
+                  </CFormLabel>
                   <CFormInput
+                  name="cMob"
                   size="sm"
+                  maxLength={10}
                   id="cMob"
-                  name='cMob'
+                  onChange={handleChange}
                   value={values.cMob}
                   onFocus={onFocus}
                   onBlur={onBlur}
+                  placeholder=""
                   />
                 </CCol>
                 <CCol xs={12} md={3}>
                   <CFormLabel htmlFor="panCardattachment">PAN Card Attatchment</CFormLabel>
-                  <CFormInput size="sm" type="file" id="panCardattachment"  />
+                  <CFormInput
+                  name="panCardattachment"
+                  type="file"
+                  size="sm"
+                  id="panCardattachment"
+                  onChange={handleChange}
+                  onFocus={onFocus}
+                  onBlur={onBlur}
+                  placeholder=""
+                  accept=".jpg,.jpeg"
+                  />
                 </CCol>
                 <CCol xs={12} md={3}>
-                  <CFormLabel htmlFor="panCard">PAN Number</CFormLabel>
-                  <CFormInput size="sm" id="panCard"  />
+                  <CFormLabel htmlFor="panCard">PAN Number
+                  {errors.panCard && (
+                    <span className="small text-danger">{errors.panCard}</span>
+                  )}
+                  </CFormLabel>
+                  <CFormInput
+                   name="panCard"
+                   size="sm"
+                   maxLength={10}
+                   id="panCard"
+                   onChange={handleChange}
+                   value={values.panCard}
+                   onFocus={onFocus}
+                   onBlur={onBlur}
+                   placeholder=""
+                  />
                 </CCol>
-              </CRow>
-              <CRow className="">
+
                 <CCol xs={12} md={3}>
                   <CFormLabel htmlFor="AadharCopy">Aadhar Card</CFormLabel>
-                  <CFormInput size="sm" type="file" id="AadharCopy"  />
+                  <CFormInput
+                  name="AadharCopy"
+                  type="file"
+                  size="sm"
+                  id="AadharCopy"
+                  onChange={handleChange}
+                  onFocus={onFocus}
+                  onBlur={onBlur}
+                  placeholder=""
+                  accept=".jpg,.jpeg"
+                  />
                 </CCol>
                 <CCol xs={12} md={3}>
-                  <CFormLabel htmlFor="aadharCard">Aadhar Number</CFormLabel>
-                  <CFormInput size="sm" id="aadharCard"  />
+                  <CFormLabel htmlFor="aadharCard">Aadhar Number
+                  {errors.aadharCard && (
+                    <span className="small text-danger">{errors.aadharCard}</span>
+                  )}
+                  </CFormLabel>
+                  <CFormInput
+                   name="aadharCard"
+                   size="sm"
+                   maxLength={12}
+                   id="aadharCard"
+                   onChange={handleChange}
+                   value={values.aadharCard}
+                   onFocus={onFocus}
+                   onBlur={onBlur}
+                   placeholder=""
+
+                  />
                 </CCol>
 
                 <CCol xs={12} md={3}>
                   <CFormLabel htmlFor="bankPass">Bank Passbook</CFormLabel>
-                  <CFormInput size="sm" type="file" id="bankPass"  />
+                  <CFormInput
+                  name="bankPass"
+                  type="file"
+                  size="sm"
+                  id="bankPass"
+                  onChange={handleChange}
+                  onFocus={onFocus}
+                  onBlur={onBlur}
+                  placeholder=""
+                  accept=".jpg,.jpeg"
+                  />
                 </CCol>
                 <CCol xs={12} md={3}>
               <CFormLabel htmlFor="bankName">Bank Name</CFormLabel>
               <CFormSelect
-                    size="sm"
-                    name="bankName"
-                    className=""
-                    id='bankName'
-                    aria-label="Small select example"
+                     size="sm"
+                     name="bankName"
+                     onChange={handleChange}
+                     onFocus={onFocus}
+                     value={values.bankName}
+                     className={`mb-1 ${errors.bankName && 'is-invalid'}`}
+                     aria-label="Small select example"
+                     id="bankName"
                   >
                  <BankComponent />
                   </CFormSelect>
             </CCol>
-              </CRow>
-              <CRow className="">
+
                 <CCol xs={12} md={3}>
-                  <CFormLabel htmlFor="bankBranch">Bank Branch</CFormLabel>
-                  <CFormInput size="sm" id="bankBranch"  />
+                  <CFormLabel htmlFor="bankBranch">Bank Branch
+                  {errors.bankBranch && (
+                    <span className="small text-danger">{errors.bankBranch}</span>
+                  )}
+                  </CFormLabel>
+                  <CFormInput
+                   name="bankBranch"
+                   size="sm"
+                   maxLength={30}
+                   id="bankBranch"
+                   onChange={handleChange}
+                   value={values.bankBranch}
+                   onFocus={onFocus}
+                   onBlur={onBlur}
+                   placeholder=""
+                  />
                 </CCol>
                 <CCol xs={12} md={3}>
-                  <CFormLabel htmlFor="ifscCode">Bank IFSC Code</CFormLabel>
-                  <CFormInput size="sm" id="ifscCode"  />
+                  <CFormLabel htmlFor="ifscCode">Bank IFSC Code
+                  {errors.ifscCode && (
+                    <span className="small text-danger">{errors.ifscCode}</span>
+                  )}
+                  </CFormLabel>
+                  <CFormInput
+                   name="ifscCode"
+                   size="sm"
+                   maxLength={11}
+                   id="ifscCode"
+                   onChange={handleChange}
+                   value={values.ifscCode}
+                   onFocus={onFocus}
+                   onBlur={onBlur}
+                   placeholder=""
+                  />
                 </CCol>
                 <CCol xs={12} md={3}>
-                  <CFormLabel htmlFor="bankAccount">Bank Account Number</CFormLabel>
-                  <CFormInput size="sm" id="bankAccount"  />
+                  <CFormLabel htmlFor="bankAccount">Bank Account Number
+                  {errors.bankAccount && (
+                    <span className="small text-danger">{errors.bankAccount}</span>
+                  )}
+                  </CFormLabel>
+                  <CFormInput
+                   name="bankAccount"
+                   size="sm"
+                   maxLength={20}
+                   id="bankAccount"
+                   onChange={handleChange}
+                   value={values.bankAccount}
+                   onFocus={onFocus}
+                   onBlur={onBlur}
+                   placeholder=""
+                  />
                 </CCol>
 
                 <CCol xs={12} md={3}>
-                  <CFormLabel htmlFor="Street">Street Name</CFormLabel>
+                  <CFormLabel htmlFor="street">Street Name
+                  {errors.street && (
+                    <span className="small text-danger">{errors.street}</span>
+                  )}
+                  </CFormLabel>
 
-                  <CFormInput size="sm" id="Street"  />
+                  <CFormInput
+                   name="street"
+                   size="sm"
+                   maxLength={30}
+                   id="street"
+                   onChange={handleChange}
+                   value={values.street}
+                   onFocus={onFocus}
+                   onBlur={onBlur}
+                   placeholder=""
+                  />
                 </CCol>
-              </CRow>
-              <CRow className="">
+
                 <CCol xs={12} md={3}>
-                  <CFormLabel htmlFor="Area">Area Name</CFormLabel>
-                  <CFormInput size="sm" id="Area"  />
+                  <CFormLabel htmlFor="area">Area Name
+                  {errors.area && (
+                    <span className="small text-danger">{errors.area}</span>
+                  )}
+                  </CFormLabel>
+                  <CFormInput
+                   name="area"
+                   size="sm"
+                   maxLength={30}
+                   id="area"
+                   onChange={handleChange}
+                   value={values.area}
+                   onFocus={onFocus}
+                   onBlur={onBlur}
+                   placeholder=""
+                  />
                 </CCol>
                 <CCol xs={12} md={3}>
                   <CFormLabel htmlFor="City">City</CFormLabel>
-                  <CFormInput size="sm" id="City"  />
+                  {errors.City && (
+                    <span className="small text-danger">{errors.City}</span>
+                  )}
+                  <CFormInput
+                   name="City"
+                   size="sm"
+                   maxLength={20}
+                   id="City"
+                   onChange={handleChange}
+                   value={values.City}
+                   onFocus={onFocus}
+                   onBlur={onBlur}
+                   placeholder=""
+                  />
                 </CCol>
                 <CCol xs={12} md={3}>
-                  <CFormLabel htmlFor="District">District</CFormLabel>
-                  <CFormInput size="sm" id="District"  />
+                  <CFormLabel htmlFor="district">District
+                  {errors.district && (
+                    <span className="small text-danger">{errors.district}</span>
+                  )}
+                  </CFormLabel>
+                  <CFormInput
+                   name="district"
+                   size="sm"
+                   maxLength={20}
+                   id="district"
+                   onChange={handleChange}
+                   value={values.district}
+                   onFocus={onFocus}
+                   onBlur={onBlur}
+                   placeholder=""
+                  />
                 </CCol>
                 <CCol xs={12} md={3}>
-                  <CFormLabel htmlFor="State">State</CFormLabel>
-                  <CFormInput size="sm" id="State"  />
+                  <CFormLabel htmlFor="state">State
+                  {errors.state && (
+                    <span className="small text-danger">{errors.state}</span>
+                  )}
+                  </CFormLabel>
+                  <CFormInput
+                   name="state"
+                   size="sm"
+                   maxLength={20}
+                   id="state"
+                   onChange={handleChange}
+                   value={values.state}
+                   onFocus={onFocus}
+                   onBlur={onBlur}
+                   placeholder=""
+                  />
                 </CCol>
-              </CRow>
-              <CRow className="">
+
                 <CCol xs={12} md={3}>
-                  <CFormLabel htmlFor="postalCode">Postal Code</CFormLabel>
-                  <CFormInput size="sm" id="postalCode"  />
+                  <CFormLabel htmlFor="postalCode">Postal Code
+                  {errors.postalCode && (
+                    <span className="small text-danger">{errors.postalCode}</span>
+                  )}
+                  </CFormLabel>
+                  <CFormInput
+                   name="postalCode"
+                   size="sm"
+                   maxLength={6}
+                   id="postalCode"
+                   onChange={handleChange}
+                   value={values.postalCode}
+                   onFocus={onFocus}
+                   onBlur={onBlur}
+                   placeholder=""
+                  />
                 </CCol>
                 <CCol xs={12} md={3}>
-                  <CFormLabel htmlFor="Region">Region</CFormLabel>
-                  <CFormInput size="sm" id="Region" value="" readOnly />
+                  <CFormLabel htmlFor="region">Region
+                  {errors.region && (
+                    <span className="small text-danger">{errors.region}</span>
+                  )}
+                  </CFormLabel>
+                  <CFormInput
+                   name="region"
+                   size="sm"
+                   maxLength={2}
+                   id="region"
+                   onChange={handleChange}
+                   value={values.region}
+                   onFocus={onFocus}
+                   onBlur={onBlur}
+                   placeholder=""
+                  />
                 </CCol>
                 <CCol xs={12} md={3}>
-                  <CFormLabel htmlFor="GST">GST Number</CFormLabel>
-                  <CFormInput size="sm" id="GST"  />
+                  <CFormLabel htmlFor="GST">GST Number
+                  {errors.GST && (
+                    <span className="small text-danger">{errors.GST}</span>
+                  )}
+                  </CFormLabel>
+                  <CFormInput
+                   name="GST"
+                   size="sm"
+                   maxLength={15}
+                   id="GST"
+                   onChange={handleChange}
+                   value={values.GST}
+                   onFocus={onFocus}
+                   onBlur={onBlur}
+                   placeholder=""
+                  />
                 </CCol>
                 <CCol xs={12} md={3}>
                   <CFormLabel htmlFor="Payment">Payment Terms</CFormLabel>
-                  <CFormInput size="sm" id="Payment"  />
+                  <CFormInput
+                   name="Payment"
+                   size="sm"
+                   maxLength={20}
+                   id="Payment"
+                   onChange={handleChange}
+                   value={values.Payment}
+                   onFocus={onFocus}
+                   onBlur={onBlur}
+                   placeholder=""
+                  />
                 </CCol>
-              </CRow>
 
-              <CRow className="">
                 <CCol xs={12} md={3}>
-                  <CFormLabel htmlFor="inputAddress">Remarks</CFormLabel>
-                  <CFormInput size="sm" id="inputAddress"  />
+                  <CFormLabel htmlFor="customer_remarks">Remarks</CFormLabel>
+                  <CFormInput
+                   name="customer_remarks"
+                   size="sm"
+                   maxLength={40}
+                   id="customer_remarks"
+                   onChange={handleChange}
+                   value={values.customer_remarks}
+                   onFocus={onFocus}
+                   onBlur={onBlur}
+                   placeholder=""
+                  />
                 </CCol>
               </CRow>
               <CRow className="mt-3">
@@ -278,7 +537,6 @@ useEffect(() => {
                     // disabled={enableSubmit}
                     className="mx-3 px-3 text-white"
                     type="submit"
-                    onClick={() => addCustomerCreation(1)}
                   >
                     Submit
                   </CButton>
@@ -297,6 +555,27 @@ useEffect(() => {
           </CTabPane>
         </CTabContent>
       </CCard>
+      <CModal visible={errorModal} onClose={() => setErrorModal(false)}>
+        <CModalHeader>
+          <CModalTitle className="h4">Error</CModalTitle>
+        </CModalHeader>
+        <CModalBody>
+          <CRow>
+            <CCol>
+              {error && (
+                <CAlert color="danger" data-aos="fade-down">
+                  {error}
+                </CAlert>
+              )}
+            </CCol>
+          </CRow>
+        </CModalBody>
+        <CModalFooter>
+          <CButton onClick={() => setErrorModal(false)} color="primary">
+            Close
+          </CButton>
+        </CModalFooter>
+      </CModal>
     </>
   )
 }

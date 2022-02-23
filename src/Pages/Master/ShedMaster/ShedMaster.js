@@ -70,7 +70,7 @@ const ShedMaster = () => {
     function addNewShed() {
         ShedMasterService.getShed().then((response) => {
             console.log(response);
-            console.log('asd');  
+            console.log('asd');
         const formData = new FormData();
     formData.append("shed_type_id",  values.ShedType);
     formData.append("shed_name",  values.ShedName);

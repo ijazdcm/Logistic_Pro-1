@@ -1,24 +1,50 @@
 import { CButton, CCard, CContainer } from '@coreui/react'
 import { Link } from 'react-router-dom'
 import CustomTable from 'src/components/customComponent/CustomTable'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
+import TripSheetCreationService from 'src/Service/TripSheetCreation/TripSheetCreationService'
 const TripSheetCreationHome = () => {
+  const [rowData, setRowData] = useState([])
+  let tableData = []
+
+  const loadVehicleReadyToTrip = () => {
+    TripSheetCreationService.getVehicleReadyToTrip().then((res) => {
+      tableData = res.data.data
+
+      let rowDataList = []
+      tableData.map((data, index) => {
+        rowDataList.push({
+          sno: index + 1,
+          // Tripsheet_No: '',
+          Vehicle_Type: data.vehicle_type_id.type,
+          Vehicle_No: data.vehicle_number,
+          Driver_Name: data.driver_name,
+          Waiting_At: (
+            <span className="badge rounded-pill bg-info">
+              TripSheet Creation
+            </span>
+          ),
+          Screen_Duration: data.updated_at,
+          Overall_Duration: data.created_at,
+          Action: (
+            <CButton className="badge text-white" color="warning">
+              <Link to={`${data.parking_yard_gate_id}`}>Create TripSheet</Link>
+            </CButton>
+          ),
+        })
+      })
+      setRowData(rowDataList)
+    })
+  }
+
+  useEffect(() => {
+    loadVehicleReadyToTrip()
+  }, [])
+
   const columns = [
     {
       name: 'S.No',
       selector: (row) => row.sno,
-      sortable: true,
-      center: true,
-    },
-    {
-      name: 'VA No',
-      selector: (row) => row.VA_No,
-      sortable: true,
-      center: true,
-    },
-    {
-      name: 'Tripsheet No',
-      selector: (row) => row.Tripsheet_No,
       sortable: true,
       center: true,
     },
@@ -67,7 +93,6 @@ const TripSheetCreationHome = () => {
     {
       id: 1,
       sno: 1,
-      VA_No: 12000,
       Tripsheet_No: 102556,
       Vehicle_Type: 'own',
       Vehicle_No: 'TN45AT8417',
@@ -124,7 +149,7 @@ const TripSheetCreationHome = () => {
   return (
     <CCard className="mt-4">
       <CContainer className="mt-2">
-        <CustomTable columns={columns} data={data} />
+        <CustomTable columns={columns} data={rowData} />
       </CContainer>
     </CCard>
   )

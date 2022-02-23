@@ -95,11 +95,12 @@ const TripSheetCreationFG = () => {
 
               <option value="1">Mari</option>
 
-              <option value="2">Selvan</option>
+
 
               <option value="3">Muthu</option>
             </CFormSelect>
           </CCol>
+
           <CCol xs={12} md={3}>
             <CFormLabel htmlFor="dMob">
               Driver Mobile Number
@@ -128,6 +129,7 @@ const TripSheetCreationFG = () => {
             </CFormLabel>
             <CFormInput size="sm" type="datetime-local" id="verifyDate"  readOnly />
           </CCol>
+
           <CCol xs={12} md={3}>
             <CFormLabel htmlFor="shedName">
               Shed Name
@@ -175,6 +177,8 @@ const TripSheetCreationFG = () => {
               <option value="5">NLDV</option>
             </CFormSelect>
           </CCol>
+
+
           <CCol xs={12} md={3}>
             <CFormLabel htmlFor="freigthRate">
               Freight Rate Per TON
@@ -182,13 +186,6 @@ const TripSheetCreationFG = () => {
             </CFormLabel>
             <CFormInput size="sm" id="freigthRate" type="text"  />
           </CCol>
-          {/* <CCol xs={12} md={3}>
-            <CFormLabel htmlFor="inputAddress">
-              Appoximate Freight Amount
-              {errors.vehicleType && <span className="small text-danger">{errors.vehicleType}</span>}
-            </CFormLabel>
-            <CFormInput size="sm" id="inputAddress" type="text"  readOnly />
-          </CCol> */}
           <CCol xs={12} md={3}>
             <CFormLabel htmlFor="AdvanceEligibility">
               Trip Advance Eligibility
@@ -232,6 +229,7 @@ const TripSheetCreationFG = () => {
             </CFormLabel>
             <CFormInput size="sm" type="" id="advancepayDiesel"  />
           </CCol>
+
           <CCol xs={12} md={3}>
             <CFormLabel htmlFor="Purpose">
               Purpose
@@ -256,7 +254,6 @@ const TripSheetCreationFG = () => {
               <option value="3">Others</option>
             </CFormSelect>
           </CCol>
-
           {values.Purpose == 2 && (
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="vSourced">

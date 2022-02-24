@@ -79,10 +79,10 @@ const VendorCreationRequest = () => {
   const [tdsBackDel, setTdsBackDel] = useState(false)
   const [fileUpdate, setFileUpdate] = useState(true)
 
-  const fileDelete = (e) => {
-    console.log(e.target.id)
-    // setDelValue({ ...delValue, [e.target.id]: false })
-  }
+  // const fileDelete = (e) => {
+  //   console.log(e.target.id)
+  //   // setDelValue({ ...delValue, [e.target.id]: false })
+  // }
 
   // SET FORM VALUES
   const formValues = {
@@ -228,7 +228,6 @@ const VendorCreationRequest = () => {
           toast.success('Vendor Documents Updated !')
           setTimeout(() => setFileUpdate(true), 500)
           setPanDel(false)
-          // setPanDel
           setAdharDel(false)
           setLicenseDel(false)
           setRcFrontDel(false)
@@ -657,9 +656,7 @@ const VendorCreationRequest = () => {
                     onClick={(useEffect) => {
                       if (window.confirm('Are you sure to remove this file?')) {
                         setPanDel(true)
-                        // fileDelete(e)
-                        // setDelValue(pan :true)
-                        // setFileUpdate(false)
+                        setFileUpdate(false)
                       }
                     }}
                   >
@@ -711,6 +708,7 @@ const VendorCreationRequest = () => {
                     onClick={() => {
                       if (window.confirm('Are you sure to remove this file?')) {
                         setAdharDel(true)
+                        setFileUpdate(false)
                       }
                     }}
                   >
@@ -764,6 +762,7 @@ const VendorCreationRequest = () => {
                     onClick={() => {
                       if (window.confirm('Are you sure to remove this file?')) {
                         setLicenseDel(true)
+                        setFileUpdate(false)
                       }
                     }}
                   >
@@ -813,6 +812,7 @@ const VendorCreationRequest = () => {
                     onClick={() => {
                       if (window.confirm('Are you sure to remove this file?')) {
                         setInsuranceDel(true)
+                        setFileUpdate(false)
                       }
                     }}
                   >
@@ -862,6 +862,7 @@ const VendorCreationRequest = () => {
                     onClick={() => {
                       if (window.confirm('Are you sure to remove this file?')) {
                         setPassBookDel(true)
+                        setFileUpdate(false)
                       }
                     }}
                   >
@@ -911,6 +912,7 @@ const VendorCreationRequest = () => {
                     onClick={() => {
                       if (window.confirm('Are you sure to remove this file?')) {
                         setRcFrontDel(true)
+                        setFileUpdate(false) 
                       }
                     }}
                   >
@@ -1014,6 +1016,7 @@ const VendorCreationRequest = () => {
                     onClick={() => {
                       if (window.confirm('Are you sure to remove this file?')) {
                         setTransShedDel(true)
+                        setFileUpdate(false)
                       }
                     }}
                   >
@@ -1064,6 +1067,7 @@ const VendorCreationRequest = () => {
                     onClick={() => {
                       if (window.confirm('Are you sure to remove this file?')) {
                         setTdsFrontDel(true)
+                        setFileUpdate(false)
                       }
                     }}
                   >
@@ -1113,6 +1117,7 @@ const VendorCreationRequest = () => {
                     onClick={() => {
                       if (window.confirm('Are you sure to remove this file?')) {
                         setTdsBackDel(true)
+                        setFileUpdate(false)
                       }
                     }}
                   >

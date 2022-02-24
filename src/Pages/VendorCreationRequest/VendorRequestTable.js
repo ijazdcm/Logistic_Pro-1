@@ -19,7 +19,7 @@ const VendorCreationHome = () => {
   const loadVendorCreationTable = () => {
     VendorCreationService.getVendorRequestTableData().then((res) => {
       tableData = res.data.data
-      
+
       let rowDataList = []
       const filterData = tableData.filter(
         (data) =>

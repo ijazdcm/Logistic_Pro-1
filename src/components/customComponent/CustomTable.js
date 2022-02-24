@@ -26,6 +26,7 @@ const CustomTable = ({ columns, data, fieldName, showSearchFilter, pending = fal
         setResetPaginationToggle(!resetPaginationToggle)
         setFilterText('')
       }
+      
     }
 
     return (

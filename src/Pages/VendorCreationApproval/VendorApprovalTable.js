@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 import CustomTable from 'src/components/customComponent/CustomTable'
 import VendorCreationService from 'src/Service/VendorCreation/VendorCreationService'
 
-const VendorCreationHome = () => {
+const VendorCreationApprovalHome = () => {
   const [rowData, setRowData] = useState([])
   const [pending, setPending] = useState(true)
 
@@ -17,15 +17,15 @@ const VendorCreationHome = () => {
     WAIT_OUTSIDE: 3,
   }
 
-  const loadVendorCreationTable = () => {
-    VendorCreationService.getVendorCreationTableData().then((res) => {
+  const loadVendorApprovalTable = () => {
+    VendorCreationService.getVendorApprovalTableData().then((res) => {
       tableData = res.data.data
       let rowDataList = []
       const filterData = tableData.filter(
         (data) =>
           data.vehicle_document != null &&
           data.vehicle_type_id.id == 3 &&
-          data.vehicle_document.vendor_flag == 0
+          data.vendor_info.vendor_status == 2
       )
       console.log(filterData)
 
@@ -40,21 +40,18 @@ const VendorCreationHome = () => {
           Waiting_At: (
             <span className="badge rounded-pill bg-info">
               {data.parking_status == ACTION.GATE_IN
-                ? 'Vendor Creation'
+                ? 'Vendor Approval'
                 : data.parking_status == ACTION.WAIT_OUTSIDE
                 ? 'Waiting Outside'
-                : 'Vendor Creation'}
+                : 'Vendor Approval'}
             </span>
           ),
           Screen_Duration: data.updated_at,
           Overall_Duration: data.created_at,
           Action: (
             <CButton className="badge" color="warning">
-              <Link
-                className="text-white"
-                to={`VendorCreationRequest/${data.vehicle_id}`}
-              >
-                Create Vendor
+              <Link className="text-white" to={`VendorCreationApproval/${data.vehicle_id}`}>
+                Approve Vendor
               </Link>
             </CButton>
           ),
@@ -67,7 +64,7 @@ const VendorCreationHome = () => {
   }
 
   useEffect(() => {
-    loadVendorCreationTable()
+    loadVendorApprovalTable()
   }, [])
 
   const columns = [
@@ -136,10 +133,15 @@ const VendorCreationHome = () => {
   return (
     <CCard className="mt-4">
       <CContainer className="mt-2">
-        <CustomTable columns={columns} data={rowData} pending={pending} />
+        <CustomTable
+          columns={columns}
+          data={rowData}
+          fieldName={'Driver_Name'}
+          showSearchFilter={true}
+          pending={pending}
+        />
       </CContainer>
     </CCard>
   )
 }
-
-export default VendorCreationHome
+export default VendorCreationApprovalHome

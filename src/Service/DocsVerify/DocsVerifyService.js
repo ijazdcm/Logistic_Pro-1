@@ -17,6 +17,10 @@ class DocsVerifyService {
   addDocumentVerificationData(data) {
     return api.post(DOCS_VERIFY_URL, data)
   }
+
+  updateDocumentVerificationData(id, data) {
+    return api.post(DOCS_VERIFY_URL + id, data)
+  }
 }
 
 export default new DocsVerifyService()

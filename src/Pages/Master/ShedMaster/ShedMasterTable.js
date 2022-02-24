@@ -223,10 +223,8 @@ const ShedMasterTable = () => {
             style={{ display: 'flex', justifyContent: 'end' }}
           >
             <Link className="text-white" to="/ShedMaster">
-              <CButton size="md" color="warning" className="px-3 text-white" type="button">
-                <span className="float-start">
-                  <i className="" aria-hidden="true"></i> &nbsp;New
-                </span>
+              <CButton size="sm" color="warning" className="px-5 text-white" type="button">
+                New
               </CButton>
             </Link>
           </CCol>
@@ -237,7 +235,6 @@ const ShedMasterTable = () => {
           fieldName={'Shed_Name'}
           showSearchFilter={true}
         />
-        <hr></hr>
       </CContainer>
       <CModal visible={ShedOwnerPhoto} onClose={() => setShedOwnerPhoto(false)}>
         <CModalHeader>

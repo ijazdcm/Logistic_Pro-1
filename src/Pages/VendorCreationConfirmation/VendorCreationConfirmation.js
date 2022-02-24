@@ -15,52 +15,109 @@ import {
   CRow,
   CFormTextarea,
 } from '@coreui/react'
-import React, { useState } from 'react'
-import { Link } from 'react-router-dom'
-import useForm from 'src/Hooks/useForm'
-import VendorRequestValidation from 'src/Utils/VendorCreation/VendorRequestValidation'
-const VendorCreationApproval = () => {
-  const formValues = {
-    vehicleType: '',
-    OdometerKm: '',
-    odometerPhoto: '',
-  }
+
+import React, { useState, useEffect } from 'react'
+import { Link, useNavigate, useParams } from 'react-router-dom'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+
+// SERVICES FILE
+import VendorCreationService from 'src/Service/VendorCreation/VendorCreationService'
+import ShedService from 'src/Service/SmallMaster/Shed/ShedService'
+import VendorToSAP from 'src/Service/SAP/VendorToSAP'
+
+// VALIDATIONS FILE
+import useForm from 'src/Hooks/useForm.js'
+
+const VendorCreationConfirmation = () => {
+  const { id } = useParams()
+  const navigation = useNavigate()
+
+  const [fetch, setFetch] = useState(false)
+  const [currentInfo, setCurrentInfo] = useState({})
+  const [shedData, setShedData] = useState({})
+
+  const [confirmBtn, setConfirmBtn] = useState(false)
+
   const [adharvisible, setAdharVisible] = useState(false)
   const [BankPassbook, setBankPassbook] = useState(false)
   const [PanCard, setPanCard] = useState(false)
   const [Licence, setLicence] = useState(false)
   const [RcFront, setRcFront] = useState(false)
-  const [RcBank, setRcBank] = useState(false)
+  const [RcBack, setRcBack] = useState(false)
   const [Insurance, setInsurance] = useState(false)
   const [TransporterShedSheet, setTransporterShedSheet] = useState(false)
   const [TDSFormFront, setTDSFormFront] = useState(false)
   const [TDSFormBack, setTDSFormBack] = useState(false)
-  const [pandel, setPandel] = useState(false)
-  const [licensedel, setLicensedel] = useState(false)
-  const [rccopybackdel, setRccopybackdel] = useState(false)
-  const [rccopyfrontdel, setRccopyfrontdel] = useState(false)
-  const [adhardel, setAdhardel] = useState(false)
-  const [passbookdel, setPassbookdel] = useState(false)
-  const [tssdel, setTssdel] = useState(false)
-  const [insurencedel, setInsurencedel] = useState(false)
-  const [tdsfrontdel, setTdsfrontdel] = useState(false)
-  const [tdsbackdel, setTdsbackdel] = useState(false)
+
+  const formValues = {
+    remarks: '',
+  }
+
+  function VendorRequestValidation() {}
+  function callBack() {}
+
   const { values, errors, handleChange, onFocus, handleSubmit, enableSubmit, onBlur } = useForm(
-    login,
+    callBack,
     VendorRequestValidation,
     formValues
   )
 
-  // function changeBackground(e) {
-  //   e.target.style.color = 'red'
-  // }
-  // function changeBackground1(e) {
-  //   e.target.style.color = '#4d3227'
-  // }
+  useEffect(() => {
+    const formData = new FormData()
+    formData.append('vendor_code', 'currentInfo.vendor_info.vendor_code')
+    formData.append('owner_name', 'currentInfo.vendor_info.owner_name')
+    formData.append('vendor_status', 'status')
+    formData.append('remarks', 'values.remarks')
 
-  function login() {
-    alert('No Errors CallBack Called')
+    let form = JSON.stringify(formData)
+
+    debugger
+    console.log(form)
+    return
+  }, [])
+
+  // ADD VENDOR REQUEST DETAILS
+  const addVendorConfirmation = (status) => {
+    const formData = new FormData()
+    formData.append('vendor_code', 'currentInfo.vendor_info.vendor_code')
+    formData.append('owner_name', 'currentInfo.vendor_info.owner_name')
+    formData.append('vendor_status', 'status')
+    formData.append('remarks', 'values.remarks')
+
+    console.log(json.stringify(formData))
+    return
+
+    setConfirmBtn(false)
+
+    VendorCreationService.updateVendorConfirmationData(id, formData).then((res) => {
+      console.log(res)
+      if (res.status == 200 && status != 0) {
+        toast.success('Vendor Approval Done!')
+        navigation('/VendorCreationConfrimationHome')
+      } else {
+        toast.success('Vendor Approval Rejected!')
+        navigation('/VendorCreationConfrimationHome')
+      }
+    })
   }
+
+  // GET SINGLE SHED DETAILS
+  const ShedData = (shed_id) => {
+    ShedService.SingleShedData(shed_id).then((resp) => {
+      setShedData(resp.data.data)
+    })
+  }
+
+  // GET SINGLE VEHICLE DATA
+  useEffect(() => {
+    VendorCreationService.getVehicleDocumentInfo(id).then((res) => {
+      const resData = res.data.data[0]
+      ShedData(resData.shed_id)
+      setCurrentInfo(resData)
+      setFetch(true)
+    })
+  }, [])
   return (
     <>
       <CCard>
@@ -72,7 +129,12 @@ const VendorCreationApproval = () => {
                 Shed Name
                 {errors.shedName && <span className="small text-danger">{errors.shedName}</span>}
               </CFormLabel>
-              <CFormInput size="sm" id="shedName" readOnly />
+              <CFormInput
+                size="sm"
+                id="shedName"
+                value={fetch ? shedData.shed_name : ''}
+                readOnly
+              />
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="ownerName">
@@ -81,7 +143,12 @@ const VendorCreationApproval = () => {
                   <span className="small text-danger">{errors.vehicleType}</span>
                 )}
               </CFormLabel>
-              <CFormInput size="sm" id="ownerName" readOnly />
+              <CFormInput
+                size="sm"
+                id="ownerName"
+                value={fetch ? shedData.shed_owner_name : ''}
+                readOnly
+              />
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="shedownerMob">
@@ -90,7 +157,12 @@ const VendorCreationApproval = () => {
                   <span className="small text-danger">{errors.shedownerMob}</span>
                 )}
               </CFormLabel>
-              <CFormInput size="sm" id="shedownerMob" readOnly />
+              <CFormInput
+                size="sm"
+                id="shedownerMob"
+                value={fetch ? shedData.shed_owner_phone_1 : ''}
+                readOnly
+              />
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="shedownerWhatsapp">
@@ -99,7 +171,12 @@ const VendorCreationApproval = () => {
                   <span className="small text-danger">{errors.shedownerWhatsapp}</span>
                 )}
               </CFormLabel>
-              <CFormInput size="sm" id="shedownerWhatsapp" readOnly />
+              <CFormInput
+                size="sm"
+                id="shedownerWhatsapp"
+                value={fetch ? shedData.shed_owner_phone_2 : ''}
+                readOnly
+              />
             </CCol>
           </CRow>
           {/* Row One------------------------- */}
@@ -119,71 +196,54 @@ const VendorCreationApproval = () => {
                 size="sm"
                 id="panCardattachment"
               >
-                <span className="float-start" onClick={() => setAdharVisible(!adharvisible)}>
+                <span className="float-start" onClick={() => setPanCard(!PanCard)}>
                   <i className="fa fa-eye" aria-hidden="true"></i> &nbsp;View
-                </span>
-                <span
-                  className="float-end"
-                  onClick={() => {
-                    if (window.confirm('Are you sure to remove this file?')) {
-                      setAdhardel(true)
-                    }
-                  }}
-                >
-                  <i
-                    className="fa fa-trash"
-                    aria-hidden="true"
-                    // onMouseOver={changeBackground}
-                    // onMouseLeave={changeBackground1}
-                  ></i>
                 </span>
               </CButton>
             </CCol>
             <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="panCard">
+              <CFormLabel htmlFor="panNumber">
                 PAN Card Number*
-                {errors.panCard && <span className="small text-danger">{errors.panCard}</span>}
+                {errors.panNumber && <span className="small text-danger">{errors.panNumber}</span>}
               </CFormLabel>
-              <CFormInput size="sm" id="panCard" readOnly />
+              <CFormInput
+                size="sm"
+                id="panNumber"
+                value={(fetch ? currentInfo.vendor_info.pan_card_number : '') || values.panNumber}
+                readOnly
+              />
             </CCol>
             <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="AadharCopy">
+              <CFormLabel htmlFor="aadharCopy">
                 Aadhar Card Copy
-                {errors.AadharCopy && <span className="small text-danger">{errors.AadharCopy}</span>}
+                {errors.aadharCopy && (
+                  <span className="small text-danger">{errors.aadharCopy}</span>
+                )}
               </CFormLabel>
               <CButton
                 // onClick={() => setAdharVisible(!adharvisible)}
                 className="w-100 m-0"
                 color="info"
                 size="sm"
-                id="AadharCopy"
+                id="aadharCopy"
               >
                 <span className="float-start" onClick={() => setAdharVisible(!adharvisible)}>
                   <i className="fa fa-eye" aria-hidden="true"></i> &nbsp;View
                 </span>
-                <span
-                  className="float-end"
-                  onClick={() => {
-                    if (window.confirm('Are you sure to remove this file?')) {
-                      setAdhardel(true)
-                    }
-                  }}
-                >
-                  <i
-                    className="fa fa-trash"
-                    aria-hidden="true"
-                    // onMouseOver={changeBackground}
-                    // onMouseLeave={changeBackground1}
-                  ></i>
-                </span>
               </CButton>
             </CCol>
             <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="aadharCard">
+              <CFormLabel htmlFor="aadhar">
                 Aadhar Card Number
-                {errors.aadharCard && <span className="small text-danger">{errors.aadharCard}</span>}
+                {errors.aadhar && <span className="small text-danger">{errors.aadhar}</span>}
               </CFormLabel>
-              <CFormInput size="sm" id="aadharCard" readOnly />
+              <CFormInput
+                size="sm"
+                id="aadhar"
+                name="aadhar"
+                value={(fetch ? currentInfo.vendor_info.aadhar_card_number : '') || values.aadhar}
+                readOnly
+              />
             </CCol>
           </CRow>
           {/* Row Two------------------------- */}
@@ -204,16 +264,6 @@ const VendorCreationApproval = () => {
                 <span className="float-start" onClick={() => setLicence(!PanCard)}>
                   <i className="fa fa-eye" aria-hidden="true"></i> &nbsp;View
                 </span>
-                <span
-                  className="float-end"
-                  onClick={() => {
-                    if (window.confirm('Are you sure to remove this file?')) {
-                      setLicensedel(true)
-                    }
-                  }}
-                >
-                  <i className="fa fa-trash" aria-hidden="true"></i>
-                </span>
               </CButton>
             </CCol>
             <CCol xs={12} md={3}>
@@ -231,16 +281,6 @@ const VendorCreationApproval = () => {
                 <span className="float-start" onClick={() => setRcFront(!RcFront)}>
                   <i className="fa fa-eye" aria-hidden="true"></i> &nbsp;View
                 </span>
-                <span
-                  className="float-end"
-                  onClick={() => {
-                    if (window.confirm('Are you sure to remove this file?')) {
-                      setRccopyfrontdel(true)
-                    }
-                  }}
-                >
-                  <i className="fa fa-trash" aria-hidden="true"></i>
-                </span>
               </CButton>
             </CCol>
             <CCol xs={12} md={3}>
@@ -249,24 +289,14 @@ const VendorCreationApproval = () => {
                 {errors.rcBack && <span className="small text-danger">{errors.rcBack}</span>}
               </CFormLabel>
               <CButton
-                // onClick={() => setRcBank(!RcBank)}
+                // onClick={() => setRcBack(!RcBack)}
                 className="w-100 m-0"
                 color="info"
                 size="sm"
                 id="rcBack"
               >
-                <span className="float-start" onClick={() => setRcBank(!RcBank)}>
+                <span className="float-start" onClick={() => setRcBack(!RcBack)}>
                   <i className="fa fa-eye" aria-hidden="true"></i> &nbsp;View
-                </span>
-                <span
-                  className="float-end"
-                  onClick={() => {
-                    if (window.confirm('Are you sure to remove this file?')) {
-                      setRccopybackdel(true)
-                    }
-                  }}
-                >
-                  <i className="fa fa-trash" aria-hidden="true"></i>
                 </span>
               </CButton>
             </CCol>
@@ -284,16 +314,6 @@ const VendorCreationApproval = () => {
               >
                 <span className="float-start" onClick={() => setInsurance(!Insurance)}>
                   <i className="fa fa-eye" aria-hidden="true"></i> &nbsp;View
-                </span>
-                <span
-                  className="float-end"
-                  onClick={() => {
-                    if (window.confirm('Are you sure to remove this file?')) {
-                      setInsurencedel(true)
-                    }
-                  }}
-                >
-                  <i className="fa fa-trash" aria-hidden="true"></i>
                 </span>
               </CButton>
             </CCol>
@@ -320,17 +340,6 @@ const VendorCreationApproval = () => {
                 >
                   <i className="fa fa-eye" aria-hidden="true"></i> &nbsp;View
                 </span>
-
-                <span
-                  className="float-end"
-                  onClick={() => {
-                    if (window.confirm('Are you sure to remove this file?')) {
-                      setTssdel(true)
-                    }
-                  }}
-                >
-                  <i className="fa fa-trash" aria-hidden="true"></i>
-                </span>
               </CButton>
             </CCol>
             <CCol xs={12} md={3}>
@@ -345,29 +354,32 @@ const VendorCreationApproval = () => {
                 size="sm"
                 id="bankPass"
               >
-                <span className="float-start" onClick={() => setTDSFormFront(!TDSFormFront)}>
+                <span className="float-start" onClick={() => setBankPassbook(!BankPassbook)}>
                   <i className="fa fa-eye" aria-hidden="true"></i> &nbsp;View
-                </span>
-
-                <span
-                  className="float-end"
-                  onClick={() => {
-                    if (window.confirm('Are you sure to remove this file?')) {
-                      setTdsfrontdel(true)
-                    }
-                  }}
-                >
-                  <i className="fa fa-trash" aria-hidden="true"></i>
                 </span>
               </CButton>
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="bankName">Bank Name</CFormLabel>
-              <CFormInput type="text" name="bankName" size="sm" id="bankName" readOnly />
+              <CFormInput
+                type="text"
+                name="bankName"
+                size="sm"
+                id="bankName"
+                value={fetch ? currentInfo.vendor_info.bank_name : ''}
+                readOnly
+              />
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="bankBranch">Bank Branch</CFormLabel>
-              <CFormInput type="text" name="bankBranch" size="sm" id="bankBranch" readOnly />
+              <CFormInput
+                type="text"
+                name="bankBranch"
+                size="sm"
+                id="bankBranch"
+                value={fetch ? currentInfo.vendor_info.bank_branch : ''}
+                readOnly
+              />
             </CCol>
           </CRow>
           {/* Row Four------------------------- */}
@@ -375,7 +387,14 @@ const VendorCreationApproval = () => {
           <CRow className="">
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="ifscCode">Bank IFSC Code</CFormLabel>
-              <CFormInput type="text" name="ifscCode" size="sm" id="ifscCode" readOnly />
+              <CFormInput
+                type="text"
+                name="ifscCode"
+                size="sm"
+                id="ifscCode"
+                value={fetch ? currentInfo.vendor_info.bank_ifsc_code : ''}
+                readOnly
+              />
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="bankAccount">
@@ -384,7 +403,12 @@ const VendorCreationApproval = () => {
                   <span className="small text-danger">{errors.bankAccount}</span>
                 )}
               </CFormLabel>
-              <CFormInput size="sm" id="bankAccount" readOnly />
+              <CFormInput
+                size="sm"
+                id="bankAccount"
+                value={fetch ? currentInfo.vendor_info.bank_acc_number : ''}
+                readOnly
+              />
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="bankaccountholderName">
@@ -393,14 +417,24 @@ const VendorCreationApproval = () => {
                   <span className="small text-danger">{errors.bankaccountholderName}</span>
                 )}
               </CFormLabel>
-              <CFormInput size="sm" id="bankaccountholderName" readOnly />
+              <CFormInput
+                size="sm"
+                id="bankaccountholderName"
+                value={fetch ? currentInfo.vendor_info.bank_acc_holder_name : ''}
+                readOnly
+              />
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="Street">
                 Street
                 {errors.Street && <span className="small text-danger">{errors.Street}</span>}
               </CFormLabel>
-              <CFormInput size="sm" id="Street" readOnly />
+              <CFormInput
+                size="sm"
+                id="Street"
+                value={fetch ? currentInfo.vendor_info.street : ''}
+                readOnly
+              />
             </CCol>
           </CRow>
           {/* Row Five------------------------- */}
@@ -411,28 +445,48 @@ const VendorCreationApproval = () => {
                 Area
                 {errors.Area && <span className="small text-danger">{errors.Area}</span>}
               </CFormLabel>
-              <CFormInput size="sm" id="Area" readOnly />
+              <CFormInput
+                size="sm"
+                id="Area"
+                value={fetch ? currentInfo.vendor_info.area : ''}
+                readOnly
+              />
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="City">
                 City
                 {errors.City && <span className="small text-danger">{errors.City}</span>}
               </CFormLabel>
-              <CFormInput size="sm" id="City" readOnly />
+              <CFormInput
+                size="sm"
+                id="City"
+                value={fetch ? currentInfo.vendor_info.city : ''}
+                readOnly
+              />
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="District">
                 District
                 {errors.District && <span className="small text-danger">{errors.District}</span>}
               </CFormLabel>
-              <CFormInput size="sm" id="District" readOnly />
+              <CFormInput
+                size="sm"
+                id="District"
+                value={fetch ? currentInfo.vendor_info.district : ''}
+                readOnly
+              />
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="State">
                 State
                 {errors.State && <span className="small text-danger">{errors.State}</span>}
               </CFormLabel>
-              <CFormInput size="sm" id="State" readOnly />
+              <CFormInput
+                size="sm"
+                id="State"
+                value={fetch ? currentInfo.vendor_info.state : ''}
+                readOnly
+              />
             </CCol>
           </CRow>
           {/* Row Six------------------------- */}
@@ -441,16 +495,28 @@ const VendorCreationApproval = () => {
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="postalCode">
                 Postal Code
-                {errors.postalCode && <span className="small text-danger">{errors.postalCode}</span>}
+                {errors.postalCode && (
+                  <span className="small text-danger">{errors.postalCode}</span>
+                )}
               </CFormLabel>
-              <CFormInput size="sm" id="postalCode" readOnly />
+              <CFormInput
+                size="sm"
+                id="postalCode"
+                value={fetch ? currentInfo.vendor_info.postal_code : ''}
+                readOnly
+              />
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="Region">
                 Region
                 {errors.Region && <span className="small text-danger">{errors.Region}</span>}
               </CFormLabel>
-              <CFormInput size="sm" id="Region" readOnly />
+              <CFormInput
+                size="sm"
+                id="Region"
+                value={fetch ? currentInfo.vendor_info.region : ''}
+                readOnly
+              />
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="TDSfront">
@@ -464,22 +530,8 @@ const VendorCreationApproval = () => {
                 size="sm"
                 id="TDSfront"
               >
-                <span
-                  className="float-start"
-                  onClick={() => setTransporterShedSheet(!TransporterShedSheet)}
-                >
+                <span className="float-start" onClick={() => setTDSFormFront(!TDSFormFront)}>
                   <i className="fa fa-eye" aria-hidden="true"></i> &nbsp;View
-                </span>
-
-                <span
-                  className="float-end"
-                  onClick={() => {
-                    if (window.confirm('Are you sure to remove this file?')) {
-                      setTssdel(true)
-                    }
-                  }}
-                >
-                  <i className="fa fa-trash" aria-hidden="true"></i>
                 </span>
               </CButton>
             </CCol>
@@ -495,22 +547,8 @@ const VendorCreationApproval = () => {
                 size="sm"
                 id="TDSback"
               >
-                <span
-                  className="float-start"
-                  onClick={() => setTransporterShedSheet(!TransporterShedSheet)}
-                >
+                <span className="float-start" onClick={() => setTDSFormBack(!TDSFormBack)}>
                   <i className="fa fa-eye" aria-hidden="true"></i> &nbsp;View
-                </span>
-
-                <span
-                  className="float-end"
-                  onClick={() => {
-                    if (window.confirm('Are you sure to remove this file?')) {
-                      setTssdel(true)
-                    }
-                  }}
-                >
-                  <i className="fa fa-trash" aria-hidden="true"></i>
                 </span>
               </CButton>
             </CCol>
@@ -524,28 +562,48 @@ const VendorCreationApproval = () => {
                 GST Registeration
                 {errors.GSTreg && <span className="small text-danger">{errors.GSTreg}</span>}
               </CFormLabel>
-              <CFormInput size="sm" id="GSTreg" readOnly />
+              <CFormInput
+                size="sm"
+                id="GSTreg"
+                value={fetch ? currentInfo.vendor_info.gst_registration : ''}
+                readOnly
+              />
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="GST">
                 GST Registration Number*
                 {errors.GST && <span className="small text-danger">{errors.GST}</span>}
               </CFormLabel>
-              <CFormInput size="sm" id="GST" readOnly />
+              <CFormInput
+                size="sm"
+                id="GST"
+                value={fetch ? currentInfo.vendor_info.gst_registration_number : ''}
+                readOnly
+              />
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="GSTtax">
                 GST Tax Code
                 {errors.GSTtax && <span className="small text-danger">{errors.GSTtax}</span>}
               </CFormLabel>
-              <CFormInput size="sm" id="GSTtax" readOnly />
+              <CFormInput
+                size="sm"
+                id="GSTtax"
+                value={fetch ? currentInfo.vendor_info.gst_tax_code : ''}
+                readOnly
+              />
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="Payment">
                 Payment Terms 3Days
                 {errors.Payment && <span className="small text-danger">{errors.Payment}</span>}
               </CFormLabel>
-              <CFormInput size="sm" id="Payment" readOnly />
+              <CFormInput
+                size="sm"
+                id="Payment"
+                value={fetch ? currentInfo.vendor_info.payment_term_3days : ''}
+                readOnly
+              />
             </CCol>
           </CRow>
           {/* Row Eight------------------------- */}
@@ -556,23 +614,59 @@ const VendorCreationApproval = () => {
                 Remarks
                 {errors.remarks && <span className="small text-danger">{errors.remarks}</span>}
               </CFormLabel>
-              <CFormInput size="sm" id="remarks" readOnly />
+              <CFormInput
+                size="sm"
+                name="remarks"
+                id="remarks"
+                value={(fetch ? currentInfo.vendor_info.remarks : '') || values.remarks}
+                onKeyUp={() => (currentInfo.vendor_info.remarks = '')}
+                onFocus={onFocus}
+                onBlur={onBlur}
+                onChange={handleChange}
+              />
             </CCol>
           </CRow>
           {/* Row Nine------------------------- */}
-          <CRow className="mb-md-1">
-            <CCol className="" xs={12} sm={12} md={3}>
-              <CButton size="sm" color="primary" className="text-white" type="button">
-                <Link className="text-white" to="/VendorCreationHome">
+          <CRow>
+            <CCol>
+              <Link to="/VendorCreationApprovalHome">
+                <CButton
+                  md={9}
+                  size="sm"
+                  color="primary"
+                  disabled=""
+                  className="text-white"
+                  type="submit"
+                >
                   Previous
-                </Link>
-              </CButton>
+                </CButton>
+              </Link>
             </CCol>
-            <CCol className="offset-md-6 d-md-flex justify-content-end" xs={12} sm={12} md={3}>
-              <CButton size="sm" color="warning" className="mx-3 px-3 text-white" type="submit">
-                Approved
+
+            <CCol
+              className=""
+              xs={12}
+              sm={12}
+              md={3}
+              style={{ display: 'flex', justifyContent: 'flex-end' }}
+            >
+              {/* addDocumentVerification */}
+              <CButton
+                size="sm"
+                color="warning"
+                className="mx-1 px-2 text-white"
+                type="button"
+                onClick={() => setConfirmBtn(true)}
+              >
+                Confirm
               </CButton>
-              <CButton size="sm" color="warning" className="mx-3 px-3 text-white" type="submit">
+              <CButton
+                size="sm"
+                color="warning"
+                className="mx-1 px-2 text-white"
+                type="button"
+                onClick={() => addVendorConfirmation(0)}
+              >
                 Reject
               </CButton>
             </CCol>
@@ -581,23 +675,54 @@ const VendorCreationApproval = () => {
         </CForm>
       </CCard>
 
-      {/* Modal Area  */}
+      {/* ============================================================= */}
+      {/* ======================= Modal Area ========================== */}
+
+      <CModal visible={confirmBtn} onClose={() => setConfirmBtn(false)}>
+        <CModalBody>
+          <p className="lead">Do You Want To Confirm and Upload This Vendor Details To SAP ?</p>
+        </CModalBody>
+        <CModalFooter>
+          <CButton className="m-2" color="warning" onClick={() => addVendorConfirmation(4)}>
+            Confirm
+          </CButton>
+          <CButton color="secondary" onClick={() => setConfirmBtn(false)}>
+            Cancel
+          </CButton>
+          {/* <CButton color="primary">Save changes</CButton> */}
+        </CModalFooter>
+      </CModal>
+
+      {/* *********************************************************** */}
+      <CModal visible={PanCard} onClose={() => setPanCard(false)}>
+        <CModalHeader>
+          <CModalTitle>Pan Card</CModalTitle>
+        </CModalHeader>
+        <CModalBody>
+          <CCardImage orientation="top" src={fetch ? currentInfo.pan_copy : ''} />
+        </CModalBody>
+        <CModalFooter>
+          <CButton color="secondary" onClick={() => setPanCard(false)}>
+            Close
+          </CButton>
+          {/* <CButton color="primary">Save changes</CButton> */}
+        </CModalFooter>
+      </CModal>
+
+      {/* *********************************************************** */}
 
       <CModal visible={adharvisible} onClose={() => setAdharVisible(false)}>
         <CModalHeader>
           <CModalTitle>Aadhar Card</CModalTitle>
         </CModalHeader>
         <CModalBody>
-          <CCardImage
-            orientation="top"
-            src="https://dmv.ny.gov/sites/default/files/resize/styles/panopoly_image_original/public/old_dl_for_sample_docs-653x325.png?itok=a8hCofjR"
-          />
+          <CCardImage orientation="top" src={fetch ? currentInfo.aadhar_copy : ''} />
         </CModalBody>
         <CModalFooter>
           <CButton color="secondary" onClick={() => setAdharVisible(false)}>
             Close
           </CButton>
-          <CButton color="primary">Save changes</CButton>
+          {/* <CButton color="primary">Save changes</CButton> */}
         </CModalFooter>
       </CModal>
 
@@ -608,50 +733,13 @@ const VendorCreationApproval = () => {
           <CModalTitle>Bank Passbook</CModalTitle>
         </CModalHeader>
         <CModalBody>
-          <CCardImage
-            orientation="top"
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRy8_NeahwoKut3zeWbVAhUWS59XaqVah0mYMotQ08scOqWrXWsZy39GGRedOzSV1Ao8qk&usqp=CAU"
-          />
+          <CCardImage orientation="top" src={fetch ? currentInfo.bank_pass_copy : ''} />
         </CModalBody>
         <CModalFooter>
-          <CButton color="secondary" onClick={() => setAdharVisible(false)}>
+          <CButton color="secondary" onClick={() => setBankPassbook(false)}>
             Close
           </CButton>
-          <CButton color="primary">Save changes</CButton>
-        </CModalFooter>
-      </CModal>
-
-      {/* *********************************************************** */}
-
-      <CModal visible={TDSFormBack} onClose={() => setTDSFormBack(false)}>
-        <CModalHeader>
-          <CModalTitle>TDS Declaration Form Back</CModalTitle>
-        </CModalHeader>
-        <CModalBody>
-          <CCardImage orientation="top" src="" />
-        </CModalBody>
-        <CModalFooter>
-          <CButton color="secondary" onClick={() => setTDSFormBack(false)}>
-            Close
-          </CButton>
-          <CButton color="primary">Save changes</CButton>
-        </CModalFooter>
-      </CModal>
-
-      {/* *********************************************************** */}
-
-      <CModal visible={PanCard} onClose={() => setPanCard(false)}>
-        <CModalHeader>
-          <CModalTitle>Pan Card</CModalTitle>
-        </CModalHeader>
-        <CModalBody>
-          <CCardImage orientation="top" src="" />
-        </CModalBody>
-        <CModalFooter>
-          <CButton color="secondary" onClick={() => setPanCard(false)}>
-            Close
-          </CButton>
-          <CButton color="primary">Save changes</CButton>
+          {/* <CButton color="primary">Save changes</CButton> */}
         </CModalFooter>
       </CModal>
 
@@ -659,16 +747,16 @@ const VendorCreationApproval = () => {
 
       <CModal visible={Licence} onClose={() => setLicence(false)}>
         <CModalHeader>
-          <CModalTitle>Pan Card</CModalTitle>
+          <CModalTitle>License</CModalTitle>
         </CModalHeader>
         <CModalBody>
-          <CCardImage orientation="top" src="" />
+          <CCardImage orientation="top" src={fetch ? currentInfo.license_copy : ''} />
         </CModalBody>
         <CModalFooter>
           <CButton color="secondary" onClick={() => setLicence(false)}>
             Close
           </CButton>
-          <CButton color="primary">Save changes</CButton>
+          {/* <CButton color="primary">Save changes</CButton> */}
         </CModalFooter>
       </CModal>
 
@@ -676,16 +764,33 @@ const VendorCreationApproval = () => {
 
       <CModal visible={RcFront} onClose={() => setRcFront(false)}>
         <CModalHeader>
-          <CModalTitle>Pan Card</CModalTitle>
+          <CModalTitle>RC Front Copy</CModalTitle>
         </CModalHeader>
         <CModalBody>
-          <CCardImage orientation="top" src="" />
+          <CCardImage orientation="top" src={fetch ? currentInfo.rc_copy_front : ''} />
         </CModalBody>
         <CModalFooter>
           <CButton color="secondary" onClick={() => setRcFront(false)}>
             Close
           </CButton>
-          <CButton color="primary">Save changes</CButton>
+          {/* <CButton color="primary">Save changes</CButton> */}
+        </CModalFooter>
+      </CModal>
+
+      {/* *********************************************************** */}
+
+      <CModal visible={RcBack} onClose={() => setRcBack(false)}>
+        <CModalHeader>
+          <CModalTitle>RC Back Copy </CModalTitle>
+        </CModalHeader>
+        <CModalBody>
+          <CCardImage orientation="top" src={fetch ? currentInfo.rc_copy_back : ''} />
+        </CModalBody>
+        <CModalFooter>
+          <CButton color="secondary" onClick={() => setRcBack(false)}>
+            Close
+          </CButton>
+          {/* <CButton color="primary">Save changes</CButton> */}
         </CModalFooter>
       </CModal>
 
@@ -696,13 +801,13 @@ const VendorCreationApproval = () => {
           <CModalTitle>Insurance</CModalTitle>
         </CModalHeader>
         <CModalBody>
-          <CCardImage orientation="top" src="" />
+          <CCardImage orientation="top" src={fetch ? currentInfo.insurance_copy_front : ''} />
         </CModalBody>
         <CModalFooter>
           <CButton color="secondary" onClick={() => setInsurance(false)}>
             Close
           </CButton>
-          <CButton color="primary">Save changes</CButton>
+          {/* <CButton color="primary">Save changes</CButton> */}
         </CModalFooter>
       </CModal>
 
@@ -713,33 +818,13 @@ const VendorCreationApproval = () => {
           <CModalTitle>Transporter Shed Sheet</CModalTitle>
         </CModalHeader>
         <CModalBody>
-          <CCardImage orientation="top" src="" />
+          <CCardImage orientation="top" src={fetch ? currentInfo.transport_shed_sheet : ''} />
         </CModalBody>
         <CModalFooter>
           <CButton color="secondary" onClick={() => setTransporterShedSheet(false)}>
             Close
           </CButton>
-          <CButton color="primary">Save changes</CButton>
-        </CModalFooter>
-      </CModal>
-
-      {/* *********************************************************** */}
-
-      <CModal visible={RcBank} onClose={() => setRcBank(false)}>
-        <CModalHeader>
-          <CModalTitle>Rc Copy Back</CModalTitle>
-        </CModalHeader>
-        <CModalBody>
-          <CCardImage
-            orientation="top"
-            src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRy8_NeahwoKut3zeWbVAhUWS59XaqVah0mYMotQ08scOqWrXWsZy39GGRedOzSV1Ao8qk&usqp=CAU"
-          />
-        </CModalBody>
-        <CModalFooter>
-          <CButton color="secondary" onClick={() => setRcBank(false)}>
-            Close
-          </CButton>
-          <CButton color="primary">Save changes</CButton>
+          {/* <CButton color="primary">Save changes</CButton> */}
         </CModalFooter>
       </CModal>
 
@@ -747,16 +832,33 @@ const VendorCreationApproval = () => {
 
       <CModal visible={TDSFormFront} onClose={() => setTDSFormFront(false)}>
         <CModalHeader>
-          <CModalTitle>TDS Declaration Fomr</CModalTitle>
+          <CModalTitle>TDS Declaration Form Front</CModalTitle>
         </CModalHeader>
         <CModalBody>
-          <CCardImage orientation="top" src="" />
+          <CCardImage orientation="top" src={fetch ? currentInfo.tds_dec_form_front : ''} />
         </CModalBody>
         <CModalFooter>
           <CButton color="secondary" onClick={() => setTDSFormFront(false)}>
             Close
           </CButton>
-          <CButton color="primary">Save changes</CButton>
+          {/* <CButton color="primary">Save changes</CButton> */}
+        </CModalFooter>
+      </CModal>
+
+      {/* *********************************************************** */}
+
+      <CModal visible={TDSFormBack} onClose={() => setTDSFormBack(false)}>
+        <CModalHeader>
+          <CModalTitle>TDS Declaration Form Back</CModalTitle>
+        </CModalHeader>
+        <CModalBody>
+          <CCardImage orientation="top" src={fetch ? currentInfo.tds_dec_form_back : ''} />
+        </CModalBody>
+        <CModalFooter>
+          <CButton color="secondary" onClick={() => setTDSFormBack(false)}>
+            Close
+          </CButton>
+          {/* <CButton color="primary">Save changes</CButton> */}
         </CModalFooter>
       </CModal>
 
@@ -769,4 +871,4 @@ const VendorCreationApproval = () => {
   )
 }
 
-export default VendorCreationApproval
+export default VendorCreationConfirmation

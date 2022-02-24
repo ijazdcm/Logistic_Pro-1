@@ -1,31 +1,35 @@
 // Implemented by David - Exciteon
 import { React, useState, useEffect } from 'react'
-import { CButton, CCard, CContainer, CSpinner } from '@coreui/react'
+import { CButton, CCard, CContainer, CSpinner, CBadge } from '@coreui/react'
 import { Link } from 'react-router-dom'
-// import { Lines } from 'react-preloaders'
 import CustomTable from 'src/components/customComponent/CustomTable'
-import DocsVerifyService from 'src/Service/DocsVerify/DocsVerifyService'
-import PanDataService from 'src/Service/SAP/PanDataService'
+import VendorCreationService from 'src/Service/VendorCreation/VendorCreationService'
 
-const DocsVerify = () => {
+const VendorCreationHome = () => {
   const [rowData, setRowData] = useState([])
   const [pending, setPending] = useState(true)
 
   let tableData = []
-
   const ACTION = {
     GATE_IN: 1,
     GATE_OUT: 2,
     WAIT_OUTSIDE: 3,
   }
 
-  const loadDocsVerifyTable = () => {
-    DocsVerifyService.getDocsVerifyTableData().then((res) => {
+  const loadVendorCreationTable = () => {
+    VendorCreationService.getVendorRequestTableData().then((res) => {
       tableData = res.data.data
+      
       let rowDataList = []
-      const filterData = tableData.filter((data) => data.vehicle_type_id.id == 3)
-      // console.log(filterData)
+      const filterData = tableData.filter(
+        (data) =>
+          data.vehicle_document != null &&
+          data.vehicle_type_id.id == 3 &&
+          data.vendor_info.vendor_status == 1
+      )
+
       filterData.map((data, index) => {
+        // if (data.vehicle_document != null) {
         rowDataList.push({
           sno: index + 1,
           // Tripsheet_No: '',
@@ -35,22 +39,23 @@ const DocsVerify = () => {
           Waiting_At: (
             <span className="badge rounded-pill bg-info">
               {data.parking_status == ACTION.GATE_IN
-                ? 'Docs. Verify'
+                ? 'Vendor Creation'
                 : data.parking_status == ACTION.WAIT_OUTSIDE
                 ? 'Waiting Outside'
-                : 'Docs. Verify'}
+                : 'Vendor Creation'}
             </span>
           ),
           Screen_Duration: data.updated_at,
           Overall_Duration: data.created_at,
           Action: (
             <CButton className="badge" color="warning">
-              <Link className="text-white" to={`DocVerifyVendorAvail/${data.parking_yard_gate_id}`}>
-                VERIFY
+              <Link className="text-white" to={`VendorCreationRequest/${data.vehicle_id}`}>
+                Create Vendor
               </Link>
             </CButton>
           ),
         })
+        // }
       })
       setRowData(rowDataList)
       setPending(false)
@@ -58,12 +63,8 @@ const DocsVerify = () => {
   }
 
   useEffect(() => {
-    loadDocsVerifyTable()
+    loadVendorCreationTable()
   }, [])
-
-  useEffect(()=>{
-    PanDataService.getPanData();
-  },[])
 
   const columns = [
     {
@@ -111,16 +112,19 @@ const DocsVerify = () => {
     {
       name: 'Screen Duration',
       selector: (row) => row.Screen_Duration,
+      sortable: true,
       center: true,
     },
     {
       name: ' Overall Duration',
       selector: (row) => row.Overall_Duration,
+      sortable: true,
       center: true,
     },
     {
       name: 'Action',
       selector: (row) => row.Action,
+      sortable: true,
       center: true,
     },
   ]
@@ -140,4 +144,4 @@ const DocsVerify = () => {
   )
 }
 
-export default DocsVerify
+export default VendorCreationHome

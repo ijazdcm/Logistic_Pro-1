@@ -61,6 +61,15 @@ export default function DocumentVerificationValidation(values, isTouched) {
   if (isTouched.bankAcc && !values.bankAcc) {
     errors.bankAcc = 'Required'
   }
+  if (isTouched.aadharCopy && !values.aadharCopy) {
+    errors.aadharCopy = 'Required'
+  }
+  if (isTouched.panCopy && !values.panCopy) {
+    errors.panCopy = 'Required'
+  }
+  if (isTouched.passCopy && !values.passCopy) {
+    errors.passCopy = 'Required'
+  }
 
   return errors
 }

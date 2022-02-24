@@ -1,6 +1,14 @@
 import DataTable from 'react-data-table-component'
 import React, { useEffect } from 'react'
-import { CButton, CCol, CFormInput, CInputGroup, CInputGroupText, CRow } from '@coreui/react'
+import {
+  CButton,
+  CCol,
+  CFormInput,
+  CInputGroup,
+  CInputGroupText,
+  CRow,
+  CSpinner,
+} from '@coreui/react'
 import { FilterComponent } from './FilterComponent'
 import { CustomLoader } from './CustomLoader'
 
@@ -21,12 +29,14 @@ const CustomTable = ({ columns, data, fieldName, showSearchFilter, pending = fal
     }
 
     return (
-      <FilterComponent
-        onFilter={(e) => setFilterText(e.target.value)}
-        onClear={handleClear}
-        filterText={filterText}
-        fieldName={fieldName}
-      />
+      <>
+        <FilterComponent
+          onFilter={(e) => setFilterText(e.target.value)}
+          onClear={handleClear}
+          filterText={filterText}
+          fieldName={fieldName}
+        />
+      </>
     )
   }, [filterText, resetPaginationToggle])
 
@@ -60,24 +70,30 @@ const CustomTable = ({ columns, data, fieldName, showSearchFilter, pending = fal
   }
 
   return showSearchFilter ? (
-    <DataTable
-      data={filteredItems}
-      columns={columns}
-      // data={data}
-      subHeader
-      subHeaderComponent={subHeaderComponentMemo}
-      pagination
-      customStyles={customStyles}
-    />
+    <>
+      <DataTable
+        data={filteredItems}
+        columns={columns}
+        // data={data}
+        subHeader
+        subHeaderComponent={subHeaderComponentMemo}
+        pagination
+        customStyles={customStyles}
+        progressPending={pending}
+        progressComponent={<CustomLoader />}
+      />
+    </>
   ) : (
-    <DataTable
-      data={data}
-      columns={columns}
-      pagination
-      customStyles={customStyles}
-      progressPending={pending}
-      progressComponent={<CustomLoader />}
-    />
+    <>
+      <DataTable
+        data={data}
+        columns={columns}
+        pagination
+        customStyles={customStyles}
+        progressPending={pending}
+        progressComponent={<CustomLoader />}
+      />
+    </>
   )
 }
 

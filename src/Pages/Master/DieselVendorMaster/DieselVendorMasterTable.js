@@ -173,7 +173,7 @@ const DieselVendorMasterTable = () => {
         <CustomTable
           columns={columns}
           data={rowData}
-          feildName={'diesel_Vendor_Name'}
+          fieldName={'diesel_Vendor_Name'}
           showSearchFilter={true}
           
         />

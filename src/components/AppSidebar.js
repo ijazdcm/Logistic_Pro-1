@@ -15,7 +15,7 @@ import 'simplebar/dist/simplebar.min.css'
 // sidebar nav config
 import navigation from '../_nav'
 
-const AppSidebar = () => {
+const appSidebar = () => {
   const dispatch = useDispatch()
   const unfoldable = useSelector((state) => state.sidebarUnfoldable)
   const sidebarShow = useSelector((state) => state.changeState.sidebarShow)
@@ -40,4 +40,4 @@ const AppSidebar = () => {
   )
 }
 
-export default React.memo(AppSidebar)
+export default React.memo(appSidebar)

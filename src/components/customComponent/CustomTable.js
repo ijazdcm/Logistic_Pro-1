@@ -1,37 +1,23 @@
 import DataTable from 'react-data-table-component'
 import React, { useEffect } from 'react'
-import { CButton, CCol, CFormInput, CInputGroup, CInputGroupText, CRow } from '@coreui/react'
+import {
+  CButton,
+  CCol,
+  CFormInput,
+  CInputGroup,
+  CInputGroupText,
+  CRow,
+  CSpinner,
+} from '@coreui/react'
+import { FilterComponent } from './FilterComponent'
+import { CustomLoader } from './CustomLoader'
 
-const CustomTable = ({ columns, data, feildName, showSearchFilter = false }) => {
+const CustomTable = ({ columns, data, fieldName, showSearchFilter, pending = false }) => {
   const [filterText, setFilterText] = React.useState('')
   const [resetPaginationToggle, setResetPaginationToggle] = React.useState(false)
 
-  const FilterComponent = ({ filterText, onFilter, onClear }) => (
-    <>
-      <CRow>
-        <CCol className="display-flex">
-          <CInputGroup>
-            <CFormInput
-              id="search"
-              type="text"
-              placeholder={`Search By ${feildName}`}
-              aria-label="Search Input"
-              onChange={onFilter}
-              value={filterText}
-            />
-            <CInputGroupText>
-              <CButton color="secondary" type="button" onClick={onClear}>
-                X
-              </CButton>
-            </CInputGroupText>
-          </CInputGroup>
-        </CCol>
-      </CRow>
-    </>
-  )
-
   const filteredItems = data.filter(
-    (item) => item[feildName] && item[feildName].toLowerCase().includes(filterText.toLowerCase())
+    (item) => item[fieldName] && item[fieldName].toLowerCase().includes(filterText.toLowerCase())
   )
 
   const subHeaderComponentMemo = React.useMemo(() => {
@@ -43,11 +29,14 @@ const CustomTable = ({ columns, data, feildName, showSearchFilter = false }) => 
     }
 
     return (
-      <FilterComponent
-        onFilter={(e) => setFilterText(e.target.value)}
-        onClear={handleClear}
-        filterText={filterText}
-      />
+      <>
+        <FilterComponent
+          onFilter={(e) => setFilterText(e.target.value)}
+          onClear={handleClear}
+          filterText={filterText}
+          fieldName={fieldName}
+        />
+      </>
     )
   }, [filterText, resetPaginationToggle])
 
@@ -81,17 +70,30 @@ const CustomTable = ({ columns, data, feildName, showSearchFilter = false }) => 
   }
 
   return showSearchFilter ? (
-    <DataTable
-      data={filteredItems}
-      columns={columns}
-      // data={data}
-      subHeader
-      subHeaderComponent={subHeaderComponentMemo}
-      pagination
-      customStyles={customStyles}
-    />
+    <>
+      <DataTable
+        data={filteredItems}
+        columns={columns}
+        // data={data}
+        subHeader
+        subHeaderComponent={subHeaderComponentMemo}
+        pagination
+        customStyles={customStyles}
+        progressPending={pending}
+        progressComponent={<CustomLoader />}
+      />
+    </>
   ) : (
-    <DataTable data={data} columns={columns} pagination customStyles={customStyles} />
+    <>
+      <DataTable
+        data={data}
+        columns={columns}
+        pagination
+        customStyles={customStyles}
+        progressPending={pending}
+        progressComponent={<CustomLoader />}
+      />
+    </>
   )
 }
 

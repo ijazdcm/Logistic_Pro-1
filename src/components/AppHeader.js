@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { useLocation } from "react-router-dom"
+import { useLocation } from 'react-router-dom'
 
 import { useSelector, useDispatch } from 'react-redux'
 import {
@@ -24,26 +24,26 @@ import routes from '../routes'
 const AppHeader = () => {
   const dispatch = useDispatch()
   const sidebarShow = useSelector((state) => state.changeState.sidebarShow)
-  const location = useLocation();
-  const curent_route=routes.find((route)=>{
+  const location = useLocation()
+  const curent_route = routes.find((route) => {
     return route.path == location.pathname
   })
   // console.log(location.pathname);
   return (
-    <CHeader position="sticky" className="mb-3 p-0 pt-3">
+    <CHeader position="sticky" className="mb-1 p-0">
       <CContainer fluid>
         <CHeaderToggler
           className=""
           onClick={() => dispatch({ type: 'set', sidebarShow: !sidebarShow })}
         >
-          <CIcon icon={cilMenu} size="lg" />
+          <CIcon icon={cilMenu} size="md" />
         </CHeaderToggler>
-        <Title tittle={(curent_route)?curent_route.name:"Logistics Pro Naga"} />
+        {/* <Title tittle={curent_route ? curent_route.name : 'Logistics Pro Naga'} /> */}
+        <Title />
         <CHeaderNav className="ms-3">
           <AppHeaderDropdown />
         </CHeaderNav>
       </CContainer>
-      <CHeaderDivider />
     </CHeader>
   )
 }

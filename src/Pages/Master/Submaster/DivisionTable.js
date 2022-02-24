@@ -191,11 +191,13 @@ const DivisionTable = () => {
       name: 'Division',
       selector: (row) => row.Division,
       left: true,
+      sortable:true
     },
     {
       name: 'Status',
       selector: (row) => row.Status,
       left: true,
+      sortable:true
     },
 
     {
@@ -239,7 +241,7 @@ const DivisionTable = () => {
         <CCard className="mt-1">
           <CustomTable
             columns={columns}
-            data={rowData || ''}
+            data={rowData}
             fieldName={'Division'}
             showSearchFilter={true}
             pending={pending}

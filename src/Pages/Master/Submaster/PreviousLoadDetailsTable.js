@@ -243,7 +243,7 @@ const PreviousLoadDetails = () => {
           <CustomTable
             columns={columns}
             data={rowData}
-            feildName={'PreviousLoadDetails'}
+            fieldName={'PreviousLoadDetails'}
             showSearchFilter={true}
           />
         </CCard>

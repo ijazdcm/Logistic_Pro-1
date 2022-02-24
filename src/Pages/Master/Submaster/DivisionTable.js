@@ -237,7 +237,7 @@ const DivisionTable = () => {
           <CustomTable
             columns={columns}
             data={rowData || ''}
-            feildName={'Division'}
+            fieldName={'Division'}
             showSearchFilter={true}
           />
         </CCard>

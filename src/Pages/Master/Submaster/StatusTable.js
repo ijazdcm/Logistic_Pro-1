@@ -241,7 +241,7 @@ const StatusTable = () => {
           <CustomTable
             columns={columns}
             data={rowData}
-            feildName={'StatusName'}
+            fieldName={'StatusName'}
             showSearchFilter={true}
           />
         </CCard>

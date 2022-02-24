@@ -20,14 +20,14 @@ $enable-rtl: true;
 html,
 body {
   font-family: 'Zen Maru Gothic', sans-serif;
-  scrollbar-width: none;
+  // scrollbar-width: none;
 }
 
 html,
 body {
-  margin: 0;
+  margin: auto;
   height: 100%;
-  overflow: hidden;
+  overflow: auto;
 }
 
 .btn,
@@ -76,7 +76,7 @@ table {
   display: flex;
   flex-flow: column;
   width: 100%;
-  // height: calc(50%);
+  height: calc(50%);
   height: 40vh;
 }
 

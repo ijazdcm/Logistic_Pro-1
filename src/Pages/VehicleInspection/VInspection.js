@@ -105,8 +105,6 @@ const VInspection = () => {
       center: true,
     },
   ]
-  {
-  }
 
   return (
     <CCard className="mt-4">
@@ -114,7 +112,7 @@ const VInspection = () => {
         <CustomTable
           columns={columns}
           data={rowData}
-          feildName={'Driver_Name'}
+          fieldName={'Driver_Name'}
           showSearchFilter={true}
         />
       </CContainer>

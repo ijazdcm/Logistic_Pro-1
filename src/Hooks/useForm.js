@@ -39,10 +39,16 @@ const useForm = (callback, validate, formValues) => {
     setIsSubmitting(false)
     let value = event.target.value
     setIsTouched((isTouched) => ({ ...isTouched, [event.target.name]: true }))
+
     if (event.target.type === 'file') {
       setValues((values) => ({
         ...values,
         [event.target.name]: event.target.files[0],
+      }))
+    } else if (event.target.type === 'checkbox') {
+      setValues((values) => ({
+        ...values,
+        [event.target.name]: event.target.checked,
       }))
     } else {
       // console.log(event.target.name + ':\t' + value)

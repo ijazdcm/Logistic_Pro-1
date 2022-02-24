@@ -249,7 +249,7 @@ const MaterialDescriptionTable = () => {
           <CustomTable
             columns={columns}
             data={rowData}
-            feildName={'MaterialDescription'}
+            fieldName={'MaterialDescription'}
             showSearchFilter={true}
           />
         </CCard>

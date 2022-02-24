@@ -5,9 +5,9 @@ import VehicleMaster from './Pages/Master/VehicleMaster/VehicleMaster'
 import DieselVendorMaster from './Pages/Master/DieselVendorMaster/DieselVendorMaster'
 import ShedMasterEdit from './Pages/Master/ShedMaster/ShedMasterEdit'
 import DriverMaster from './Pages/Master/DriverMaster/DriverMaster'
-import ShedMaster from './Pages/Master/ShedMaster'
-import UserLoginMaster from './Pages/UserLoginMaster/UserLoginMaster'
-import UserLoginMasterTable from './Pages/Master/UserLoginMasterTable'
+import ShedMaster from './Pages/Master/ShedMaster/ShedMaster'
+import UserLoginMaster from './Pages/Master/UserMaster/UserLoginMaster'
+import UserLoginMasterTable from './Pages/Master/UserMaster/UserLoginMasterTable'
 
 // Sub-Master Pages
 
@@ -46,11 +46,11 @@ import vehicleInspection from './Pages/VehicleInspection/vehicleInspection'
 import VehicleInspectionHire from './Pages/VehicleInspection/VehicleInspectionHire'
 import vehicleMaintainence from './Pages/VehicleMaintenance/vehicleMaintainence'
 import VMain from './Pages/VehicleMaintenance/VMain'
-import DocVerify from './Pages/DocumentVerification/DocsVerify'
-import DocVerifyVendorAvail from './Pages/DocumentVerification/DocVerifyVendorAvail'
-import DocVerifyVendorNotAvail from './Pages/DocumentVerification/DocVerifyVendorNotAvail'
+import DocVerify from './Pages/DocumentVerification/DocumentVerificationTable'
+import DocVerifyVendorAvail from './Pages/DocumentVerification/DocumentVerification'
+import DocVerifyVendorNotAvail from './Pages/DocumentVerification/DocVerifyVendorNotAvailDeleted'
 import TripSheetCreationFG from './Pages/TripSheetCreation/TripSheetCreationFG'
-import TripSheetCreationOwnFG from './Pages/TripSheetCreation/TripSheetCreationOwnFG'
+import TripSheetCreationOwnFG from './Pages/TripSheetCreation/TripSheetCreation'
 import TripSheetCreationHome from './Pages/TripSheetCreation/TripSheetCreationHome'
 import TripSheetCreationSTO from './Pages/TripSheetCreation/TripSheetCreationSTO'
 import TripSTO from './Pages/TripSTO/TripSto'
@@ -59,10 +59,10 @@ import TripSheetSettleMentNew from './Pages/TripSheetSettleMent/TripSheetSettleM
 import TripSheetSettleMentHome from './Pages/TripSheetSettleMent/TripSheetSettleMentHome'
 import TripSheetSettleMentSTO from './Pages/TripSheetSettleMent/TripSheetSettleMentSTO'
 import VendorCreationApproval from './Pages/VendorCreationApproval/VendorCreationApproval'
-import VendorCreationApprovalHome from './Pages/VendorCreationApproval/VendorCreationApprovalHome'
-import VendorCreationConfrimation from './Pages/VendorCreationConfrimation/VendorCreationConfrimationHire'
-import VendorCreationConfrimationHome from './Pages/VendorCreationConfrimation/VendorCreationConfrimation'
-import VendorCreationHome from './Pages/VendorCreationRequest/VendorCreationHome'
+import VendorCreationApprovalHome from './Pages/VendorCreationApproval/VendorApprovalTable'
+import VendorCreationConfirmation from './Pages/VendorCreationConfirmation/VendorCreationConfirmation'
+import VendorCreationConfirmationHome from './Pages/VendorCreationConfirmation/VendorConfirmationTable'
+import VendorCreationHome from './Pages/VendorCreationRequest/VendorRequestTable'
 import VendorCreationRequest from './Pages/VendorCreationRequest/VendorCreationRequest'
 import TSClossure from './Pages/TripsheetClossure/TSClossure'
 import TSClossureSto from './Pages/TripsheetClossure/TSClossureSto'
@@ -95,6 +95,8 @@ import BankMasterTable from './Pages/Master/Submaster/Bank/BankMasterTable'
 import DriverMasterTable from './Pages/Master/DriverMaster/DriverMasterTable'
 
 import LocationTable from './Pages/Master/Submaster/LocationTable'
+import UserLoginMasterEdit from './Pages/Master/UserMaster/UserLoginMasterEdit'
+import TripSheetCreation from './Pages/TripSheetCreation/TripSheetCreation'
 
 const routes = [
   // Master
@@ -157,6 +159,12 @@ const routes = [
     name: 'UserLoginMasterTable',
     component: UserLoginMasterTable,
   },
+  {
+    path: '/UserLoginMasterTable/UserLoginMasterEdit/:id',
+    exact: true,
+    name: 'UserLoginMasterTable Edit',
+    component: UserLoginMasterEdit,
+  },
 
   // Sub-Master
   { path: '/bankmaster', exact: true, name: 'Bank Master', component: BankMasterTable },
@@ -212,23 +220,23 @@ const routes = [
     name: 'DocVerifyVendorAvail',
     component: DocVerifyVendorAvail,
   },
+  // {
+  //   path: '/DocsVerify/DocVerifyVendorNotAvail',
+  //   exact: true,
+  //   name: 'DocVerifyVendorNotAvail',
+  //   component: DocVerifyVendorNotAvail,
+  // },
+  { path: '/RjSalesOrderCreation', exact: true, name: 'Test', component: RjSalesOrderCreation },
   {
-    path: '/DocsVerify/DocVerifyVendorNotAvail',
+    path: '/RJcustomerCreationHome',
     exact: true,
-    name: 'DocVerifyVendorNotAvail',
-    component: DocVerifyVendorNotAvail,
+    name: 'RJ Customer Creation',
+    component: RJcustomerCreationHome,
   },
   {
-    path: '/RjSalesOrderCreation',
+    path: '/RJcustomerCreation',
     exact: true,
-    name: 'Return Journey Sales Order Creation',
-    component: RjSalesOrderCreation,
-  },
-  { path: '/RJcustomerCreationHome', exact: true, name: 'Test', component: RJcustomerCreationHome },
-  {
-    path: '/RJcustomerCreationHome/RJcustomerCreation',
-    exact: true,
-    name: 'Test',
+    name: 'RJ Customer Creation',
     component: RJcustomerCreation,
   },
   {
@@ -280,7 +288,7 @@ const routes = [
     component: VendorCreationHome,
   },
   {
-    path: '/VendorCreationHome/VendorCreationRequest',
+    path: '/VendorCreationHome/VendorCreationRequest/:id',
     exact: true,
     name: 'VendorCreationRequest',
     component: VendorCreationRequest,
@@ -292,7 +300,7 @@ const routes = [
     component: VendorCreationApprovalHome,
   },
   {
-    path: '/VendorCreationApprovalHome/VendorCreationApproval',
+    path: '/VendorCreationApprovalHome/VendorCreationApproval/:id',
     exact: true,
     name: 'VendorCreationApprovalHome',
     component: VendorCreationApproval,
@@ -301,13 +309,13 @@ const routes = [
     path: '/VendorCreationConfrimationHome',
     exact: true,
     name: 'VendorCreationConfrimationHome',
-    component: VendorCreationConfrimationHome,
+    component: VendorCreationConfirmationHome,
   },
   {
-    path: '/VendorCreationConfrimationHome/VendorCreationConfrimation',
+    path: '/VendorCreationConfrimationHome/VendorCreationConfirmation/:id',
     exact: true,
     name: 'VendorCreationConfrimation',
-    component: VendorCreationConfrimation,
+    component: VendorCreationConfirmation,
   },
   {
     path: '/TripSheetCreation',
@@ -322,10 +330,10 @@ const routes = [
     component: TripSheetCreationFG,
   },
   {
-    path: '/TripSheetCreation/own',
+    path: '/TripSheetCreation/:id',
     exact: true,
-    name: '/TripSheetCreationOwnFG',
-    component: TripSheetCreationOwnFG,
+    name: '/TripSheetCreation',
+    component: TripSheetCreation,
   },
 
   {

@@ -18,10 +18,10 @@ const BankComponent = () => {
     <>
 
         <option value={''}>Select...</option>
-        {loadDetails.map(({ id, bank_name }) => {
+        {loadDetails.map(({ bank_id, bank_name }) => {
           return (
             <>
-              <option key={id} value={id}>
+              <option key={bank_id} value={bank_id}>
                 {bank_name}
               </option>
             </>

@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom'
 // import { Lines } from 'react-preloaders'
 import CustomTable from 'src/components/customComponent/CustomTable'
 import DocsVerifyService from 'src/Service/DocsVerify/DocsVerifyService'
+import PanDataService from 'src/Service/SAP/PanDataService'
 
 const DocsVerify = () => {
   const [rowData, setRowData] = useState([])
@@ -61,6 +62,10 @@ const DocsVerify = () => {
   useEffect(() => {
     loadDocsVerifyTable()
   }, [])
+
+  useEffect(()=>{
+    PanDataService.getPanData();
+  },[])
 
   const columns = [
     {

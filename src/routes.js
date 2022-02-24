@@ -260,7 +260,7 @@ const routes = [
     component: RJcustomerCreationHome,
   },
   {
-    path: '/RJcustomerCreation',
+    path: '/RJcustomerCreationHome/RJcustomerCreation',
     exact: true,
     name: 'RJ Customer Creation',
     component: RJcustomerCreation,

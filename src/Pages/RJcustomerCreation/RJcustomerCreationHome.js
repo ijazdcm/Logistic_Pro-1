@@ -1,80 +1,64 @@
-import { React, useState, useEffect } from 'react'
 import {
   CButton,
   CCard,
-  CRow,
-  CCol,
-  CAlert,
   CContainer,
+  CCol,
+  CRow,
   CModal,
   CModalHeader,
   CModalTitle,
   CModalBody,
+  CCardImage,
   CModalFooter,
 } from '@coreui/react'
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import CustomTable from 'src/components/customComponent/CustomTable'
+import DriverMasterService from 'src/Service/Master/DriverMasterService'
+import { toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+import CustomSpanButton from 'src/components/customComponent/CustomSpanButton1'
 import CustomerCreationService from 'src/Service/CustomerCreation/CustomerCreationService'
-import VehicleMaintenanceValidation from 'src/Utils/TransactionPages/VehicleMaintenance/VehicleMaintenanceValidation'
 
-const CustomerCreation = () => {
+const CustomerCreationHome = () => {
   const [rowData, setRowData] = useState([])
-  const [errorModal, setErrorModal] = useState(false)
-  let tableData = []
+  const [mount, setMount] = useState(1)
 
-  const ACTION = {
-    GATE_IN: 1,
-    GATE_OUT: 2,
-    WAIT_OUTSIDE: 3,
-  }
+  const [documentSrc, setDocumentSrc] = useState('')
+  let viewData
 
-  const loadCustomerCreationTable = () => {
-    CustomerCreationService.getCustomerCreationData().then((res) => {
-      tableData = res.data.data
+  
+
+
+  //section for handling view model for each model
+
+  useEffect(() => {
+    CustomerCreationService.getCustomerCreationData().then((response) => {
+      viewData = response.data.data
+      console.log(viewData);
       let rowDataList = []
-      tableData.map((data, index) => {
+      viewData.map((data, index) => {
         rowDataList.push({
           sno: index + 1,
-          Tripsheet_No: '',
-          Vehicle_Type: data.vehicle_type_id.type,
-          Vehicle_No: data.vehicle_number,
-          Driver_Name: data.driver_name,
-          Waiting_At: (
-            <span className="badge rounded-pill bg-info">
-              {data.parking_status == ACTION.GATE_IN
-                ? 'Customer Creation'
-                : data.parking_status == ACTION.WAIT_OUTSIDE
-                ? 'Waiting Outside'
-                : 'Gate Out'}
-            </span>
-          ),
-          Screen_Duration: data.updated_at,
-          Overall_Duration: data.created_at,
-          Action: (
-            <span>
-              {data.vehicle_type_id.type != 'Hire' ? (
-                <CButton
-                  className="badge text-white"
-                  color="warning"
-                >
-                <Link to={`RJcustomerCreation/${data.parking_yard_gate_id}`}>
-                 RJ Customer Creation
-                 </Link>
-                </CButton>
-              ) : (
-                ''
-              )}
-            </span>
-          ),
+          Creation_Date: data.created_at,
+          customer_name: data.customer_name,
+          customer_PAN_card_number: data.customer_PAN_card_number,
+          customer_Aadhar_card_number: data.customer_Aadhar_card_number,
+          customer_mobile_number: data.customer_mobile_number,
+          customer_street_name: data.customer_street_name,
+          customer_area: data.customer_area,
+          customer_city: data.customer_city,
+          customer_state: data.customer_state,
+          customer_district: data.customer_district,
+          customer_postal_code: data.customer_postal_code,
         })
       })
       setRowData(rowDataList)
-    })
-  }
 
-  useEffect(() => {
-    loadCustomerCreationTable()
-  }, [])
+    })
+  }, [mount])
+
+  // ============ Column Header Data =======
 
   const columns = [
     {
@@ -83,95 +67,106 @@ const CustomerCreation = () => {
       sortable: true,
       center: true,
     },
+
     {
-      name: 'TripSheet No',
-      selector: (row) => row.VA_No,
+      name: 'Customer Name',
+      selector: (row) => row.customer_name,
       sortable: true,
       center: true,
     },
     {
-      name: 'Vehicle Type',
-      selector: (row) => row.Vehicle_Type,
+      name: 'PAN Number',
+      selector: (row) => row.customer_PAN_card_number,
       sortable: true,
       center: true,
     },
     {
-      name: 'Vehicle No',
-      selector: (row) => row.Vehicle_No,
+      name: 'Aadhar Number',
+      selector: (row) => row.customer_Aadhar_card_number,
       sortable: true,
       center: true,
     },
     {
-      name: 'Driver Name',
-      selector: (row) => row.Driver_Name,
+      name: 'Mobile Number',
+      selector: (row) => row.customer_mobile_number,
       sortable: true,
       center: true,
     },
     {
-      name: 'Waiting At',
-      selector: (row) => row.Waiting_At,
-      // sortable: true,
-      center: true,
-    },
-    {
-      name: 'Screen Duration',
-      selector: (row) => row.Screen_Duration,
+      name: 'Street Name',
+      selector: (row) => row.customer_street_name,
       sortable: true,
       center: true,
     },
     {
-      name: ' Overall Duration',
-      selector: (row) => row.Overall_Duration,
+      name: 'Area',
+      selector: (row) => row.customer_area,
       sortable: true,
       center: true,
     },
     {
-      name: 'Action',
-      selector: (row) => row.Action,
+      name: 'City',
+      selector: (row) => row.customer_city,
+      sortable: true,
       center: true,
     },
+    {
+      name: 'District',
+      selector: (row) => row.customer_district,
+      sortable: true,
+      center: true,
+    },
+    {
+      name: 'State',
+      selector: (row) => row.customer_state,
+      sortable: true,
+      center: true,
+    },
+    {
+      name: ' Postal code',
+      selector: (row) => row.customer_postal_code,
+      sortable: true,
+      center: true,
+    },
+
   ]
+
+  //============ column header data=========
+
   return (
-    <CCard className="mt-4">
-      <CContainer className="mt-2">
-        <CustomTable columns={columns} data={rowData} />
+    <CCard>
+      <CContainer className="mt-1">
+        <CRow className="mt-1 mb-1">
+          <CCol
+            className="offset-md-6"
+            xs={15}
+            sm={15}
+            md={6}
+            style={{ display: 'flex', justifyContent: 'end' }}
+          >
+            <Link className="text-white" to="/RJcustomerCreationHome/RJcustomerCreation">
+              <CButton size="md" color="warning" className="px-3 text-white" type="button">
+                <span className="float-start">
+                  <i className="" aria-hidden="true"></i> &nbsp;New
+                </span>
+              </CButton>
+            </Link>
+          </CCol>
+        </CRow>
+
+        <CustomTable
+          columns={columns}
+          data={rowData}
+          fieldName={'customer_name'}
+          showSearchFilter={true}
+        />
+        <hr></hr>
       </CContainer>
+      {/*License copy front model*/}
+
+      {/*Driver Photo model*/}
     </CCard>
   )
-
-  // return (
-  //   <>
-  //     <CCard className="mt-4">
-  //       <CContainer className="m-2">
-  //         <CustomTable columns={columns} data={rowData} />
-  //       </CContainer>
-  //     </CCard>
-  //     {/* Error Modal Section */}
-  //     <CModal visible={errorModal} onClose={() => setErrorModal(false)}>
-  //       <CModalHeader>
-  //         <CModalTitle className="h4">Trip STO Confirmation</CModalTitle>
-  //       </CModalHeader>
-  //       <CModalBody>
-  //         <CRow>
-  //           <CCol>
-  //             <CAlert color="danger" data-aos="fade-down">
-  //               {'Are You Sure to Create Return Journey Customer ?'}
-  //             </CAlert>
-  //           </CCol>
-  //         </CRow>
-  //       </CModalBody>
-  //       <CModalFooter>
-  //         <CButton color="primary">
-  //           <Link to="/RJcustomerCreation"> Yes </Link>
-  //         </CButton>
-  //         <CButton onClick={() => setErrorModal(false)} color="primary">
-  //           <Link to=""> No </Link>
-  //         </CButton>
-  //       </CModalFooter>
-  //     </CModal>
-  //     {/* Error Modal Section */}
-  //   </>
-  // )
 }
 
-export default CustomerCreation
+export default CustomerCreationHome

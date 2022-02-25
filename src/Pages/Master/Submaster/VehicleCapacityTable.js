@@ -64,7 +64,7 @@ const VehicleCapacityTable = () => {
   // =================== CRUD =====================
   const Create = (e) => {
     e.preventDefault()
-    let createValues = { capacity_name: values.capacity }
+    let createValues = { vehicle_capacity: values.capacity }
     VehicleCapacityApi.createVehicleCapacity(createValues)
       .then((response) => {
         setSuccess('New Vehicle Capacity Added Successfully')

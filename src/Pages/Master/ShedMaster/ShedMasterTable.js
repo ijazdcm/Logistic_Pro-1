@@ -87,11 +87,8 @@ const ShedMasterTable = () => {
           Aadhar_Number: data.shed_adhar_number,
           Pan_Number: data.pan_number,
           Gst_No: data.gst_no,
-          Status: (
-            <span className="badge rounded-pill bg-info">
-              {data.shed_status === 1 ? 'Active' : 'Inactive'}
-            </span>
-          ),
+          Status: data.shed_status === 1 ? '✔️' : '❌',
+
           Action: (
             <div className="d-flex justify-content-space-between">
               <CButton

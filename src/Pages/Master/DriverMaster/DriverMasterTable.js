@@ -135,11 +135,7 @@ const DriverMasterTable = () => {
             />
           ),
           Driver_Address: data.driver_address,
-          Status: (
-            <span className="badge rounded-pill bg-info">
-              {data.driver_status === 1 ? 'Active' : 'InActive'}
-            </span>
-          ),
+          Status: data.driver_status === 1 ? '✔️' : '❌',
           Action: (
             <div className="d-flex justify-content-space-between">
               <CButton

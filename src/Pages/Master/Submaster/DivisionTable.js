@@ -121,17 +121,13 @@ const DivisionTable = () => {
       let viewData = response.data.data
       let rowDataList = []
       viewData.map((data, index) => {
+        let status = data.division_status == 1 ? '✔️' : '❌'
+
         rowDataList.push({
           sno: index + 1,
           Division: data.division,
           Created_at: data.created_at,
-          Status: (
-            <span
-              className={`badge rounded-pill bg-${data.division_status === 1 ? 'info' : 'danger'}`}
-            >
-              {data.division_status === 1 ? 'Active' : 'InActive'}
-            </span>
-          ),
+          Status: status,
           Action: (
             <div className="d-flex justify-content-space-between">
               <CButton
@@ -163,7 +159,6 @@ const DivisionTable = () => {
       })
       setRowData(rowDataList)
       setPending(false)
-
       setTimeout(() => {
         setSuccess('')
         setUpdate('')
@@ -182,27 +177,28 @@ const DivisionTable = () => {
       center: true,
     },
     {
-      name: 'Creation date',
+      name: 'Created_at',
       selector: (row) => row.Created_at,
+      sortable: true,
       left: true,
-      sortable:true,
     },
     {
       name: 'Division',
       selector: (row) => row.Division,
+      sortable: true,
       left: true,
-      sortable:true
     },
     {
       name: 'Status',
       selector: (row) => row.Status,
-      left: true,
-      sortable:true
+      sortable: true,
+      center: true,
     },
 
     {
       name: 'Action',
       selector: (row) => row.Action,
+      sortable: true,
       center: true,
     },
   ]
@@ -241,7 +237,7 @@ const DivisionTable = () => {
         <CCard className="mt-1">
           <CustomTable
             columns={columns}
-            data={rowData}
+            data={rowData || ''}
             fieldName={'Division'}
             showSearchFilter={true}
             pending={pending}

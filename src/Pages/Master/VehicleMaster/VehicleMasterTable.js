@@ -20,7 +20,6 @@ import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import CustomSpanButton from 'src/components/customComponent/CustomSpanButton'
 
-
 const VehicleMasterTable = () => {
   const [RCCopyFront, setRCCopyFront] = useState(false)
   const [RCCopyBack, setRCCopyBack] = useState(false)
@@ -122,13 +121,7 @@ const VehicleMasterTable = () => {
           ),
           Insurance_Validity: data.insurance_validity,
           FC_Validity: data.fc_validity,
-          Status: (
-            <span
-              className={`badge rounded-pill bg-${data.vehicle_status === 1 ? 'info' : 'danger'}`}
-            >
-              {data.vehicle_status === 1 ? 'Active' : 'Inactive'}
-            </span>
-          ),
+          Status: data.vehicle_status === 1 ? '✔️' : '❌',
           Action: (
             <div className="d-flex justify-content-space-between">
               <CButton
@@ -232,14 +225,15 @@ const VehicleMasterTable = () => {
       selector: (row) => row.Insurance_Validity,
       center: true,
       sortable: true,
-      Cell: ({ row }) =>{return format(row, 'DD/mm/yyyy')}
+      Cell: ({ row }) => {
+        return format(row, 'DD/mm/yyyy')
+      },
     },
     {
       name: 'FC Validity',
       selector: (row) => row.FC_Validity,
       center: true,
       sortable: true,
-      
     },
     {
       name: 'Status',

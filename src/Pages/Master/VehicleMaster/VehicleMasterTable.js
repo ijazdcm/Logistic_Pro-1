@@ -20,6 +20,7 @@ import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import CustomSpanButton from 'src/components/customComponent/CustomSpanButton'
 
+
 const VehicleMasterTable = () => {
   const [RCCopyFront, setRCCopyFront] = useState(false)
   const [RCCopyBack, setRCCopyBack] = useState(false)
@@ -28,6 +29,7 @@ const VehicleMasterTable = () => {
 
   const [rowData, setRowData] = useState([])
   const [mount, setMount] = useState(1)
+  const [pending, setPending] = useState(true)
 
   const [documentSrc, setDocumentSrc] = useState('')
   let viewData
@@ -162,6 +164,7 @@ const VehicleMasterTable = () => {
         })
       })
       setRowData(rowDataList)
+      setPending(false)
     })
   }, [mount])
 
@@ -228,11 +231,15 @@ const VehicleMasterTable = () => {
       name: 'Insurance Validity',
       selector: (row) => row.Insurance_Validity,
       center: true,
+      sortable: true,
+      Cell: ({ row }) =>{return format(row, 'DD/mm/yyyy')}
     },
     {
       name: 'FC Validity',
       selector: (row) => row.FC_Validity,
       center: true,
+      sortable: true,
+      
     },
     {
       name: 'Status',
@@ -273,6 +280,7 @@ const VehicleMasterTable = () => {
             data={rowData}
             fieldName={'vehicle_Number'}
             showSearchFilter={true}
+            pending={pending}
           />
         </CContainer>
 

@@ -85,7 +85,7 @@ const DriverMasterTable = () => {
   useEffect(() => {
     DriverMasterService.getDrivers().then((response) => {
       viewData = response.data.data
-      console.log(viewData);
+      console.log(viewData)
       let rowDataList = []
       viewData.map((data, index) => {
         rowDataList.push({
@@ -173,7 +173,6 @@ const DriverMasterTable = () => {
         })
       })
       setRowData(rowDataList)
-
     })
   }, [mount])
 
@@ -288,34 +287,35 @@ const DriverMasterTable = () => {
   //============ column header data=========
 
   return (
-    <CCard>
-      <CContainer className="mt-1">
-        <CRow className="mt-1 mb-1">
-          <CCol
-            className="offset-md-6"
-            xs={15}
-            sm={15}
-            md={6}
-            style={{ display: 'flex', justifyContent: 'end' }}
-          >
-            <Link className="text-white" to="/DriverMaster">
-              <CButton size="md" color="warning" className="px-3 text-white" type="button">
-                <span className="float-start">
-                  <i className="" aria-hidden="true"></i> &nbsp;New Driver
-                </span>
-              </CButton>
-            </Link>
-          </CCol>
-        </CRow>
+    <>
+      <CRow className="mt-1 mb-1">
+        <CCol
+          className="offset-md-6"
+          xs={15}
+          sm={15}
+          md={6}
+          style={{ display: 'flex', justifyContent: 'end' }}
+        >
+          <Link className="text-white" to="/DriverMaster">
+            <CButton size="md" color="warning" className="px-3 text-white" type="button">
+              <span className="float-start">
+                <i className="" aria-hidden="true"></i> &nbsp;NEW
+              </span>
+            </CButton>
+          </Link>
+        </CCol>
+      </CRow>
+      <CCard>
+        <CContainer>
+          <CustomTable
+            columns={columns}
+            data={rowData}
+            fieldName={'Driver_Name'}
+            showSearchFilter={true}
+          />
+        </CContainer>
+      </CCard>
 
-        <CustomTable
-          columns={columns}
-          data={rowData}
-          fieldName={'Driver_Name'}
-          showSearchFilter={true}
-        />
-        <hr></hr>
-      </CContainer>
       {/*License copy front model*/}
       <CModal visible={LicenseCopyFront} onClose={() => setLicenseCopyFront(false)}>
         <CModalHeader>
@@ -391,7 +391,7 @@ const DriverMasterTable = () => {
         </CModalFooter>
       </CModal>
       {/*Driver Photo model*/}
-    </CCard>
+    </>
   )
 }
 

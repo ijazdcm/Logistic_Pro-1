@@ -1,4 +1,4 @@
-  import {
+import {
   CButton,
   CCard,
   CContainer,
@@ -22,6 +22,7 @@ import CustomTable from 'src/components/customComponent/CustomTable'
 import VehicleCapacityApi from '../../../Service/SubMaster/VehicleCapacityApi'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import VehicleCapacitySubmasterValidation from 'src/Utils/SubMaster/VehicleCapacitySubMasterValidation'
 
 const VehicleCapacityTable = () => {
   const [modal, setModal] = useState(false)
@@ -34,6 +35,7 @@ const VehicleCapacityTable = () => {
   const [deleted, setDeleted] = useState('')
   const [error, setError] = useState('')
   const [mount, setMount] = useState(1)
+  const [pending, setPending] = useState(true)
 
   const formValues = {
     vehicleCapacity: '',
@@ -50,7 +52,7 @@ const VehicleCapacityTable = () => {
     onBlur,
     onClick,
     onKeyUp,
-  } = useForm(login, validate, formValues)
+  } = useForm(login, VehicleCapacitySubmasterValidation, formValues)
 
   function login() {
     // alert('No Errors CallBack Called')
@@ -134,7 +136,6 @@ const VehicleCapacityTable = () => {
           Action: (
             <div className="d-flex justify-content-space-between">
               <CButton
-
                 size="sm"
                 color="danger"
                 shape="rounded"
@@ -162,6 +163,7 @@ const VehicleCapacityTable = () => {
         })
       })
       setRowData(rowDataList)
+      setPending(false)
 
       setTimeout(() => {
         setSuccess('')
@@ -196,6 +198,7 @@ const VehicleCapacityTable = () => {
     {
       name: 'Status',
       selector: (row) => row.Status,
+      sortable: true,
       left: true,
     },
     {
@@ -231,7 +234,7 @@ const VehicleCapacityTable = () => {
               }}
             >
               <span className="float-start">
-                <i className="" aria-hidden="true"></i> &nbsp;New
+                <i className="" aria-hidden="true"></i> &nbsp;NEW
               </span>
             </CButton>
           </CCol>
@@ -241,7 +244,9 @@ const VehicleCapacityTable = () => {
           <CustomTable
             columns={columns}
             data={rowData}
-            
+            fieldName={'Vehicle_Capacitys'}
+            showSearchFilter={true}
+            pending={pending}
           />
         </CCard>
       </CContainer>

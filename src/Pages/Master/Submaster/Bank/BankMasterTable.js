@@ -27,6 +27,7 @@ const BankMasterTable = () => {
   const [editBankModel, setEditBankModel] = useState(false)
   const [updateBankId, setUpdateBankId] = useState(false)
   const [mount, setMount] = useState(1)
+  const [pending, setPending] = useState(true)
 
   const formValues = {
     bankName: '',
@@ -134,6 +135,7 @@ const BankMasterTable = () => {
         })
       })
       setRowData(rowDataList)
+      setPending(false)
     })
   }, [mount])
 
@@ -202,6 +204,7 @@ const BankMasterTable = () => {
             data={rowData}
             fieldName={'Bank'}
             showSearchFilter={true}
+            pending={pending}
           />
         </CCard>
         {/*add New Bank model*/}

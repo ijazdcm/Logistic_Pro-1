@@ -2,17 +2,20 @@ export default function ShedMasterValidation(values, isTouched) {
   const errors = {}
 
   //vehicle type validation rule
-  if (isTouched.shedType && values.shedType == 0) {
-    errors.shedType = 'Choose Type'
+  if (isTouched.shedType && values.shedType === '0') {
+    errors.shedType = 'Choose Shed Type'
   }
 
+  //shed name validation rule
   if (isTouched.ShedName && !values.ShedName) {
-    errors.ShedName = 'Required'
+    errors.ShedName = 'Shed Name is required'
   } else if (isTouched.ShedName && !/^[a-zA-Z ]+$/.test(values.ShedName)) {
-    errors.ShedName = 'Must Have Letters & Space'
+    errors.ShedName = 'Driver Name only have Letters and space'
   }
+  //
+
   if (isTouched.ShedOwnerName && !values.ShedOwnerName) {
-    errors.ShedOwnerName = 'Required'
+    errors.ShedOwnerName = 'Shed Owner name is Required'
   } else if (isTouched.ShedOwnerName && !/^[a-zA-Z ]+$/.test(values.ShedOwnerName)) {
     errors.ShedOwnerName = 'Must Have Letters & Space'
   }
@@ -33,23 +36,23 @@ export default function ShedMasterValidation(values, isTouched) {
     errors.ShedOwnerMobileNumber1 = 'Must Have 10 Digit Numeric'
   }
   if (isTouched.ShedOwnerAddress && !values.ShedOwnerAddress) {
-    errors.ShedOwnerAddress = 'Required'
+    errors.ShedOwnerAddress = 'Address is required'
   }
   if (isTouched.ShedOwnerPhoto && !values.ShedOwnerPhoto) {
-    errors.ShedOwnerPhoto = 'Required'
+    errors.ShedOwnerPhoto = 'Shed Owner photo is required'
   }
   if (isTouched.PANNumber && !values.PANNumber) {
-    errors.PANNumber = 'Required'
+    errors.PANNumber = 'PAN Number is required'
   } else if (isTouched.PANNumber && !/^[A-Z]{5}[\d]{4}[A-Z]{1}$/.test(values.PANNumber)) {
     errors.PANNumber = 'Must Have 10 Digit Alphanumeric'
   }
   if (isTouched.AadharNumber && !values.AadharNumber) {
-    errors.AadharNumber = 'Required'
+    errors.AadharNumber = 'Aadhar Number is required'
   } else if (isTouched.AadharNumber && !/^[\d]{12}$/.test(values.AadharNumber)) {
     errors.AadharNumber = 'Must Have 12 Digit Numeric'
   }
   if (isTouched.GSTNumber && !values.GSTNumber) {
-    errors.GSTNumber = 'Required'
+    errors.GSTNumber = 'GST Number is required'
   } else if (
     isTouched.GSTNumber &&
     !/^[\d]{2}[A-Z]{5}[\d]{4}[A-Z]{1}[\d]{1}[A-Z]{1}[A-Z\d]{1}$/.test(values.GSTNumber)

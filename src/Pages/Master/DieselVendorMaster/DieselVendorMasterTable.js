@@ -20,6 +20,8 @@ import DieselVendorMasterService from 'src/Service/Master/DieselVendorMasterServ
 const DieselVendorMasterTable = () => {
   const [rowData, setRowData] = useState([])
   const [mount, setMount] = useState(1)
+  const [pending, setPending] = useState(true)
+
   let viewData
 
   function changeDieselVendorStatus(id) {
@@ -91,6 +93,7 @@ const DieselVendorMasterTable = () => {
         })
       })
       setRowData(rowDataList)
+      setPending(false)
     })
   }, [mount])
 
@@ -141,6 +144,7 @@ const DieselVendorMasterTable = () => {
       name: 'Status',
       selector: (row) => row.Status,
       center: true,
+      sortable: true,
     },
     {
       name: 'Action',
@@ -150,36 +154,34 @@ const DieselVendorMasterTable = () => {
   ]
 
   return (
-    <CCard>
-      <CContainer className="mt-1">
-        <CRow className="mt-1 mb-1">
-          <CCol
-            className="offset-md-6"
-            xs={15}
-            sm={15}
-            md={6}
-            style={{ display: 'flex', justifyContent: 'end' }}
-          >
-            <Link className="text-white" to="/DieselVendorMaster">
-              <CButton size="md" color="warning" className="px-3 text-white" type="button">
-                <span className="float-start">
-                  <i className="" aria-hidden="true"></i> &nbsp;New
-                </span>
-              </CButton>
-            </Link>
-          </CCol>
-        </CRow>
-
+    <>
+      <CRow className="mt-1 mb-1">
+        <CCol
+          className="offset-md-6"
+          xs={15}
+          sm={15}
+          md={6}
+          style={{ display: 'flex', justifyContent: 'end' }}
+        >
+          <Link className="text-white" to="/DieselVendorMaster">
+            <CButton size="md" color="warning" className="px-3 text-white" type="button">
+              <span className="float-start">
+                <i className="" aria-hidden="true"></i> &nbsp;NEW
+              </span>
+            </CButton>
+          </Link>
+        </CCol>
+      </CRow>
+      <CCard>
         <CustomTable
           columns={columns}
           data={rowData}
           fieldName={'diesel_Vendor_Name'}
           showSearchFilter={true}
-          
+          pending={pending}
         />
-        <hr></hr>
-      </CContainer>
-    </CCard>
+      </CCard>
+    </>
   )
 }
 

@@ -23,6 +23,7 @@ const UserLoginMasterTable = () => {
   const [documentSrc, setDocumentSrc] = useState('')
   const [mount, setMount] = useState(1)
   const [rowData, setRowData] = useState([])
+  const [pending, setPending] = useState(true)
   let viewData
 
   function handleViewDocuments(e, id, type) {
@@ -73,11 +74,8 @@ const UserLoginMasterTable = () => {
               documentType={'USER_PHOTO'}
             />
           ),
-          Status: (
-            <span className={`badge rounded-pill bg-${data.user_status === 1 ? 'info' : 'danger'}`}>
-              {data.user_status === 1 ? 'Active' : 'Inactive'}
-            </span>
-          ),
+          Status: data.user_status === 1 ? '✔️' : '❌',
+
           Action: (
             <div className="d-flex justify-content-space-between">
               <CButton
@@ -112,6 +110,7 @@ const UserLoginMasterTable = () => {
         })
       })
       setRowData(rowDataList)
+      setPending(false)
     })
   }, [mount])
 
@@ -168,16 +167,19 @@ const UserLoginMasterTable = () => {
     {
       name: 'User ID',
       selector: (row) => row.User_ID,
+      sortable: true,
       center: true,
     },
     {
       name: ' User Mobile Number',
       selector: (row) => row.User_Mobile_Number,
+      sortable: true,
       center: true,
     },
     {
       name: 'User Mail ID',
       selector: (row) => row.User_Mail_ID,
+      sortable: true,
       center: true,
     },
     {
@@ -186,8 +188,9 @@ const UserLoginMasterTable = () => {
       center: true,
     },
     {
-      name: 'Statususer_status',
+      name: 'Status',
       selector: (row) => row.Status,
+      sortable: true,
       center: true,
     },
     {
@@ -200,7 +203,7 @@ const UserLoginMasterTable = () => {
   return (
     <CCard className="mt-4">
       <CContainer className="mt-2">
-        <CustomTable columns={columns} data={rowData} />
+        <CustomTable columns={columns} data={rowData} pending={pending} />
         <hr></hr>
         <CRow className="mt-3">
           <CCol

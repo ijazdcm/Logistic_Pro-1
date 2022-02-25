@@ -28,6 +28,7 @@ const VehicleMasterTable = () => {
 
   const [rowData, setRowData] = useState([])
   const [mount, setMount] = useState(1)
+  const [pending, setPending] = useState(true)
 
   const [documentSrc, setDocumentSrc] = useState('')
   let viewData
@@ -120,13 +121,7 @@ const VehicleMasterTable = () => {
           ),
           Insurance_Validity: data.insurance_validity,
           FC_Validity: data.fc_validity,
-          Status: (
-            <span
-              className={`badge rounded-pill bg-${data.vehicle_status === 1 ? 'info' : 'danger'}`}
-            >
-              {data.vehicle_status === 1 ? 'Active' : 'Inactive'}
-            </span>
-          ),
+          Status: data.vehicle_status === 1 ? '✔️' : '❌',
           Action: (
             <div className="d-flex justify-content-space-between">
               <CButton
@@ -162,6 +157,7 @@ const VehicleMasterTable = () => {
         })
       })
       setRowData(rowDataList)
+      setPending(false)
     })
   }, [mount])
 
@@ -228,11 +224,16 @@ const VehicleMasterTable = () => {
       name: 'Insurance Validity',
       selector: (row) => row.Insurance_Validity,
       center: true,
+      sortable: true,
+      Cell: ({ row }) => {
+        return format(row, 'DD/mm/yyyy')
+      },
     },
     {
       name: 'FC Validity',
       selector: (row) => row.FC_Validity,
       center: true,
+      sortable: true,
     },
     {
       name: 'Status',
@@ -273,6 +274,7 @@ const VehicleMasterTable = () => {
             data={rowData}
             fieldName={'vehicle_Number'}
             showSearchFilter={true}
+            pending={pending}
           />
         </CContainer>
 

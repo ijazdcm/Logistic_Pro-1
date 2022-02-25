@@ -35,6 +35,7 @@ const LocationTable = () => {
   const [deleted, setDeleted] = useState('')
   const [error, setError] = useState('')
   const [mount, setMount] = useState(1)
+  const [pending, setPending] = useState(true)
   const formValues = {
     location: '',
   }
@@ -154,6 +155,7 @@ const LocationTable = () => {
         })
       })
       setRowData(rowDataList)
+      setPending(false)
 
       setTimeout(() => {
         setSuccess('')

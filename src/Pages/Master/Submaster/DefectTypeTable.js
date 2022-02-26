@@ -133,15 +133,7 @@ const DefectTypeTable = () => {
           sno: index + 1,
           DefectType: data.defect_type,
           Created_at: data.created_at,
-          Status: (
-            <span
-              className={`badge rounded-pill bg-${
-                data.defect_type_status === 1 ? 'info' : 'danger'
-              }`}
-            >
-              {data.defect_type_status === 1 ? 'Active' : 'InActive'}
-            </span>
-          ),
+          Status: data.defect_type_status === 1 ? '✔️' : '❌',
           Action: (
             <div className="d-flex justify-content-space-between">
               <CButton

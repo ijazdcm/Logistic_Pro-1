@@ -99,11 +99,8 @@ const BankMasterTable = () => {
           sno: index + 1,
           Created_at: data.created_at,
           Bank: data.bank_name,
-          Status: (
-            <span className={`badge rounded-pill bg-${data.bank_status === 1 ? 'info' : 'danger'}`}>
-              {data.bank_status === 1 ? 'Active' : 'InActive'}
-            </span>
-          ),
+          Status:
+            data.bank_status === 1 ? '✔️' : '❌',
           Action: (
             <div className="d-flex justify-content-space-between">
               <CButton

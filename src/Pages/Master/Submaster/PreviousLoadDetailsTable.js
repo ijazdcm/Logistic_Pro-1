@@ -128,15 +128,7 @@ const PreviousLoadDetails = () => {
           sno: index + 1,
           PreviousLoadDetails: data.previous_load_details,
           Created_at: data.created_at,
-          Status: (
-            <span
-              className={`badge rounded-pill bg-${
-                data.previous_load_status === 1 ? 'info' : 'danger'
-              }`}
-            >
-              {data.previous_load_status === 1 ? 'Active' : 'InActive'}
-            </span>
-          ),
+          Status: data.previous_load_status === 1 ? '✔️' : '❌',
           Action: (
             <div className="d-flex justify-content-space-between">
               <CButton
@@ -203,6 +195,7 @@ const PreviousLoadDetails = () => {
       name: 'Status',
       selector: (row) => row.Status,
       left: true,
+      sortable: true,
     },
 
     {

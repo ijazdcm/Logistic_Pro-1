@@ -65,8 +65,8 @@ const LocationTable = () => {
     let createValues = { location_name: values.location }
     LocationApi.createLocation(createValues)
       .then((response) => {
-        setSuccess('New Location Added Successfully');
-        values.location = '';
+        setSuccess('New Location Added Successfully')
+        values.location = ''
       })
       .catch((error) => {
         setError(error.response.data.errors.location_name[0])
@@ -139,7 +139,7 @@ const LocationTable = () => {
                 <i className="fa fa-trash" aria-hidden="true"></i>
               </CButton>
               <CButton
-              disabled={data.location_status === 1 ? false : true}
+                disabled={data.location_status === 1 ? false : true}
                 size="sm"
                 color="secondary"
                 shape="rounded"
@@ -164,7 +164,7 @@ const LocationTable = () => {
         setDeleted('')
       }, 1500)
     })
-  }, [mount,modal, save, success, update, deleted])
+  }, [mount, modal, save, success, update, deleted])
   // ============ CRUD =====================
   /*                    */
   // ============ Column Header Data =======
@@ -176,7 +176,7 @@ const LocationTable = () => {
       center: true,
     },
     {
-      name: 'Created_at',
+      name: 'Creation date',
       selector: (row) => row.Created_at,
       left: true,
     },
@@ -260,9 +260,7 @@ const LocationTable = () => {
 
               <CFormLabel htmlFor="location">
                 Location*{' '}
-                {errors.location && (
-                  <span className="small text-danger">{errors.location}</span>
-                )}
+                {errors.location && <span className="small text-danger">{errors.location}</span>}
               </CFormLabel>
               <CFormInput
                 size="sm"

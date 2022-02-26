@@ -177,7 +177,7 @@ const DivisionTable = () => {
       center: true,
     },
     {
-      name: 'Created_at',
+      name: 'Creation date',
       selector: (row) => row.Created_at,
       sortable: true,
       left: true,
@@ -198,7 +198,6 @@ const DivisionTable = () => {
     {
       name: 'Action',
       selector: (row) => row.Action,
-      sortable: true,
       center: true,
     },
   ]

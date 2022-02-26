@@ -135,11 +135,7 @@ const MaterialDescriptionTable = () => {
           // CreationDate: data.creation_date,
           CreationDate: data.creation_date.substring(0, 10),
           MaterialDescription: data.material_description,
-          Status: (
-            <span className={`badge rounded-pill bg-${data.status === 1 ? 'info' : 'danger'}`}>
-              {data.status === 1 ? 'Active' : 'In Active'}
-            </span>
-          ),
+          Status: data.status === 1 ? '✔️' : '❌',
           // data.status,
           Action: (
             <div className="d-flex justify-content-space-between">

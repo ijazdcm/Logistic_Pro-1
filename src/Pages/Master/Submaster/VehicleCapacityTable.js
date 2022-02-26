@@ -126,13 +126,7 @@ const VehicleCapacityTable = () => {
           sno: index + 1,
           Vehicle_Capacity: data.capacity,
           Created_at: data.created_at,
-          Status: (
-            <span
-              className={`badge rounded-pill bg-${data.vehicle_status === 1 ? 'info' : 'danger'}`}
-            >
-              {data.vehicle_status === 1 ? 'Active' : 'InActive'}
-            </span>
-          ),
+          Status: data.vehicle_status === 1 ? '✔️' : '❌',
           Action: (
             <div className="d-flex justify-content-space-between">
               <CButton

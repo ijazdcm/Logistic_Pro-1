@@ -94,6 +94,18 @@ import DriverMasterEdit from './Pages/Master/DriverMaster/DriverMasterEdit'
 import BankMasterTable from './Pages/Master/Submaster/Bank/BankMasterTable'
 import DriverMasterTable from './Pages/Master/DriverMaster/DriverMasterTable'
 
+
+import LocationTable from './Pages/Master/Submaster/LocationTable';
+import UserLoginMasterEdit from './Pages/Master/UserMaster/UserLoginMasterEdit'
+
+
+// import UserLoginMasterEdit from './Pages/Master/UserMaster/UserLoginMasterEdit'
+import TripSheetCreation from './Pages/TripSheetCreation/TripSheetCreation'
+
+
+
+
+
 // import LocationTable from './Pages/Master/Submaster/LocationTable'
 // =======
 // import LocationTable from './Pages/Master/Submaster/LocationTable';
@@ -101,10 +113,10 @@ import DriverMasterTable from './Pages/Master/DriverMaster/DriverMasterTable'
 
 // >>>>>>> master
 // =======
-import LocationTable from './Pages/Master/Submaster/LocationTable'
-import UserLoginMasterEdit from './Pages/Master/UserMaster/UserLoginMasterEdit'
-import TripSheetCreation from './Pages/TripSheetCreation/TripSheetCreation'
-// >>>>>>> c23dc360c51e3c06a378f88a380696d37c6a1924
+// import LocationTable from './Pages/Master/Submaster/LocationTable'
+// import UserLoginMasterEdit from './Pages/Master/UserMaster/UserLoginMasterEdit'
+// import TripSheetCreation from './Pages/TripSheetCreation/TripSheetCreation'
+
 
 const routes = [
   // Master
@@ -228,6 +240,8 @@ const routes = [
     name: 'DocVerifyVendorAvail',
     component: DocVerifyVendorAvail,
   },
+
+
   {
     path: '/DocsVerify/DocVerifyVendorNotAvail',
     exact: true,
@@ -241,6 +255,15 @@ const routes = [
     component: RjSalesOrderCreation,
   },
   { path: '/RJcustomerCreationHome', exact: true, name: 'Test', component: RJcustomerCreationHome },
+
+  // {
+  //   path: '/DocsVerify/DocVerifyVendorNotAvail',
+  //   exact: true,
+  //   name: 'DocVerifyVendorNotAvail',
+  //   component: DocVerifyVendorNotAvail,
+  // },
+  { path: '/RjSalesOrderCreation', exact: true, name: 'Test', component: RjSalesOrderCreation },
+
   {
     path: '/RJcustomerCreationHome',
     exact: true,

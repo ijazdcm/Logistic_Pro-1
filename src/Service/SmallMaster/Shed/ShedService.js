@@ -14,6 +14,7 @@ class ShedService {
   getShedType() {
     return api.get(SHED_TYPE_URL)
   }
+  
 }
 
 export default new ShedService()

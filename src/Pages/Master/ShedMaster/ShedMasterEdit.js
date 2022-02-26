@@ -51,7 +51,7 @@ const ShedMasterEdit = () => {
   const [singleShed, setsingleShed] = useState('')
 
   const formValues = {
-    ShedType: '',
+    // ShedType: '',
     ShedName: '',
     ShedOwnerName: '',
     ShedOwnerMobileNumber1: '',
@@ -73,7 +73,7 @@ const ShedMasterEdit = () => {
   function addNewShed() {
     const formData = new FormData()
     formData.append('_method', 'PUT')
-    formData.append('shed_type_id', values.ShedType)
+    // formData.append('shed_type_id', values.ShedType)
     formData.append('shed_name', values.ShedName)
     formData.append('shed_owner_name', values.ShedOwnerName)
     formData.append('shed_owner_phone_1', values.ShedOwnerMobileNumber1)
@@ -109,7 +109,7 @@ const ShedMasterEdit = () => {
     //section for getting vehicle type from database
     ShedMasterService.getShedById(id).then((res) => {
       console.log(res.data.data)
-      values.ShedType = res.data.data.shed_type_info.shed_id
+      // values.ShedType = res.data.data.shed_type_info.shed_id
       values.ShedName = res.data.data.shed_name
       values.ShedOwnerName = res.data.data.shed_owner_name
       values.ShedOwnerMobileNumber1 = res.data.data.shed_owner_phone_1
@@ -133,7 +133,7 @@ const ShedMasterEdit = () => {
           <CTabPane role="tabpanel" aria-labelledby="home-tab" visible={true}>
             <CForm className="row g-3 m-2 p-1" onSubmit={handleSubmit}>
               <CRow className="">
-                <CCol md={3}>
+                {/* <CCol md={3}>
                   <CFormLabel htmlFor="sType">
                     Shed Type*{' '}
                     {errors.ShedType && (
@@ -163,7 +163,7 @@ const ShedMasterEdit = () => {
                       )
                     })}
                   </CFormSelect>
-                </CCol>
+                </CCol> */}
                 <CCol md={3}>
                   <CFormLabel htmlFor="sName">
                     Shed Name*
@@ -221,8 +221,6 @@ const ShedMasterEdit = () => {
                     placeholder=""
                   />
                 </CCol>
-              </CRow>
-              <CRow className="">
                 <CCol md={3}>
                   <CFormLabel htmlFor="sOwnerMob2">
                     Shed Owner Mobile Number 2*
@@ -331,8 +329,6 @@ const ShedMasterEdit = () => {
                     placeholder=""
                   />
                 </CCol>
-              </CRow>
-              <CRow className="">
                 <CCol md={3}>
                   <CFormLabel htmlFor="aNumber">
                     Aadhar Number*

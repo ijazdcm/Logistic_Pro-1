@@ -99,7 +99,6 @@ const DriverMaster = () => {
     DriverMasterService.createDrivers(formData)
       .then((res) => {
         console.log(res)
-
         if (res.status === 201) {
           toast.success('Driver Created Successfully!')
 
@@ -175,7 +174,7 @@ const DriverMaster = () => {
                   <CFormInput
                     name="driverName"
                     size="sm"
-                    maxLength={20}
+                    maxLength={30}
                     id="driverName"
                     onChange={handleChange}
                     value={values.driverName}

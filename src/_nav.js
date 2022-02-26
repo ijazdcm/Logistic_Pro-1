@@ -149,7 +149,7 @@ const _nav = [
   {
     component: CNavItem,
     name: 'Customer Creation',
-    to: '/RJcustomerCreation',
+    to: '/RJcustomerCreationHome',
     icon: <CIcon icon={cilAperture} customClassName="nav-icon" />,
     datatoggle: 'tooltip',
     title: 'Return Journey Customer Creation',

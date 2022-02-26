@@ -43,6 +43,7 @@ const ParkingYardGate = () => {
   let tableData = []
 
   const [vehicleType, setVehicleType] = useState([])
+  const [pending, setPending] = useState(true)
 
   const ACTION = {
     GATE_IN: 1,
@@ -144,7 +145,7 @@ const ParkingYardGate = () => {
   const gateInAction = (vehicleId) => {
     ParkingYardGateService.actionWaitingOutsideToGateIn(vehicleId).then((res) => {
       if (res.status === 201) {
-        toast.success('Vehicle Gate In process completed')
+        toast.success('Vehicle Gate In Process Completed')
         loadParkingYardGateTable()
       }
     })
@@ -153,7 +154,7 @@ const ParkingYardGate = () => {
   const gateOutAction = (vehicleId) => {
     ParkingYardGateService.actionGateOut(vehicleId).then((res) => {
       if (res.status === 201) {
-        toast.success('Vehicle Gate Out process completed')
+        toast.success('Vehicle Gate Out Process Completed')
         loadParkingYardGateTable()
       }
     })
@@ -211,6 +212,7 @@ const ParkingYardGate = () => {
         })
       })
       setRowData(rowDataList)
+      setPending(false)
     })
   }
 
@@ -410,6 +412,7 @@ const ParkingYardGate = () => {
               data={rowData}
               fieldName={'Driver_Name'}
               showSearchFilter={true}
+              pending={pending}
             />
           </CContainer>
         </CCard>

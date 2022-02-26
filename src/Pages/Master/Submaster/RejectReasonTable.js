@@ -36,6 +36,7 @@ const RejectResonTable = () => {
   const [deleted, setDeleted] = useState('')
   const [error, setError] = useState('')
   const [mount, setMount] = useState(1)
+  const [pending, setPending] = useState(true)
   const formValues = {
     rejection_reason: '',
   }
@@ -126,7 +127,9 @@ const RejectResonTable = () => {
           Created_at: data.created_at,
           Status: (
             <span
-              className={`badge rounded-pill bg-${data.rejection_reason_status === 1 ? 'info' : 'danger'}`}
+              className={`badge rounded-pill bg-${
+                data.rejection_reason_status === 1 ? 'info' : 'danger'
+              }`}
             >
               {data.rejection_reason_status === 1 ? 'Active' : 'InActive'}
             </span>
@@ -145,7 +148,7 @@ const RejectResonTable = () => {
                 <i className="fa fa-trash" aria-hidden="true"></i>
               </CButton>
               <CButton
-              disabled={data.rejection_reason_status === 1 ? false : true}
+                disabled={data.rejection_reason_status === 1 ? false : true}
                 size="sm"
                 color="secondary"
                 shape="rounded"
@@ -161,6 +164,7 @@ const RejectResonTable = () => {
         })
       })
       setRowData(rowDataList)
+      setPending(false)
 
       setTimeout(() => {
         setSuccess('')
@@ -230,7 +234,7 @@ const RejectResonTable = () => {
               }}
             >
               <span className="float-start">
-                <i className="" aria-hidden="true"></i> &nbsp;New
+                <i className="" aria-hidden="true"></i> &nbsp;NEW
               </span>
             </CButton>
           </CCol>
@@ -242,6 +246,7 @@ const RejectResonTable = () => {
             data={rowData}
             fieldName={'Rejection'}
             showSearchFilter={true}
+            pending={pending}
           />
         </CCard>
       </CContainer>

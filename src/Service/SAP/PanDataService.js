@@ -4,6 +4,7 @@ import AppConfig from 'src/AppConfig'
 class PanDataService {
   // GET SINGLE PAN DATA FROM SAP
   getPanData(panNumber) {
+
     // if (panNumber == 'AMIPR8417L') {
     //   return {
     //     LIFNR: '212248',
@@ -65,6 +66,7 @@ class PanDataService {
           withCredentials: true,
           'Access-Control-Allow-Origin': '*',
 
+
           // 'Access-Control-Allow-Origin': 'http://localhost:3001',
 
           'Access-Control-Allow-Credentials': true,
@@ -83,6 +85,7 @@ class PanDataService {
       .then((response) => response.json())
       .then((data) => {
         console.log(data)
+
         // console.log(response.data);
       })
       .catch((error) => {

@@ -80,7 +80,7 @@ const HireSection = ({
         </CFormLabel>
         <CFormInput
           size="sm"
-          type="number"
+          type="text"
           name="driverPhoneNumber"
           id="driverPhoneNumber"
           maxLength={10}

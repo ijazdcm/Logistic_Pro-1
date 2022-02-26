@@ -39,6 +39,7 @@ const DefectTypeTable = () => {
   const [deleted, setDeleted] = useState('')
   const [error, setError] = useState('')
   const [mount, setMount] = useState(1)
+  const [pending, setPending] = useState(true)
   const formValues = {
     defect_type: '',
   }
@@ -171,6 +172,7 @@ const DefectTypeTable = () => {
         })
       })
       setRowData(rowDataList)
+      setPending(false)
 
       setTimeout(() => {
         setSuccess('')
@@ -238,7 +240,9 @@ const DefectTypeTable = () => {
                 setModal(!modal)
               }}
             >
-              NEW
+              <span className="float-start">
+                <i className="" aria-hidden="true"></i> &nbsp;NEW
+              </span>
             </CButton>
           </CCol>
         </CRow>
@@ -248,6 +252,7 @@ const DefectTypeTable = () => {
             data={rowData}
             fieldName={'DefectType'}
             showSearchFilter={true}
+            pending={pending}
           />
         </CCard>
       </CContainer>

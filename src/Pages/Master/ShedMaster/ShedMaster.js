@@ -43,6 +43,7 @@ import ShedMasterService from 'src/Service/Master/ShedMasterService'
 
 const ShedMaster = () => {
   const formValues = {
+
     ShedType: '',
     ShedName: '',
     ShedOwnerName: '',
@@ -74,6 +75,7 @@ const ShedMaster = () => {
         console.log(response)
         console.log('asd')
         const formData = new FormData()
+
         formData.append('shed_type_id', values.shedType)
         formData.append('shed_name', values.ShedName)
         formData.append('shed_owner_name', values.ShedOwnerName)
@@ -119,7 +121,7 @@ const ShedMaster = () => {
           <CTabPane role="tabpanel" aria-labelledby="home-tab" visible={true}>
             <CForm className="row g-3 m-2 p-1" onSubmit={handleSubmit}>
               <CRow className="">
-                <CCol md={3}>
+                {/* <CCol md={3}>
                   <CFormLabel htmlFor="shedType">
                     Shed Type*{' '}
                     {errors.shedType && (
@@ -149,7 +151,7 @@ const ShedMaster = () => {
                       )
                     })}
                   </CFormSelect>
-                </CCol>
+                </CCol> */}
                 <CCol md={3}>
                   <CFormLabel htmlFor="sName">
                     Shed Name*
@@ -207,8 +209,7 @@ const ShedMaster = () => {
                     placeholder=""
                   />
                 </CCol>
-              </CRow>
-              <CRow className="">
+
                 <CCol md={3}>
                   <CFormLabel htmlFor="sOwnerMob2">
                     Shed Owner Mobile Number 2*
@@ -284,8 +285,7 @@ const ShedMaster = () => {
                     placeholder=""
                   />
                 </CCol>
-              </CRow>
-              <CRow className="">
+            
                 <CCol md={3}>
                   <CFormLabel htmlFor="aNumber">
                     Aadhar Number*
@@ -338,7 +338,7 @@ const ShedMaster = () => {
                     color="warning"
                     className="mx-1 px-2 text-white"
                     type="submit"
-                    disabled={enableSubmit}
+                    // disabled={enableSubmit}
                   >
                     Submit
                   </CButton>

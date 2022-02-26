@@ -100,6 +100,7 @@ const VehicleInspection = () => {
   const [rejectBtn, setRejectBtn] = useState(true)
   const [oldDriver, setOldDriver] = useState('')
   const [fetch, setFetch] = useState(false)
+  const [pending, setPending] = useState(true)
   const VEHICLE_TYPE = {
     OWN: 1,
     CONTRACT: 2,
@@ -585,20 +586,20 @@ const VehicleInspection = () => {
                       color="warning"
                       className="mx-1 px-2 text-white"
                       type="button"
-                      disabled={acceptBtn}
+                      // disabled={acceptBtn}
                       onClick={() => addVehicleInspection(1)}
                     >
                       Accept
                     </CButton>
 
-                    {currentVehicleInfo.vehicle_type_id.id == VEHICLE_TYPE.HIRE ||
-                    currentVehicleInfo.vehicle_type_id.id == VEHICLE_TYPE.PARTY ? (
+                    {(!changeDriver && currentVehicleInfo.vehicle_type_id.id == VEHICLE_TYPE.OWN) ||
+                    currentVehicleInfo.vehicle_type_id.id == VEHICLE_TYPE.CONTRACT ? (
                       <CButton
                         size="sm"
                         color="warning"
                         className="mx-1 px-2 text-white"
                         type="button"
-                        disabled={rejectBtn}
+                        // disabled={rejectBtn}
                         onClick={() => addVehicleInspection(0)}
                       >
                         Reject

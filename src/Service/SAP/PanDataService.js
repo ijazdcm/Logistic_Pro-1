@@ -4,6 +4,22 @@ import AppConfig from 'src/AppConfig'
 class PanDataService {
   // GET SINGLE PAN DATA FROM SAP
   getPanData(panNumber) {
+
+
+    // if (panNumber == 'AMIPR8417L') {
+    //   return {
+    //     LIFNR: '212248',
+    //     NAME1: 'K.RAJASEKAR-AMIPR8417L',
+    //     TELF1: '9944990055',
+    //     IDNUMBER: '533792467415',
+    //     BANKN: '916010067777029',
+    //     J_1IPANNO: 'AMIPR8417L',
+    //   }
+    // } else {
+    //   return ''
+    // }
+
+
     if (panNumber == 'AMIPR8417L') {
       return {
         LIFNR: '212248',
@@ -16,6 +32,7 @@ class PanDataService {
     } else {
       return ''
     }
+
     //   let config = {
     //     method: 'GET',
     //     url: 'http://10.10.63.134:8001/zdoc_ver_LP/DocumentationVerification?sap-client=900&&PAN_NO=AMIPR8417L',
@@ -50,6 +67,10 @@ class PanDataService {
           AccessControlAllowCredentials: true,
           withCredentials: true,
           'Access-Control-Allow-Origin': '*',
+
+          // 'Access-Control-Allow-Origin': 'http://localhost:3001',
+
+
           'Access-Control-Allow-Credentials': true,
           headers: {
             // Accept: 'application/json',
@@ -66,6 +87,7 @@ class PanDataService {
       .then((response) => response.json())
       .then((data) => {
         console.log(data)
+
         // console.log(response.data);
       })
       .catch((error) => {

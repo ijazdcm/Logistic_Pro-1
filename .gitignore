@@ -3,3 +3,4 @@ node_modules_old
 build
 build.zip
 package-lock.json
+.env

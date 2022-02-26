@@ -1,4 +1,5 @@
 /*Created by maria vanaraj*/
+
 import {
   CButton,
   CCard,
@@ -32,17 +33,18 @@ import {
 } from '@coreui/react'
 import { React, useEffect, useState } from 'react'
 import useForm from 'src/Hooks/useForm.js'
-import validate from 'src/Utils/Validation'
+import ShedMasterValidation from 'src/Utils/Master/ShedMasterValidation'
 import ShedTypeService from 'src/Service/SmallMaster/Shed/ShedService'
 import { Link, useNavigate } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import ShedMasterValidation from 'src/Utils/Master/ShedMasterValidation'
+
 import ShedMasterService from 'src/Service/Master/ShedMasterService'
 
 const ShedMaster = () => {
   const formValues = {
-    // shedType: '',
+
+    ShedType: '',
     ShedName: '',
     ShedOwnerName: '',
     ShedOwnerMobileNumber1: '',
@@ -73,7 +75,8 @@ const ShedMaster = () => {
         console.log(response)
         console.log('asd')
         const formData = new FormData()
-        // formData.append('shed_type_id', values.ShedType)
+
+        formData.append('shed_type_id', values.shedType)
         formData.append('shed_name', values.ShedName)
         formData.append('shed_owner_name', values.ShedOwnerName)
         formData.append('shed_owner_phone_1', values.ShedOwnerMobileNumber1)
@@ -128,8 +131,8 @@ const ShedMaster = () => {
 
                   <CFormSelect
                     size="sm"
-                    name="shedType"
-                    id="shedType"
+                    name="ShedType"
+                    id="sType"
                     onFocus={onFocus}
                     onBlur={onBlur}
                     onChange={handleChange}
@@ -303,7 +306,7 @@ const ShedMaster = () => {
                   />
                 </CCol>
                 <CCol md={3}>
-                  <CFormLabel htmlFor="GSTNumber">
+                  <CFormLabel htmlFor="gNumber">
                     GST Number*
                     {errors.GSTNumber && (
                       <span className="small text-danger">{errors.GSTNumber}</span>
@@ -313,7 +316,7 @@ const ShedMaster = () => {
                     name="GSTNumber"
                     size="sm"
                     maxLength={15}
-                    id="GSTNumber"
+                    id="gNumber"
                     placeholder=""
                     onChange={handleChange}
                     value={values.GSTNumber}

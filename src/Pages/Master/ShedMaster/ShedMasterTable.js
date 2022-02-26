@@ -70,7 +70,7 @@ const ShedMasterTable = () => {
         rowDataList.push({
           sno: index + 1,
           Creation_Date: data.created_at,
-          Shed_Type: data.shed_type_info.shed_type,
+          // Shed_Type: data.shed_type_info.shed_type,
           Shed_Name: data.shed_name,
           Shed_Owner_Name: data.shed_owner_name,
           Shed_Owner_Phone_1: data.shed_owner_phone_1,

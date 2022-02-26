@@ -27,7 +27,7 @@ export default function ShedMasterValidation(values, isTouched) {
   if (isTouched.ShedOwnerMobileNumber1 && !values.ShedOwnerMobileNumber1) {
     errors.ShedOwnerMobileNumber1 = 'Required'
   } else if (
-    isTouched.ShedOwnerMobileNumber2 &&
+    isTouched.ShedOwnerMobileNumber1 &&
     !/^[\d]{10}$/.test(values.ShedOwnerMobileNumber1)
   ) {
     errors.ShedOwnerMobileNumber1 = 'Must Have 10 Digit Numeric'

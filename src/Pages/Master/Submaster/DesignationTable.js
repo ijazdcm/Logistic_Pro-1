@@ -118,13 +118,8 @@ const DesignationTable = () => {
           sno: index + 1,
           Designation: data.designation,
           Created_at: data.created_at,
-          Status: (
-            <span
-              className={`badge rounded-pill bg-${data.designation_status === 1 ? 'info' : 'danger'}`}
-            >
-              {data.designation_status === 1 ? 'Active' : 'InActive'}
-            </span>
-          ),
+          Status: data.designation_status === 1 ? '✔️' : '❌',
+
           Action: (
             <div className="d-flex justify-content-space-between">
               <CButton
@@ -139,7 +134,7 @@ const DesignationTable = () => {
                 <i className="fa fa-trash" aria-hidden="true"></i>
               </CButton>
               <CButton
-              disabled={data.designation_status === 1 ? false : true}
+                disabled={data.designation_status === 1 ? false : true}
                 size="sm"
                 color="secondary"
                 shape="rounded"
@@ -164,7 +159,7 @@ const DesignationTable = () => {
         setDeleted('')
       }, 1500)
     })
-  }, [mount,modal, save, success, update, deleted])
+  }, [mount, modal, save, success, update, deleted])
   // ============ CRUD =====================
   /*                    */
   // ============ Column Header Data =======
@@ -191,6 +186,7 @@ const DesignationTable = () => {
       name: 'Status',
       selector: (row) => row.Status,
       left: true,
+      sortable:true,
     },
     {
       name: 'Action',

@@ -125,15 +125,7 @@ const RejectResonTable = () => {
           sno: index + 1,
           Rejection: data.rejection_reason,
           Created_at: data.created_at,
-          Status: (
-            <span
-              className={`badge rounded-pill bg-${
-                data.rejection_reason_status === 1 ? 'info' : 'danger'
-              }`}
-            >
-              {data.rejection_reason_status === 1 ? 'Active' : 'InActive'}
-            </span>
-          ),
+          Status: data.rejection_reason_status === 1 ? '✔️' : '❌',
           Action: (
             <div className="d-flex justify-content-space-between">
               <CButton
@@ -198,7 +190,8 @@ const RejectResonTable = () => {
     {
       name: 'Status',
       selector: (row) => row.Status,
-      left: true,
+      center: true,
+      sortable: true,
     },
 
     {

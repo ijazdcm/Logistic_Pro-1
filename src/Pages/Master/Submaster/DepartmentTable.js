@@ -125,15 +125,7 @@ const DepartmentTable = () => {
           sno: index + 1,
           Department: data.department,
           Created_at: data.created_at,
-          Status: (
-            <span
-              className={`badge rounded-pill bg-${
-                data.department_status === 1 ? 'info' : 'danger'
-              }`}
-            >
-              {data.department_status === 1 ? 'Active' : 'InActive'}
-            </span>
-          ),
+          Status: data.department_status === 1 ? '✔️' : '❌',
           Action: (
             <div className="d-flex justify-content-space-between">
               <CButton
@@ -200,6 +192,7 @@ const DepartmentTable = () => {
       name: 'Status',
       selector: (row) => row.Status,
       left: true,
+      sortable: true,
     },
 
     {

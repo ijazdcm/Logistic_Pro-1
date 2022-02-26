@@ -123,13 +123,7 @@ const StatusTable = () => {
           sno: index + 1,
           StatusName: data.status,
           Created_at: data.created_at,
-          Status: (
-            <span
-              className={`badge rounded-pill bg-${data.status_status === 1 ? 'info' : 'danger'}`}
-            >
-              {data.status_status === 1 ? 'Active' : 'InActive'}
-            </span>
-          ),
+          Status: data.status_status === 1 ? '✔️' : '❌',
           Action: (
             <div className="d-flex justify-content-space-between">
               <CButton

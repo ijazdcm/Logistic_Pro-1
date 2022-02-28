@@ -124,7 +124,7 @@ const VehicleCapacityTable = () => {
       viewData.map((data, index) => {
         rowDataList.push({
           sno: index + 1,
-          Vehicle_Capacity: data.capacity,
+          Capacity: data.capacity + ' - Ton',
           Created_at: data.created_at,
           Status: data.vehicle_status === 1 ? '✔️' : '❌',
           Action: (
@@ -185,7 +185,7 @@ const VehicleCapacityTable = () => {
 
     {
       name: 'Vehicle Capacity',
-      selector: (row) => row.Vehicle_Capacity,
+      selector: (row) => row.Capacity,
       center: true,
       sortable: true,
     },
@@ -237,8 +237,8 @@ const VehicleCapacityTable = () => {
         <CCard className="mt-1">
           <CustomTable
             columns={columns}
-            data={rowData}
-            fieldName={'Vehicle_Capacitys'}
+            data={rowData || ''}
+            fieldName={'Capacity'}
             showSearchFilter={true}
             pending={pending}
           />

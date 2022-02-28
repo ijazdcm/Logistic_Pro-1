@@ -38,8 +38,11 @@ export default function DocumentVerificationValidation(values, isTouched) {
   if (isTouched.ownershipTrans && !values.ownershipTrans) {
     errors.ownershipTrans = 'Required'
   }
+
   if (isTouched.freightRate && !values.freightRate) {
     errors.freightRate = 'Required'
+  } else if (isTouched.freightRate && !/^[0-9]*\.[0-9][0-9]$/.test(values.freightRate)) {
+    errors.freightRate = 'Invalid Format (Ex. 12345.67)'
   }
 
   if (isTouched.ownerName && !values.ownerName) {

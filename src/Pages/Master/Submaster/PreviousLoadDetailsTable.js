@@ -38,6 +38,7 @@ const PreviousLoadDetails = () => {
   const [deleted, setDeleted] = useState('')
   const [error, setError] = useState('')
   const [mount, setMount] = useState(1)
+  const [pending, setPending] = useState(true)
 
   const formValues = {
     PreviousLoadDetails: '',
@@ -127,13 +128,7 @@ const PreviousLoadDetails = () => {
           sno: index + 1,
           PreviousLoadDetails: data.previous_load_details,
           Created_at: data.created_at,
-          Status: (
-            <span
-              className={`badge rounded-pill bg-${data.previous_load_status === 1 ? 'info' : 'danger'}`}
-            >
-              {data.previous_load_status === 1 ? 'Active' : 'InActive'}
-            </span>
-          ),
+          Status: data.previous_load_status === 1 ? '✔️' : '❌',
           Action: (
             <div className="d-flex justify-content-space-between">
               <CButton
@@ -148,7 +143,7 @@ const PreviousLoadDetails = () => {
                 <i className="fa fa-trash" aria-hidden="true"></i>
               </CButton>
               <CButton
-              disabled={data.previous_load_status === 1 ? false : true}
+                disabled={data.previous_load_status === 1 ? false : true}
                 size="sm"
                 color="secondary"
                 shape="rounded"
@@ -164,6 +159,7 @@ const PreviousLoadDetails = () => {
         })
       })
       setRowData(rowDataList)
+      setPending(false)
 
       setTimeout(() => {
         setSuccess('')
@@ -199,6 +195,7 @@ const PreviousLoadDetails = () => {
       name: 'Status',
       selector: (row) => row.Status,
       left: true,
+      sortable: true,
     },
 
     {
@@ -234,7 +231,7 @@ const PreviousLoadDetails = () => {
               }}
             >
               <span className="float-start">
-                <i className="" aria-hidden="true"></i> &nbsp;New Previous Load Details
+                <i className="" aria-hidden="true"></i> &nbsp;NEW
               </span>
             </CButton>
           </CCol>
@@ -245,6 +242,7 @@ const PreviousLoadDetails = () => {
             data={rowData}
             fieldName={'PreviousLoadDetails'}
             showSearchFilter={true}
+            pending={pending}
           />
         </CCard>
       </CContainer>

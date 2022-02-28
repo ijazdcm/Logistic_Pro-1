@@ -30,6 +30,7 @@ const ShedMasterTable = () => {
   const [deleteModal, setDeleteModal] = useState(false)
   const [rowData, setRowData] = useState([])
   const [mount, setMount] = useState(1)
+  const [pending, setPending] = useState(true)
 
   const [documentSrc, setDocumentSrc] = useState('')
   let viewData
@@ -70,7 +71,7 @@ const ShedMasterTable = () => {
         rowDataList.push({
           sno: index + 1,
           Creation_Date: data.created_at,
-          Shed_Type: data.shed_type_info.shed_type,
+          // Shed_Type: data.shed_type_info.shed_type,
           Shed_Name: data.shed_name,
           Shed_Owner_Name: data.shed_owner_name,
           Shed_Owner_Phone_1: data.shed_owner_phone_1,
@@ -86,11 +87,8 @@ const ShedMasterTable = () => {
           Aadhar_Number: data.shed_adhar_number,
           Pan_Number: data.pan_number,
           Gst_No: data.gst_no,
-          Status: (
-            <span className="badge rounded-pill bg-info">
-              {data.shed_status === 1 ? 'Active' : 'Inactive'}
-            </span>
-          ),
+          Status: data.shed_status === 1 ? '✔️' : '❌',
+
           Action: (
             <div className="d-flex justify-content-space-between">
               <CButton
@@ -124,6 +122,7 @@ const ShedMasterTable = () => {
         })
       })
       setRowData(rowDataList)
+      setPending(false)
     })
   }, [mount])
   const columns = [
@@ -212,44 +211,48 @@ const ShedMasterTable = () => {
     },
   ]
   return (
-    <CCard>
-      <CContainer className="mt-1">
-        <CRow className="mt-1 mb-1">
-          <CCol
-            className="offset-md-6"
-            xs={15}
-            sm={15}
-            md={6}
-            style={{ display: 'flex', justifyContent: 'end' }}
-          >
-            <Link className="text-white" to="/ShedMaster">
-              <CButton size="sm" color="warning" className="px-5 text-white" type="button">
-                New
-              </CButton>
-            </Link>
-          </CCol>
-        </CRow>
-        <CustomTable
-          columns={columns}
-          data={rowData}
-          fieldName={'Shed_Name'}
-          showSearchFilter={true}
-        />
-      </CContainer>
-      <CModal visible={ShedOwnerPhoto} onClose={() => setShedOwnerPhoto(false)}>
-        <CModalHeader>
-          <CModalTitle>Shed Owner Photo</CModalTitle>
-        </CModalHeader>
-        <CModalBody>
-          <CCardImage orientation="top" src={documentSrc} />
-        </CModalBody>
-        <CModalFooter>
-          <CButton color="secondary" onClick={() => setShedOwnerPhoto(false)}>
-            Close
-          </CButton>
-        </CModalFooter>
-      </CModal>
-    </CCard>
+    <>
+      <CRow className="mt-1 mb-1">
+        <CCol
+          className="offset-md-6"
+          xs={15}
+          sm={15}
+          md={6}
+          style={{ display: 'flex', justifyContent: 'end' }}
+        >
+          <Link className="text-white" to="/ShedMaster">
+            <CButton size="sm" color="warning" className="px-5 text-white" type="button">
+              NEW
+            </CButton>
+          </Link>
+        </CCol>
+      </CRow>
+      <CCard>
+        <CContainer>
+          <CustomTable
+            columns={columns}
+            data={rowData}
+            fieldName={'Shed_Name'}
+            showSearchFilter={true}
+            pending={pending}
+          />
+        </CContainer>
+
+        <CModal visible={ShedOwnerPhoto} onClose={() => setShedOwnerPhoto(false)}>
+          <CModalHeader>
+            <CModalTitle>Shed Owner Photo</CModalTitle>
+          </CModalHeader>
+          <CModalBody>
+            <CCardImage orientation="top" src={documentSrc} />
+          </CModalBody>
+          <CModalFooter>
+            <CButton color="secondary" onClick={() => setShedOwnerPhoto(false)}>
+              Close
+            </CButton>
+          </CModalFooter>
+        </CModal>
+      </CCard>
+    </>
   )
 }
 export default ShedMasterTable

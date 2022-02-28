@@ -25,7 +25,6 @@ import 'react-toastify/dist/ReactToastify.css'
 import DepartmentSubMasterValidation from 'src/Utils/SubMaster/DepartmentSubMasterValidation'
 
 const DepartmentTable = () => {
-
   const [modal, setModal] = useState(false)
   const [deleteModal, setDeleteModal] = useState(false)
   const [rowData, setRowData] = useState([])
@@ -37,6 +36,7 @@ const DepartmentTable = () => {
   const [deleted, setDeleted] = useState('')
   const [error, setError] = useState('')
   const [mount, setMount] = useState(1)
+  const [pending, setPending] = useState(true)
 
   const formValues = {
     department: '',
@@ -94,14 +94,11 @@ const DepartmentTable = () => {
     console.log(updateValues, id)
     DepartmentApi.updateDepartment(updateValues, id)
       .then((res) => {
-
-        if(res.status==200)
-        {
+        if (res.status == 200) {
           setModal(false)
-          toast.success("Department Info Updated Successfully!")
+          toast.success('Department Info Updated Successfully!')
           setMount((prevState) => (prevState = prevState + 1))
         }
-
       })
       .catch((error) => {
         setError(error.response.data.errors.department_name[0])
@@ -128,13 +125,7 @@ const DepartmentTable = () => {
           sno: index + 1,
           Department: data.department,
           Created_at: data.created_at,
-          Status: (
-            <span
-              className={`badge rounded-pill bg-${data.department_status === 1 ? 'info' : 'danger'}`}
-            >
-              {data.department_status === 1 ? 'Active' : 'InActive'}
-            </span>
-          ),
+          Status: data.department_status === 1 ? '✔️' : '❌',
           Action: (
             <div className="d-flex justify-content-space-between">
               <CButton
@@ -149,7 +140,7 @@ const DepartmentTable = () => {
                 <i className="fa fa-trash" aria-hidden="true"></i>
               </CButton>
               <CButton
-               disabled={data.department_status === 1 ? false : true}
+                disabled={data.department_status === 1 ? false : true}
                 size="sm"
                 color="secondary"
                 shape="rounded"
@@ -165,6 +156,7 @@ const DepartmentTable = () => {
         })
       })
       setRowData(rowDataList)
+      setPending(false)
 
       setTimeout(() => {
         setSuccess('')
@@ -173,7 +165,7 @@ const DepartmentTable = () => {
         setDeleted('')
       }, 1500)
     })
-  }, [mount,modal, save, success, update, deleted])
+  }, [mount, modal, save, success, update, deleted])
   // ============ CRUD =====================
   /*                    */
   // ============ Column Header Data =======
@@ -200,6 +192,7 @@ const DepartmentTable = () => {
       name: 'Status',
       selector: (row) => row.Status,
       left: true,
+      sortable: true,
     },
 
     {
@@ -246,6 +239,7 @@ const DepartmentTable = () => {
             data={rowData}
             fieldName={'Department'}
             showSearchFilter={true}
+            pending={pending}
           />
         </CCard>
       </CContainer>

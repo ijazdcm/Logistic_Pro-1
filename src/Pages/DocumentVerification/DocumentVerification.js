@@ -147,6 +147,7 @@ const DocVerifyVendorAvail = () => {
     formData.append('freight_rate', values.freightRate)
     formData.append('remarks', values.remarks ? values.remarks : 'NO REMARKS')
     formData.append('document_status', status)
+    formData.append('document_verification_status', status)
 
     DocumentVerificationService.addDocumentVerificationData(formData)
       .then((res) => {
@@ -704,6 +705,7 @@ const DocVerifyVendorAvail = () => {
                     name="freightRate"
                     size="sm"
                     id="freightRate"
+                    maxLength={8}
                     onFocus={onFocus}
                     onBlur={onBlur}
                     onChange={handleChange}

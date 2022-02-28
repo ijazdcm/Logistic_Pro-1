@@ -39,6 +39,7 @@ const MaterialDescriptionTable = () => {
   const [deleted, setDeleted] = useState('')
   const [error, setError] = useState('')
   const [mount, setMount] = useState(1)
+  const [pending, setPending] = useState(true)
   const checkRadio = (param) => {
     if (param == 'enab') {
       values.material_description = ''
@@ -134,11 +135,7 @@ const MaterialDescriptionTable = () => {
           // CreationDate: data.creation_date,
           CreationDate: data.creation_date.substring(0, 10),
           MaterialDescription: data.material_description,
-          Status: (
-            <span className={`badge rounded-pill bg-${data.status === 1 ? 'info' : 'danger'}`}>
-              {data.status === 1 ? 'Active' : 'In Active'}
-            </span>
-          ),
+          Status: data.status === 1 ? '✔️' : '❌',
           // data.status,
           Action: (
             <div className="d-flex justify-content-space-between">
@@ -170,6 +167,7 @@ const MaterialDescriptionTable = () => {
         })
       })
       setRowData(rowDataList)
+      setPending(false)
 
       setTimeout(() => {
         setSuccess('')
@@ -239,7 +237,7 @@ const MaterialDescriptionTable = () => {
               // onClick={() => setModal(!modal)}
             >
               <span className="float-start">
-                <i className="" aria-hidden="true"></i> &nbsp;New Material Description
+                <i className="" aria-hidden="true"></i> &nbsp;NEW
               </span>
             </CButton>
           </CCol>
@@ -251,6 +249,7 @@ const MaterialDescriptionTable = () => {
             data={rowData}
             fieldName={'MaterialDescription'}
             showSearchFilter={true}
+            pending={pending}
           />
         </CCard>
       </CContainer>

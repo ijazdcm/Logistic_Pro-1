@@ -94,10 +94,29 @@ import DriverMasterEdit from './Pages/Master/DriverMaster/DriverMasterEdit'
 import BankMasterTable from './Pages/Master/Submaster/Bank/BankMasterTable'
 import DriverMasterTable from './Pages/Master/DriverMaster/DriverMasterTable'
 
-import LocationTable from './Pages/Master/Submaster/LocationTable'
+
+import LocationTable from './Pages/Master/Submaster/LocationTable';
 import UserLoginMasterEdit from './Pages/Master/UserMaster/UserLoginMasterEdit'
 
+
+// import UserLoginMasterEdit from './Pages/Master/UserMaster/UserLoginMasterEdit'
 import TripSheetCreation from './Pages/TripSheetCreation/TripSheetCreation'
+
+
+
+
+
+// import LocationTable from './Pages/Master/Submaster/LocationTable'
+// =======
+// import LocationTable from './Pages/Master/Submaster/LocationTable';
+// import UserLoginMasterEdit from './Pages/Master/UserMaster/UserLoginMasterEdit'
+
+// >>>>>>> master
+// =======
+// import LocationTable from './Pages/Master/Submaster/LocationTable'
+// import UserLoginMasterEdit from './Pages/Master/UserMaster/UserLoginMasterEdit'
+// import TripSheetCreation from './Pages/TripSheetCreation/TripSheetCreation'
+
 
 const routes = [
   // Master
@@ -222,6 +241,7 @@ const routes = [
     component: DocVerifyVendorAvail,
   },
 
+
   {
     path: '/DocsVerify/DocVerifyVendorNotAvail',
     exact: true,
@@ -251,7 +271,7 @@ const routes = [
     component: RJcustomerCreationHome,
   },
   {
-    path: '/RJcustomerCreation',
+    path: '/RJcustomerCreationHome/RJcustomerCreation',
     exact: true,
     name: 'RJ Customer Creation',
     component: RJcustomerCreation,

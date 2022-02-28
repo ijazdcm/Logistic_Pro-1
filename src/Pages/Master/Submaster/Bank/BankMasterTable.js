@@ -27,6 +27,7 @@ const BankMasterTable = () => {
   const [editBankModel, setEditBankModel] = useState(false)
   const [updateBankId, setUpdateBankId] = useState(false)
   const [mount, setMount] = useState(1)
+  const [pending, setPending] = useState(true)
 
   const formValues = {
     bankName: '',
@@ -98,11 +99,8 @@ const BankMasterTable = () => {
           sno: index + 1,
           Created_at: data.created_at,
           Bank: data.bank_name,
-          Status: (
-            <span className={`badge rounded-pill bg-${data.bank_status === 1 ? 'info' : 'danger'}`}>
-              {data.bank_status === 1 ? 'Active' : 'InActive'}
-            </span>
-          ),
+          Status:
+            data.bank_status === 1 ? '✔️' : '❌',
           Action: (
             <div className="d-flex justify-content-space-between">
               <CButton
@@ -134,6 +132,7 @@ const BankMasterTable = () => {
         })
       })
       setRowData(rowDataList)
+      setPending(false)
     })
   }, [mount])
 
@@ -202,6 +201,7 @@ const BankMasterTable = () => {
             data={rowData}
             fieldName={'Bank'}
             showSearchFilter={true}
+            pending={pending}
           />
         </CCard>
         {/*add New Bank model*/}

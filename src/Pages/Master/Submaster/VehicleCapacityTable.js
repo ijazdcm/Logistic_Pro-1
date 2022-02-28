@@ -1,4 +1,4 @@
-  import {
+import {
   CButton,
   CCard,
   CContainer,
@@ -22,6 +22,7 @@ import CustomTable from 'src/components/customComponent/CustomTable'
 import VehicleCapacityApi from '../../../Service/SubMaster/VehicleCapacityApi'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import VehicleCapacitySubmasterValidation from 'src/Utils/SubMaster/VehicleCapacitySubMasterValidation'
 
 const VehicleCapacityTable = () => {
   const [modal, setModal] = useState(false)
@@ -34,6 +35,7 @@ const VehicleCapacityTable = () => {
   const [deleted, setDeleted] = useState('')
   const [error, setError] = useState('')
   const [mount, setMount] = useState(1)
+  const [pending, setPending] = useState(true)
 
   const formValues = {
     vehicleCapacity: '',
@@ -50,7 +52,7 @@ const VehicleCapacityTable = () => {
     onBlur,
     onClick,
     onKeyUp,
-  } = useForm(login, validate, formValues)
+  } = useForm(login, VehicleCapacitySubmasterValidation, formValues)
 
   function login() {
     // alert('No Errors CallBack Called')
@@ -62,7 +64,7 @@ const VehicleCapacityTable = () => {
   // =================== CRUD =====================
   const Create = (e) => {
     e.preventDefault()
-    let createValues = { capacity_name: values.capacity }
+    let createValues = { vehicle_capacity: values.capacity }
     VehicleCapacityApi.createVehicleCapacity(createValues)
       .then((response) => {
         setSuccess('New Vehicle Capacity Added Successfully')
@@ -122,19 +124,12 @@ const VehicleCapacityTable = () => {
       viewData.map((data, index) => {
         rowDataList.push({
           sno: index + 1,
-          Vehicle_Capacity: data.capacity,
+          Capacity: data.capacity + ' - Ton',
           Created_at: data.created_at,
-          Status: (
-            <span
-              className={`badge rounded-pill bg-${data.vehicle_status === 1 ? 'info' : 'danger'}`}
-            >
-              {data.vehicle_status === 1 ? 'Active' : 'InActive'}
-            </span>
-          ),
+          Status: data.vehicle_status === 1 ? '✔️' : '❌',
           Action: (
             <div className="d-flex justify-content-space-between">
               <CButton
-
                 size="sm"
                 color="danger"
                 shape="rounded"
@@ -162,6 +157,7 @@ const VehicleCapacityTable = () => {
         })
       })
       setRowData(rowDataList)
+      setPending(false)
 
       setTimeout(() => {
         setSuccess('')
@@ -189,13 +185,14 @@ const VehicleCapacityTable = () => {
 
     {
       name: 'Vehicle Capacity',
-      selector: (row) => row.Vehicle_Capacity,
+      selector: (row) => row.Capacity,
       center: true,
       sortable: true,
     },
     {
       name: 'Status',
       selector: (row) => row.Status,
+      sortable: true,
       left: true,
     },
     {
@@ -231,7 +228,7 @@ const VehicleCapacityTable = () => {
               }}
             >
               <span className="float-start">
-                <i className="" aria-hidden="true"></i> &nbsp;New
+                <i className="" aria-hidden="true"></i> &nbsp;NEW
               </span>
             </CButton>
           </CCol>
@@ -240,8 +237,10 @@ const VehicleCapacityTable = () => {
         <CCard className="mt-1">
           <CustomTable
             columns={columns}
-            data={rowData}
-            
+            data={rowData || ''}
+            fieldName={'Capacity'}
+            showSearchFilter={true}
+            pending={pending}
           />
         </CCard>
       </CContainer>

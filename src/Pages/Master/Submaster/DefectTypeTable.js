@@ -39,6 +39,7 @@ const DefectTypeTable = () => {
   const [deleted, setDeleted] = useState('')
   const [error, setError] = useState('')
   const [mount, setMount] = useState(1)
+  const [pending, setPending] = useState(true)
   const formValues = {
     defect_type: '',
   }
@@ -132,15 +133,7 @@ const DefectTypeTable = () => {
           sno: index + 1,
           DefectType: data.defect_type,
           Created_at: data.created_at,
-          Status: (
-            <span
-              className={`badge rounded-pill bg-${
-                data.defect_type_status === 1 ? 'info' : 'danger'
-              }`}
-            >
-              {data.defect_type_status === 1 ? 'Active' : 'InActive'}
-            </span>
-          ),
+          Status: data.defect_type_status === 1 ? '✔️' : '❌',
           Action: (
             <div className="d-flex justify-content-space-between">
               <CButton
@@ -171,6 +164,7 @@ const DefectTypeTable = () => {
         })
       })
       setRowData(rowDataList)
+      setPending(false)
 
       setTimeout(() => {
         setSuccess('')
@@ -238,7 +232,9 @@ const DefectTypeTable = () => {
                 setModal(!modal)
               }}
             >
-              NEW
+              <span className="float-start">
+                <i className="" aria-hidden="true"></i> &nbsp;NEW
+              </span>
             </CButton>
           </CCol>
         </CRow>
@@ -248,6 +244,7 @@ const DefectTypeTable = () => {
             data={rowData}
             fieldName={'DefectType'}
             showSearchFilter={true}
+            pending={pending}
           />
         </CCard>
       </CContainer>

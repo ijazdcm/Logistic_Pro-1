@@ -39,6 +39,7 @@ const UomTable = () => {
   const [deleted, setDeleted] = useState('')
   const [error, setError] = useState('')
   const [mount, setMount] = useState(1)
+  const [pending, setPending] = useState(true)
 
   const checkRadio = (param) => {
     if (param == 'enab') {
@@ -102,7 +103,7 @@ const UomTable = () => {
       .then((res) => {
         if (res.status == 200) {
           setModal(false)
-          toast.success("Uom Info Updated Successfully!")
+          toast.success('Uom Info Updated Successfully!')
           setMount((prevState) => (prevState = prevState + 1))
         }
       })
@@ -112,14 +113,12 @@ const UomTable = () => {
   }
 
   const Delete = (id) => {
-
-      UomApi.deleteUom(id).then((res) => {
-        if (res.status === 204) {
-          setMount((prevState) => (prevState = prevState + 1))
-          toast.success('Uom Status Updated Successfully!')
-        }
-      })
-
+    UomApi.deleteUom(id).then((res) => {
+      if (res.status === 204) {
+        setMount((prevState) => (prevState = prevState + 1))
+        toast.success('Uom Status Updated Successfully!')
+      }
+    })
   }
 
   useEffect(() => {
@@ -131,11 +130,7 @@ const UomTable = () => {
           sno: index + 1,
           CreationDate: data.creation_date.substring(0, 10),
           Uom: data.uom,
-          Status: (
-            <span className={`badge rounded-pill bg-${data.status === 1 ? 'info' : 'danger'}`}>
-              {data.status === 1 ? 'Active' : 'In Active'}
-            </span>
-          ),
+          Status: data.status === 1 ? '✔️' : '❌',
           // data.status,
           Action: (
             <div className="d-flex justify-content-space-between">
@@ -167,6 +162,7 @@ const UomTable = () => {
         })
       })
       setRowData(rowDataList)
+      setPending(false)
 
       setTimeout(() => {
         setSuccess('')
@@ -175,7 +171,7 @@ const UomTable = () => {
         setDeleted('')
       }, 1500)
     })
-  }, [mount,modal, save, success, update, deleted])
+  }, [mount, modal, save, success, update, deleted])
 
   const columns = [
     {
@@ -200,6 +196,7 @@ const UomTable = () => {
       name: 'Status',
       selector: (row) => row.Status,
       center: true,
+      sortable: true,
     },
     {
       name: 'Action',
@@ -235,7 +232,7 @@ const UomTable = () => {
               // onClick={() => setModal(!modal)}
             >
               <span className="float-start">
-                <i className="" aria-hidden="true"></i> &nbsp;New UOM
+                <i className="" aria-hidden="true"></i> &nbsp;NEW UOM
               </span>
             </CButton>
           </CCol>
@@ -247,6 +244,7 @@ const UomTable = () => {
             data={rowData}
             fieldName={'Uom'}
             showSearchFilter={true}
+            pending={pending}
           />
         </CCard>
       </CContainer>

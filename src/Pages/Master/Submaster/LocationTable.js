@@ -38,6 +38,7 @@ const LocationTable = () => {
   const [pending, setPending] = useState(true)
   const formValues = {
     location: '',
+    location_code: ''
   }
   // =================== Validation ===============
   const {
@@ -62,14 +63,16 @@ const LocationTable = () => {
   // =================== CRUD =====================
   const Create = (e) => {
     e.preventDefault()
-    let createValues = { location_name: values.location }
+    let createValues = { location_name: values.location,
+      location_code: values.location_code.toUpperCase() }
     LocationApi.createLocation(createValues)
       .then((response) => {
         setSuccess('New Location Added Successfully')
-        values.location = ''
+        values.location = '';
+        values.location_code = '';
       })
       .catch((error) => {
-        setError(error.response.data.errors.location_name[0])
+        showError(error);
       })
   }
 
@@ -80,22 +83,21 @@ const LocationTable = () => {
       let editData = response.data.data
       setModal(true)
       values.location = editData.location
+      values.location_code = editData.location_code.toUpperCase()
       setEditId(id)
     })
   }
 
   const Update = (id) => {
-    let updateValues = { location_name: values.location }
+    let updateValues = { location_name: values.location, 
+      location_code: values.location_code }
     console.log(updateValues, id)
     LocationApi.updateLocation(updateValues, id)
       .then((response) => {
         setSuccess('Location Updated Successfully')
       })
       .catch((error) => {
-        setError(error.response.data.errors.location_name[0])
-        setTimeout(() => {
-          setError('')
-        }, 1000)
+        showError(error);
       })
   }
 
@@ -109,22 +111,26 @@ const LocationTable = () => {
     })
   }
 
+  const showError = (error) =>{
+    let errors = error.response.data.errors;
+        setError(Object.keys(errors).map((key, index) => errors[key][0]).join(' <br/> '))
+        setTimeout(() => {
+          setError('')
+        }, 1000)
+  }
+
   useEffect(() => {
     LocationApi.getLocation().then((response) => {
       let viewData = response.data.data
       let rowDataList = []
       viewData.map((data, index) => {
+
         rowDataList.push({
           sno: index + 1,
           Location: data.location,
+          location_code: data.location_code,
           Created_at: data.created_at,
-          Status: (
-            <span
-              className={`badge rounded-pill bg-${data.location_status === 1 ? 'info' : 'danger'}`}
-            >
-              {data.location_status === 1 ? 'Active' : 'InActive'}
-            </span>
-          ),
+          Status: data.location_status === 1 ? '✔️' : '❌',
           Action: (
             <div className="d-flex justify-content-space-between">
               <CButton
@@ -179,16 +185,25 @@ const LocationTable = () => {
       name: 'Creation date',
       selector: (row) => row.Created_at,
       left: true,
+      sortable: true,
     },
     {
       name: 'Location',
       selector: (row) => row.Location,
       left: true,
+      sortable: true,
+    },
+    {
+      name: 'Location Code',
+      selector: (row) => row.location_code,
+      left: true,
+      sortable: true,
     },
     {
       name: 'Status',
       selector: (row) => row.Status,
       left: true,
+      sortable: true,
     },
     {
       name: 'Action',
@@ -215,6 +230,7 @@ const LocationTable = () => {
               className="px-3 text-white"
               onClick={() => {
                 values.location = ''
+                values.location_code = ''
                 setSuccess('')
                 setUpdate('')
                 setError('')
@@ -230,7 +246,12 @@ const LocationTable = () => {
           </CCol>
         </CRow>
         <CCard className="mt-1">
-          <CustomTable columns={columns} data={rowData || ''} />
+          <CustomTable 
+          columns={columns} 
+          data={rowData || ''} 
+          fieldName={'Location'}
+          showSearchFilter={true}
+          pending={pending}/>
         </CCard>
       </CContainer>
 
@@ -254,7 +275,7 @@ const LocationTable = () => {
               )}
               {error && (
                 <CAlert color="danger" data-aos="fade-down" dismissible>
-                  {error}
+                  <div  dangerouslySetInnerHTML={{__html: error}}/>
                 </CAlert>
               )}
 
@@ -269,6 +290,22 @@ const LocationTable = () => {
                 className={`${errors.location && 'is-invalid'}`}
                 name="location"
                 value={values.location || ''}
+                onFocus={onFocus}
+                onBlur={onBlur}
+                onChange={handleChange}
+                aria-label="Small select example"
+              />
+              <CFormLabel htmlFor="location">
+                Location Code*{' '}
+                {errors.location_code && <span className="small text-danger">{errors.location_code}</span>}
+              </CFormLabel>
+              <CFormInput
+                size="sm"
+                id="location_code"
+                maxLength={125}
+                className={`${errors.location_code && 'is-invalid'}`}
+                name="location_code"
+                value={values.location_code || ''}
                 onFocus={onFocus}
                 onBlur={onBlur}
                 onChange={handleChange}

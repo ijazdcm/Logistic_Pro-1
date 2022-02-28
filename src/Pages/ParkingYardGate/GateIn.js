@@ -130,14 +130,14 @@ const ParkingYardGate = () => {
 
     ParkingYardGateService.handleParkingYardGateAction(formData).then((res) => {
       if (res.status === 200) {
-        toast.success('process done!')
+        toast.success('Process Done!')
         //reseting the fromValues
         resetFormValues()
         loadParkingYardGateTable()
         setIsTouched({})
         setErrors({})
       } else {
-        toast.danger('something went wrong!')
+        toast.danger('Something Went Wrong!')
       }
     })
   }

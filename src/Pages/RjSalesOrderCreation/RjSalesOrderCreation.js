@@ -931,7 +931,7 @@ const RJSalesOrderCreation = () => {
                     color="primary"
                     // disabled={enableSubmit}
                     className="text-white"
-                    type="submit"
+                    // type="submit"
                   >
                     Previous
                   </CButton>

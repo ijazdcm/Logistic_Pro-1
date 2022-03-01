@@ -61,7 +61,7 @@ const UserLoginMasterTable = () => {
           Division: data.division_info.division,
           Department: data.department_info.department,
           Designation: data.designation_info.designation,
-          Location: data.location_info.location,
+          Location: data.location_info.filter(location => location.location_name).map(location => `${location.location_name} - ${location.location_code}`).join(', '),
           Serial_No: data.serial_no,
           User_ID: data.user_auto_id,
           User_Mobile_Number: data.mobile_no,

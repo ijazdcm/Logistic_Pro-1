@@ -93,7 +93,7 @@ const UserLoginMaster = () => {
     values.trip_sheet_creation_page = false
   }
 
-  const { values, errors, handleChange, onFocus, handleSubmit, enableSubmit, onBlur } = useForm(
+  const { values, errors, handleChange, handleMultipleChange, onFocus, handleSubmit, enableSubmit, onBlur } = useForm(
     addUser,
     validate,
     formValues
@@ -344,27 +344,26 @@ const UserLoginMaster = () => {
                     id="UserPhoto"
                   />
                 </CCol>
-                <CCol md={3}>
+                <CCol md={6}>
                   <CFormLabel htmlFor="location">
                     Location*{' '}
                     {errors.location && (
                       <span className="small text-danger">{errors.location}</span>
                     )}
                   </CFormLabel>
-
-                  <CFormSelect
+                    <LocationListComponent 
                     size="sm"
                     name="location"
                     id="location"
                     onFocus={onFocus}
                     onBlur={onBlur}
-                    onChange={handleChange}
-                    value={values.location}
+                    onChange={handleMultipleChange}
+                    selectedValue={values.location}
+                    isMultiple={true}
                     className={`mb-1 ${errors.location && 'is-invalid'}`}
-                    aria-label="Small select example"
-                  >
-                    <LocationListComponent />
-                  </CFormSelect>
+                    label="Select Location"
+                    noOptionsMessage="No Location found"/>
+                  {/* </CFormSelect> */}
                 </CCol>
               </CRow>
               <CRow className="mb-md-1">

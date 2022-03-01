@@ -59,6 +59,14 @@ const useForm = (callback, validate, formValues) => {
     }
   }
 
+  const handleMultipleChange = (data, name) => {
+    setIsTouched((isTouched) => ({ ...isTouched, [name]: true }))
+    setValues((values) => ({
+      ...values,
+      [name]: data.filter( data => data.value).map(data => data.value),
+    }))
+  }
+
   const onFocus = (event) => {
     event.persist()
     setIsTouched((isTouched) => ({ ...isTouched, [event.target.name]: true }))
@@ -74,6 +82,7 @@ const useForm = (callback, validate, formValues) => {
   }
   return {
     handleChange,
+    handleMultipleChange,
     handleSubmit,
     onload,
     onFocus,

@@ -10,6 +10,10 @@ class TripStoService {
     return api.get(TRIPSTO_URL)
   }
 
+  doAssignTripSto(id) {
+    return api.get(TRIPSTO_URL + '/' + id)
+  }
+
   getSingleVehicleInfoOnParkingYardGate(id) {
     return api.get(PARKING_YRD_SINGEL_VEHICLE_INFO_URL + id)
   }

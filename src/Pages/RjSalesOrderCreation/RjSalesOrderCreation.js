@@ -28,9 +28,10 @@ import {
   CTabPane,
   CFormFloating,
   CFormTextarea,
+  CSpinner,
 } from '@coreui/react'
 import { React, useState, useEffect } from 'react'
-import useForm from 'src/Hooks/useForm'
+import useFormRJSO from 'src/Hooks/useFormRJSO'
 import { ToastContainer, toast } from 'react-toastify'
 import { Link, useNavigate } from 'react-router-dom'
 import UOMService from 'src/Service/SubMaster/UomApi'
@@ -72,6 +73,9 @@ const RJSalesOrderCreation = () => {
   const [uomType, setUOMType] = useState([])
   const [materialType, setMaterialType] = useState([])
   const [shedName, setShedName] = useState([])
+  const [state, setState] = useState({
+    page_loading: false,
+  })
 
   //Auto Fields
 
@@ -87,8 +91,18 @@ const RJSalesOrderCreation = () => {
   const [errorModal, setErrorModal] = useState(false)
   const [error, setError] = useState({})
 
-  const { values, errors, handleChange, isTouched, onFocus, handleSubmit, enableSubmit, onBlur } =
-    useForm(login, RJSaleOrderCreationValidation, formValues)
+  const {
+    values,
+    errors,
+    handleChange,
+    isTouched,
+    setIsTouched,
+    setErrors,
+    onFocus,
+    handleSubmit,
+    enableSubmit,
+    onBlur,
+  } = useFormRJSO(login, RJSaleOrderCreationValidation, formValues)
 
   function login() {
     // alert('No Errors CallBack Called')
@@ -120,7 +134,7 @@ const RJSalesOrderCreation = () => {
   }, [])
 
   useEffect(() => {
-    console.log(values)
+    // console.log(values)
     console.log(enableSubmit)
 
     if (values.vehicleNumber != '0') {
@@ -177,13 +191,18 @@ const RJSalesOrderCreation = () => {
         setCustPan('')
         setCustMobile('')
         setCustCode('')
+        console.log(values.customerCode + '/confirm4/')
       }
     } else {
       values.customerMobile = ''
       values.customerPAN = ''
       values.customerCode = ''
+      isTouched.customerMobile = false
+      isTouched.customerPAN = false
+      isTouched.customerCode = false
       setCustPan('')
       setCustMobile('')
+      console.log(values.customerCode + '/confirm3/')
     }
   }, [values.customerName])
 
@@ -200,19 +219,23 @@ const RJSalesOrderCreation = () => {
         isTouched.customerCode = true
         // console.log(res.data.data)
         // values.shed_name = res.data.data.shed_id
-        values.shed_pan = res.data.data.pan_number
-        values.shed_aadhar = res.data.data.shed_adhar_number
+        // values.shed_pan = res.data.data.pan_number
+        // values.shed_aadhar = res.data.data.shed_adhar_number
         setShedPAN(res.data.data.pan_number)
         setShedAadhar(res.data.data.shed_adhar_number)
-        if (values.PaymentTerm === '1') {
+        if (values.PaymentTerm == '1') {
           // values.customerCode = res.data.data.shed_adhar_number.substring(0, 5)
-          setShedCode(res.data.data.shed_adhar_number.substring(0, 5))
+          // setShedCode(res.data.data.shed_adhar_number.substring(0, 5))
           values.customerCode = res.data.data.shed_adhar_number.substring(0, 5)
+          setShedCode(res.data.data.shed_adhar_number.substring(0, 5))
         } else {
           // isTouched.customerCode = false
           // values.customerCode = ''
           setShedCode('')
         }
+        console.log(shedCode + '/ask1/')
+        console.log(values.customerCode + '/ask2/')
+        console.log(values.PaymentTerm + '/ask3/')
       })
     } else {
       setShedPAN('')
@@ -235,6 +258,7 @@ const RJSalesOrderCreation = () => {
           values.customerCode = '32457'
         } else {
           values.customerCode = ''
+          console.log(values.customerCode + '/confirm2/')
         }
       }
       //fetch Shed Pan , Aadhar Number from Shed Master
@@ -259,73 +283,82 @@ const RJSalesOrderCreation = () => {
       setShedPAN('')
       setShedAadhar('')
       values.shed_name = '0'
+      console.log(values.customerCode + '/confirm1/')
     }
   }, [values.PaymentTerm])
 
   function createRJSalesOrder() {
-    const formData = new FormData()
-    formData.append('vehicle_id', values.vehicleNumber)
-    formData.append('tripsheet_id', values.tripsheetNumber)
-    formData.append('payment_terms', values.PaymentTerm)
-    formData.append('pay_customer_name', values.customerName)
-    formData.append('customer_mobile_no', values.customerMobile)
-    formData.append('customer_PAN_number', values.customerPAN)
-    formData.append('shed_id', values.shed_name)
-    // formData.append('shed_pan', values.shed_pan)
-    // formData.append('shed_aadhar', values.shed_aadhar)
-    formData.append('material_description_id', values.materialType)
-    formData.append('material_descriptions', values.materialDescription)
-    formData.append('uom_id', values.uomType)
-    formData.append('order_qty', values.orderQuantity)
-    formData.append('freight_income', values.freight_income)
-    formData.append('advance_amount', values.advance_amount)
-    formData.append('last_Delivery_point', values.lastDeliveryPoint)
-    formData.append('empty_load_km', values.emptyLoad)
-    formData.append('loading_point', values.loadPoint)
-    formData.append('unloading_point', values.unloadPoint)
-    formData.append('empty_km_after_unloaded', values.emptyUnload)
-    formData.append('expected_delivery_date_time', values.deliveryTime)
-    formData.append('expected_return_date_time', values.returnTime)
+    setState({ ...state, page_loading: true })
+    console.log(values.customerCode + '/ask7/')
+    let data = new FormData()
+    data.append('HSN_SAC', values.hsnCode)
+    data.append('kunnr', values.customerCode)
 
-    formData.append('remarks', values.remarks ? values.remarks : 'NO REMARKS')
+    data.append('netwr', values.freight_income)
+    data.append('Tripsheet', values.tripsheetNumber)
+    data.append('matnr', values.materialType)
 
-    formData.append('customer_code', values.customerCode)
-
-    console.log(values)
-    console.log(formData)
-
-    let rj_so_no = RJSaleOrderCreationSapService.createRJSaleOrder(values)
-    if (rj_so_no != '') {
-      toast.success('RjSaleOrder Number Generated!')
-    } else {
-      toast.warning('Failed to generate RjSaleOrder Number')
-    }
-
-    formData.append('rj_so_no', rj_so_no)
-
-    RJSaleOrderCreationService.createRJSaleOrder(formData)
+    RJSaleOrderCreationSapService.createRJSaleOrder(data)
       .then((res) => {
-        if (res.status === 200) {
-          toast.success('RJSaleOrder Created Successfully!')
+        console.log(res.data.SALEORDER_NO)
+        const formData = new FormData()
+        formData.append('vehicle_id', values.vehicleNumber)
+        formData.append('tripsheet_id', values.tripsheetNumber)
+        formData.append('payment_terms', values.PaymentTerm)
+        formData.append('pay_customer_name', values.customerName)
+        formData.append('customer_mobile_no', values.customerMobile)
+        formData.append('customer_PAN_number', values.customerPAN)
+        formData.append('shed_id', values.shed_name)
+        // formData.append('shed_pan', values.shed_pan)
+        // formData.append('shed_aadhar', values.shed_aadhar)
+        formData.append('material_description_id', values.materialType)
+        formData.append('material_descriptions', values.materialDescription)
+        formData.append('uom_id', values.uomType)
+        formData.append('order_qty', values.orderQuantity)
+        formData.append('freight_income', values.freight_income)
+        formData.append('advance_amount', values.advance_amount)
+        formData.append('last_Delivery_point', values.lastDeliveryPoint)
+        formData.append('empty_load_km', values.emptyLoad)
+        formData.append('loading_point', values.loadPoint)
+        formData.append('unloading_point', values.unloadPoint)
+        formData.append('empty_km_after_unloaded', values.emptyUnload)
+        formData.append('expected_delivery_date_time', values.deliveryTime)
+        formData.append('expected_return_date_time', values.returnTime)
+        formData.append('remarks', values.remarks ? values.remarks : 'NO REMARKS')
+        formData.append('customer_code', values.customerCode)
+        formData.append('hsn_code', values.hsnCode)
+        formData.append('rj_so_no', Number(res.data.SALEORDER_NO))
 
-          setTimeout(() => {
-            // navigation('/RjSalesOrderCreation')
-            window.location.href = '/RjSalesOrderCreation'
-          }, 1000)
-        }
+        RJSaleOrderCreationService.createRJSaleOrder(formData)
+          .then((res) => {
+            if (res.status === 200) {
+              setState({ ...state, page_loading: false })
+              toast.success('RJSaleOrder Created Successfully!')
+
+              setTimeout(() => {
+                // navigation('/RjSalesOrderCreation')
+                window.location.href = '/RjSalesOrderCreation'
+              }, 1000)
+            }
+          })
+          .catch((error) => {
+            setState({ ...state })
+            for (let value of formData.values()) {
+              console.log(value)
+            }
+            console.log(error)
+            var object = error.response.data.errors
+            var output = ''
+            for (var property in object) {
+              output += '*' + object[property] + '\n'
+            }
+            setError(output)
+            setErrorModal(true)
+          })
       })
       .catch((error) => {
-        for (let value of formData.values()) {
-          console.log(value)
-        }
-        console.log(error)
-        var object = error.response.data.errors
-        var output = ''
-        for (var property in object) {
-          output += '*' + object[property] + '\n'
-        }
-        setError(output)
-        setErrorModal(true)
+        setState({ ...state })
+        alert(error.message)
       })
   }
 
@@ -405,6 +438,21 @@ const RJSalesOrderCreation = () => {
                     <option value="2">To Pay</option>
                   </CFormSelect>
                 </CCol>
+                {/* {values.PaymentTerm == 2 && (
+                  <TopaySection
+                    errors={errors}
+                    onFocus={onFocus}
+                    onBlur={onBlur}
+                    handleChange={handleChange}
+                    values={values}
+                    isTouched={isTouched}
+                    setIsTouched={setIsTouched}
+                    setErrors={setErrors}
+                  />
+                )} */}
+
+                {/* ================================================================================= */}
+
                 {values.PaymentTerm == 2 && (
                   <CCol xs={12} md={3}>
                     <CFormLabel htmlFor="customerName">
@@ -433,28 +481,12 @@ const RJSalesOrderCreation = () => {
 
                       <option value="Akbar">Akbar</option>
                     </CFormSelect>
-                    {/* <CFormInput
-                      name="customerName"
-                      size="sm"
-                      maxLength={20}
-                      id="customerName"
-                      onChange={handleChange}
-                      value={values.customerName}
-                      onFocus={onFocus}
-                      onBlur={onBlur}
-                      placeholder=""
-                    /> */}
-                    {/* <CFormInput size="sm" id="cName" /> */}
                   </CCol>
                 )}
+
                 {values.PaymentTerm == 2 && (
                   <CCol xs={12} md={3}>
-                    <CFormLabel htmlFor="customerMobile">
-                      Customer Mobile Number*{' '}
-                      {/* {errors.customerMobile && (
-                        <span className="small text-danger">{errors.customerMobile}</span>
-                      )} */}
-                    </CFormLabel>
+                    <CFormLabel htmlFor="customerMobile">Customer Mobile Number* </CFormLabel>
                     <CFormInput
                       name="customerMobile"
                       size="sm"
@@ -468,23 +500,10 @@ const RJSalesOrderCreation = () => {
                       readOnly
                     />
                   </CCol>
-                  // <CCol xs={12} md={3}>
-                  //   <CFormLabel htmlFor="cMob">Customer Mobile Number</CFormLabel>
-                  //   <CFormInput size="sm" id="cMob" />
-                  // </CCol>
                 )}
                 {values.PaymentTerm == 2 && (
-                  // <CCol xs={12} md={3}>
-                  //   <CFormLabel htmlFor="cPAN">Customer PAN Number</CFormLabel>
-                  //   <CFormInput size="sm" id="cPAN" />
-                  // </CCol>
                   <CCol xs={12} md={3}>
-                    <CFormLabel htmlFor="customerPAN">
-                      Customer PAN Number*{' '}
-                      {/* {errors.customerPAN && (
-                        <span className="small text-danger">{errors.customerPAN}</span>
-                      )} */}
-                    </CFormLabel>
+                    <CFormLabel htmlFor="customerPAN">Customer PAN Number* </CFormLabel>
                     <CFormInput
                       name="customerPAN"
                       size="sm"
@@ -499,6 +518,7 @@ const RJSalesOrderCreation = () => {
                     />
                   </CCol>
                 )}
+                {/* ================================================================================= */}
                 <CCol xs={12} md={3}>
                   <CFormLabel htmlFor="shed_name">
                     Shed Name*{' '}
@@ -703,7 +723,7 @@ const RJSalesOrderCreation = () => {
                     onFocus={onFocus}
                     onBlur={onBlur}
                     onChange={handleChange}
-                    maxLength={4}
+                    maxLength={9}
                     className={`${errors.orderQuantity && 'is-invalid'}`}
                     values={values.orderQuantity}
                     size="sm"
@@ -724,7 +744,7 @@ const RJSalesOrderCreation = () => {
                     onFocus={onFocus}
                     onBlur={onBlur}
                     // type="number"
-                    maxLength={8}
+                    maxLength={5}
                     onChange={handleChange}
                     className={`${errors.freight_income && 'is-invalid'}`}
                     size="sm"
@@ -746,7 +766,7 @@ const RJSalesOrderCreation = () => {
                     onFocus={onFocus}
                     onBlur={onBlur}
                     // type="number"
-                    maxLength={8}
+                    maxLength={5}
                     onChange={handleChange}
                     className={`${errors.advance_amount && 'is-invalid'}`}
                     values={values.advance_amount}
@@ -922,6 +942,7 @@ const RJSalesOrderCreation = () => {
                     {values.remarks}
                   </CFormTextarea>
                 </CCol>
+                {state.page_loading && <CSpinner color="danger" className="mt-2" />}
               </CRow>
 
               <CRow className="mt-3">

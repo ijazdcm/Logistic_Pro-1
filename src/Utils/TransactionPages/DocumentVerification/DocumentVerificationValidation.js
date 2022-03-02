@@ -63,7 +63,10 @@ export default function DocumentVerificationValidation(values, isTouched) {
 
   if (isTouched.bankAcc && !values.bankAcc) {
     errors.bankAcc = 'Required'
+  } else if (isTouched.bankAcc && !/^[\d]{20}$/.test(values.bankAcc)) {
+    errors.bankAcc = 'Must Have 20 Digit Numeric'
   }
+
   if (isTouched.aadharCopy && !values.aadharCopy) {
     errors.aadharCopy = 'Required'
   }

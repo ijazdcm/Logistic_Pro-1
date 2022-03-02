@@ -24,9 +24,12 @@ const DocsVerify = () => {
       tableData = res.data.data
       let rowDataList = []
       const filterData = tableData.filter(
-        (data) => data.vehicle_type_id.id == 3 && data.vehicle_inspection != null
+        (data) =>
+          data.vehicle_type_id.id == 3 &&
+          data.vehicle_inspection != null &&
+          data.document_verification_status == 0
       )
-      console.log(filterData)
+
       filterData.map((data, index) => {
         rowDataList.push({
           sno: index + 1,
@@ -62,10 +65,6 @@ const DocsVerify = () => {
   useEffect(() => {
     loadDocsVerifyTable()
   }, [])
-
-  useEffect(()=>{
-    PanDataService.getPanData();
-  },[])
 
   const columns = [
     {

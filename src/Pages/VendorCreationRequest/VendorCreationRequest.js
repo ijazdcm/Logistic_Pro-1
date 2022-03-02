@@ -19,6 +19,10 @@ import React, { useState, useEffect } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { Country, State, City } from 'country-state-city'
+import Select from 'react-select'
+import Async, { useAsync } from 'react-select/async'
+import AsyncSelect from 'react-select/async'
 
 // SERVICES FILE
 import VendorCreationService from 'src/Service/VendorCreation/VendorCreationService'
@@ -54,19 +58,6 @@ const VendorCreationRequest = () => {
   const [acceptBtn, setAcceptBtn] = useState(true)
   const [rejectBtn, setRejectBtn] = useState(true)
 
-  // const [delValue, setDelValue] = useState({
-  //   pan: false,
-  //   adhar: false,
-  //   license: false,
-  //   rcFront: false,
-  //   rcBack: false,
-  //   insurance: false,
-  //   transShed: false,
-  //   passBook: false,
-  //   tdsFront: false,
-  //   tdsBack: false,
-  // })
-
   const [panDel, setPanDel] = useState(false)
   const [adharDel, setAdharDel] = useState(false)
   const [licenseDel, setLicenseDel] = useState(false)
@@ -79,10 +70,11 @@ const VendorCreationRequest = () => {
   const [tdsBackDel, setTdsBackDel] = useState(false)
   const [fileUpdate, setFileUpdate] = useState(true)
 
-  // const fileDelete = (e) => {
-  //   console.log(e.target.id)
-  //   // setDelValue({ ...delValue, [e.target.id]: false })
-  // }
+  const options = [
+    { value: 'chocolate', label: 'Chocolate' },
+    { value: 'strawberry', label: 'Strawberry' },
+    { value: 'vanilla', label: 'Vanilla' },
+  ]
 
   // SET FORM VALUES
   const formValues = {
@@ -152,16 +144,16 @@ const VendorCreationRequest = () => {
 
   // ERROR VALIDATIONS
   useEffect(() => {
-    if (Object.keys(isTouched).length == 17) {
-      // if (Object.keys(isTouched).length == Object.keys(formValues).length) {
-      if (Object.keys(errors).length == 0) {
-        setAcceptBtn(false)
-        setRejectBtn(false)
-      } else {
-        setAcceptBtn(true)
-        setRejectBtn(false)
-      }
+    // if (Object.keys(isTouched).length == 17) {
+    // if (Object.keys(isTouched).length == Object.keys(formValues).length) {
+    if (Object.keys(errors).length == 0) {
+      setAcceptBtn(false)
+      setRejectBtn(false)
+    } else {
+      setAcceptBtn(true)
+      setRejectBtn(false)
     }
+    // }
   }, [values, errors])
 
   // ADD VENDOR REQUEST DETAILS
@@ -181,14 +173,15 @@ const VendorCreationRequest = () => {
     formData.append('bank_name', values.bankName)
     formData.append('bank_acc_number', currentInfo.vendor_info.bank_acc_number)
     formData.append('bank_acc_holder_name', values.bankAccHolderName)
+    formData.append('bank_branch', values.bankBranch)
     formData.append('bank_ifsc_code', values.ifscCode)
     formData.append('street', values.street)
     formData.append('area', values.area)
     formData.append('city', values.city)
     formData.append('district', values.district)
     formData.append('state', values.state)
+    formData.append('region', values.state.substring(0, 2))
     formData.append('postal_code', values.postalCode)
-    formData.append('region', values.region)
     formData.append('gst_registration', values.GSTreg)
     formData.append('gst_registration_number', values.GSTNumber)
     formData.append('gst_tax_code', values.GSTtax || 1245)
@@ -199,8 +192,15 @@ const VendorCreationRequest = () => {
     VendorCreationService.updateVendorRequestData(id, formData).then((res) => {
       console.log(res)
       if (res.status == 200) {
-        toast.success('Document Verification Done!')
-        navigation('/DocsVerify')
+        if (status == 1) {
+          toast.success('Vendor Creation Done!')
+          navigation('/VendorCreationHome')
+        } else {
+          toast.warning('Vendor Creation Rejected!')
+          navigation('/VendorCreationHome')
+        }
+      } else {
+        toast.warning('Something Went Wrong !')
       }
     })
   }
@@ -365,6 +365,7 @@ const VendorCreationRequest = () => {
                 size="sm"
                 id="bankAccount"
                 name="bankAccount"
+                maxLength={20}
                 value={(fetch ? currentInfo.vendor_info.bank_acc_number : '') || values.bankAccount}
                 onKeyUp={() => (currentInfo.vendor_info.bank_acc_number = '')}
                 onFocus={onFocus}
@@ -382,6 +383,7 @@ const VendorCreationRequest = () => {
               <CFormInput
                 size="sm"
                 id="bankAccHolderName"
+                maxLength={30}
                 className={`${errors.bankAccHolderName && 'is-invalid'}`}
                 name="bankAccHolderName"
                 value={values.bankAccHolderName || ''}
@@ -423,7 +425,7 @@ const VendorCreationRequest = () => {
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="bankBranch">
-                Bank Branch{' '}
+                Bank Branch*{' '}
                 {errors.bankBranch && (
                   <span className="small text-danger">{errors.bankBranch}</span>
                 )}
@@ -433,6 +435,7 @@ const VendorCreationRequest = () => {
                 name="bankBranch"
                 size="sm"
                 id="bankBranch"
+                maxLength={30}
                 className={`${errors.bankBranch && 'is-invalid'}`}
                 value={values.bankBranch || ''}
                 onFocus={onFocus}
@@ -442,12 +445,17 @@ const VendorCreationRequest = () => {
             </CCol>
 
             <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="ifscCode">Bank IFSC Code</CFormLabel>
+              <CFormLabel htmlFor="ifscCode">
+                Bank IFSC Code*{' '}
+                {errors.ifscCode && <span className="small text-danger">{errors.ifscCode}</span>}
+              </CFormLabel>
               <CFormInput
                 type="text"
                 name="ifscCode"
                 size="sm"
                 id="ifscCode"
+                maxLength={11}
+                className={`${errors.ifscCode && 'is-invalid'}`}
                 value={values.ifscCode || ''}
                 onFocus={onFocus}
                 onBlur={onBlur}
@@ -475,26 +483,30 @@ const VendorCreationRequest = () => {
                   Select...
                 </option>
                 <option value="1">Yes</option>
-                <option value="2">No</option>
+                <option value="0">No</option>
               </CFormSelect>
             </CCol>
-            <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="GSTNumber">
-                GST Registration Number*{' '}
-                {errors.GSTNumber && <span className="small text-danger">{errors.GSTNumber}</span>}
-              </CFormLabel>
-              <CFormInput
-                size="sm"
-                id="GSTNumber"
-                className={`${errors.GSTNumber && 'is-invalid'}`}
-                name="GSTNumber"
-                maxLength={15}
-                onFocus={onFocus}
-                onBlur={onBlur}
-                onChange={handleChange}
-                value={values.GSTNumber}
-              />
-            </CCol>
+            {values.GSTreg == 1 && (
+              <CCol xs={12} md={3}>
+                <CFormLabel htmlFor="GSTNumber">
+                  GST Registration Number*{' '}
+                  {errors.GSTNumber && (
+                    <span className="small text-danger">{errors.GSTNumber}</span>
+                  )}
+                </CFormLabel>
+                <CFormInput
+                  size="sm"
+                  id="GSTNumber"
+                  className={`${errors.GSTNumber && 'is-invalid'}`}
+                  name="GSTNumber"
+                  maxLength={15}
+                  onFocus={onFocus}
+                  onBlur={onBlur}
+                  onChange={handleChange}
+                  value={values.GSTNumber}
+                />
+              </CCol>
+            )}
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="GSTtax">
                 GST Tax Code
@@ -511,13 +523,15 @@ const VendorCreationRequest = () => {
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="street">
-                Street
-                {/* {errors.street && <span className="small text-danger">{errors.street}</span>} */}
+                Street*
+                {errors.street && <span className="small text-danger">{errors.street}</span>}
               </CFormLabel>
               <CFormInput
                 size="sm"
                 id="street"
                 name="street"
+                className={`${errors.street && 'is-invalid'}`}
+                maxLength={40}
                 value={values.street}
                 onFocus={onFocus}
                 onBlur={onBlur}
@@ -543,12 +557,14 @@ const VendorCreationRequest = () => {
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="city">
                 City
-                {/* {errors.city && <span className="small text-danger">{errors.city}</span>} */}
+                {errors.city && <span className="small text-danger">{errors.city}</span>}
               </CFormLabel>
               <CFormInput
                 size="sm"
                 id="city"
                 name="city"
+                className={`${errors.city && 'is-invalid'}`}
+                maxLength={30}
                 value={values.city}
                 onFocus={onFocus}
                 onBlur={onBlur}
@@ -560,6 +576,7 @@ const VendorCreationRequest = () => {
                 District
                 {/* {errors.district && <span className="small text-danger">{errors.district}</span>} */}
               </CFormLabel>
+              {/* <AsyncSelect cacheOptions defaultOptions loadOptions={promiseOptions} /> */}
               <CFormInput
                 size="sm"
                 id="district"
@@ -572,17 +589,51 @@ const VendorCreationRequest = () => {
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="state">
-                State
-                {/* {errors.state && <span className="small text-danger">{errors.state}</span>} */}
+                State*
+                {errors.state && <span className="small text-danger">{errors.state}</span>}
               </CFormLabel>
-              <CFormInput
+
+              <CFormSelect
                 size="sm"
                 id="state"
                 name="state"
-                value={'Tamil Nadu'}
+                value={values.state}
                 onFocus={onFocus}
                 onBlur={onBlur}
                 onChange={handleChange}
+                className={`${errors.GSTreg && 'is-invalid'}`}
+                aria-label="Small select example"
+              >
+                <option value={''} hidden selected>
+                  Select...
+                </option>
+                <option value="24-Gujarat">Gujarat</option>
+                <option value="27-Maharashtra">Maharashtra</option>
+                <option value="29-Karnataka">Karnataka</option>
+                <option value="32-Kerala">Kerala</option>
+                <option value="33-Tamil nadu">Tamil nadu</option>
+                <option value="34-Pondicherry">Pondicherry</option>
+                <option value="36-Telengana">Telengana</option>
+                <option value="37-Andhra pradesh">Andhra pradesh</option>
+              </CFormSelect>
+            </CCol>
+            <CCol xs={12} md={3}>
+              <CFormLabel htmlFor="region">
+                Region
+                {/* {errors.region && <span className="small text-danger">{errors.region}</span>} */}
+              </CFormLabel>
+
+              <CFormInput
+                size="sm"
+                id="region"
+                name="region"
+                maxLength={2}
+                value={values.state.substring(0, 2)}
+                placeholder="Select State"
+                onFocus={onFocus}
+                onBlur={onBlur}
+                onChange={handleChange}
+                readOnly
               />
             </CCol>
 
@@ -599,21 +650,6 @@ const VendorCreationRequest = () => {
                 name="postalCode"
                 maxLength={6}
                 value={values.postalCode}
-                onFocus={onFocus}
-                onBlur={onBlur}
-                onChange={handleChange}
-              />
-            </CCol>
-            <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="region">
-                Region
-                {/* {errors.region && <span className="small text-danger">{errors.region}</span>} */}
-              </CFormLabel>
-              <CFormInput
-                size="sm"
-                id="region"
-                name="region"
-                value={values.region}
                 onFocus={onFocus}
                 onBlur={onBlur}
                 onChange={handleChange}
@@ -642,7 +678,6 @@ const VendorCreationRequest = () => {
                   className="w-100 m-0"
                   color="info"
                   size="sm"
-                  id="panCopy"
                   onFocus={onFocus}
                   onBlur={onBlur}
                   onChange={handleChange}
@@ -683,8 +718,8 @@ const VendorCreationRequest = () => {
                   size="sm"
                   id="aadharCopy"
                   name="aadharCopy"
+                  accept=".jpg,.jpeg,.png,.pdf"
                   className={`${errors.aadharCopy && 'is-invalid'}`}
-                  value={values.aadharCopy}
                   onFocus={onFocus}
                   onBlur={onBlur}
                   onChange={handleChange}
@@ -694,8 +729,6 @@ const VendorCreationRequest = () => {
                   className="w-100 m-0"
                   color="info"
                   size="sm"
-                  id="panCopy"
-                  accept=".jpg,.jpeg,.png,.pdf"
                   onFocus={onFocus}
                   onBlur={onBlur}
                   onChange={handleChange}
@@ -737,8 +770,8 @@ const VendorCreationRequest = () => {
                   size="sm"
                   id="licenseCopy"
                   name="licenseCopy"
+                  accept=".jpg,.jpeg,.png,.pdf"
                   className={`${errors.aadharCopy && 'is-invalid'}`}
-                  value={values.aadharCopy}
                   onFocus={onFocus}
                   onBlur={onBlur}
                   onChange={handleChange}
@@ -748,8 +781,6 @@ const VendorCreationRequest = () => {
                   className="w-100 m-0"
                   color="info"
                   size="sm"
-                  id="licenseCopy"
-                  accept=".jpg,.jpeg,.png,.pdf"
                   onFocus={onFocus}
                   onBlur={onBlur}
                   onChange={handleChange}
@@ -787,8 +818,8 @@ const VendorCreationRequest = () => {
                   size="sm"
                   id="insurance"
                   name="insurance"
+                  accept=".jpg,.jpeg,.png,.pdf"
                   className={`${errors.insurance && 'is-invalid'}`}
-                  value={values.insurance}
                   onFocus={onFocus}
                   onBlur={onBlur}
                   onChange={handleChange}
@@ -798,8 +829,6 @@ const VendorCreationRequest = () => {
                   className="w-100 m-0"
                   color="info"
                   size="sm"
-                  id="insurance"
-                  accept=".jpg,.jpeg,.png,.pdf"
                   onFocus={onFocus}
                   onBlur={onBlur}
                   onChange={handleChange}
@@ -837,8 +866,8 @@ const VendorCreationRequest = () => {
                   size="sm"
                   id="bankPass"
                   name="bankPass"
+                  accept=".jpg,.jpeg,.png,.pdf"
                   className={`${errors.bankPass && 'is-invalid'}`}
-                  value={values.bankPass}
                   onFocus={onFocus}
                   onBlur={onBlur}
                   onChange={handleChange}
@@ -848,8 +877,6 @@ const VendorCreationRequest = () => {
                   className="w-100 m-0"
                   color="info"
                   size="sm"
-                  id="bankPass"
-                  accept=".jpg,.jpeg,.png,.pdf"
                   onFocus={onFocus}
                   onBlur={onBlur}
                   onChange={handleChange}
@@ -887,8 +914,8 @@ const VendorCreationRequest = () => {
                   size="sm"
                   id="rcFront"
                   name="rcFront"
+                  accept=".jpg,.jpeg,.png,.pdf"
                   className={`${errors.rcFront && 'is-invalid'}`}
-                  value={values.rcFront}
                   onFocus={onFocus}
                   onBlur={onBlur}
                   onChange={handleChange}
@@ -898,8 +925,6 @@ const VendorCreationRequest = () => {
                   className="w-100 m-0"
                   color="info"
                   size="sm"
-                  id="panCopy"
-                  accept=".jpg,.jpeg,.png,.pdf"
                   onFocus={onFocus}
                   onBlur={onBlur}
                   onChange={handleChange}
@@ -912,7 +937,7 @@ const VendorCreationRequest = () => {
                     onClick={() => {
                       if (window.confirm('Are you sure to remove this file?')) {
                         setRcFrontDel(true)
-                        setFileUpdate(false) 
+                        setFileUpdate(false)
                       }
                     }}
                   >
@@ -937,8 +962,8 @@ const VendorCreationRequest = () => {
                   size="sm"
                   id="rcBack"
                   name="rcBack"
+                  accept=".jpg,.jpeg,.png,.pdf"
                   className={`${errors.rcBack && 'is-invalid'}`}
-                  value={values.rcBack}
                   onFocus={onFocus}
                   onBlur={onBlur}
                   onChange={handleChange}
@@ -948,8 +973,6 @@ const VendorCreationRequest = () => {
                   className="w-100 m-0"
                   color="info"
                   size="sm"
-                  id="rcBack"
-                  accept=".jpg,.jpeg,.png,.pdf"
                   onFocus={onFocus}
                   onBlur={onBlur}
                   onChange={handleChange}
@@ -962,6 +985,7 @@ const VendorCreationRequest = () => {
                     onClick={() => {
                       if (window.confirm('Are you sure to remove this file?')) {
                         setRcBackDel(true)
+                        setFileUpdate(false)
                       }
                     }}
                   >
@@ -988,8 +1012,8 @@ const VendorCreationRequest = () => {
                   size="sm"
                   id="transportShed"
                   name="transportShed"
+                  accept=".jpg,.jpeg,.png,.pdf"
                   className={`${errors.transportShed && 'is-invalid'}`}
-                  value={values.transportShed}
                   onFocus={onFocus}
                   onBlur={onBlur}
                   onChange={handleChange}
@@ -999,8 +1023,6 @@ const VendorCreationRequest = () => {
                   className="w-100 m-0"
                   color="info"
                   size="sm"
-                  id="transportShed"
-                  accept=".jpg,.jpeg,.png,.pdf"
                   onFocus={onFocus}
                   onBlur={onBlur}
                   onChange={handleChange}
@@ -1042,8 +1064,8 @@ const VendorCreationRequest = () => {
                   size="sm"
                   id="TDSfront"
                   name="TDSfront"
+                  accept=".jpg,.jpeg,.png,.pdf"
                   className={`${errors.TDSfront && 'is-invalid'}`}
-                  value={values.TDSfront}
                   onFocus={onFocus}
                   onBlur={onBlur}
                   onChange={handleChange}
@@ -1053,8 +1075,6 @@ const VendorCreationRequest = () => {
                   className="w-100 m-0"
                   color="info"
                   size="sm"
-                  id="TDSfront"
-                  accept=".jpg,.jpeg,.png,.pdf"
                   onFocus={onFocus}
                   onBlur={onBlur}
                   onChange={handleChange}
@@ -1092,8 +1112,8 @@ const VendorCreationRequest = () => {
                   size="sm"
                   id="TDSback"
                   name="TDSback"
+                  accept=".jpg,.jpeg,.png,.pdf"
                   className={`${errors.TDSback && 'is-invalid'}`}
-                  value={values.TDSback}
                   onFocus={onFocus}
                   onBlur={onBlur}
                   onChange={handleChange}
@@ -1103,8 +1123,6 @@ const VendorCreationRequest = () => {
                   className="w-100 m-0"
                   color="info"
                   size="sm"
-                  id="TDSback"
-                  accept=".jpg,.jpeg,.png,.pdf"
                   onFocus={onFocus}
                   onBlur={onBlur}
                   onChange={handleChange}

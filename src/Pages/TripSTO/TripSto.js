@@ -35,7 +35,11 @@ function assignTripSTO(vehicleId) {
 const TripSto = () => {
   const [rowData, setRowData] = useState([])
   const [errorModal, setErrorModal] = useState(false)
+
+  const [pending, setPending] = useState(true)
+
   const [vehicleSto, setVehicleSto] = useState('')
+
   let tableData = []
 
   const ACTION = {
@@ -80,6 +84,7 @@ const TripSto = () => {
         })
       })
       setRowData(rowDataList)
+      setPending(false)
     })
   }
 
@@ -147,7 +152,13 @@ const TripSto = () => {
     <>
       <CCard className="mt-4">
         <CContainer className="m-2">
-          <CustomTable columns={columns} data={rowData} />
+          <CustomTable
+            columns={columns}
+            data={rowData}
+            fieldName={'Driver_Name'}
+            showSearchFilter={true}
+            pending={pending}
+          />
         </CContainer>
       </CCard>
       {/* Error Modal Section */}

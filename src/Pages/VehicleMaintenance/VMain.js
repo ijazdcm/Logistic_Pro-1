@@ -5,8 +5,8 @@ import CustomTable from 'src/components/customComponent/CustomTable'
 import VehicleMaintenanceService from 'src/Service/VehicleMaintenance/VehicleMaintenanceService'
 
 const VehicleMaintainence = () => {
-
   const [rowData, setRowData] = useState([])
+  const [pending, setPending] = useState(true)
   let tableData = []
 
   const ACTION = {
@@ -14,14 +14,14 @@ const VehicleMaintainence = () => {
     GATE_OUT: 2,
     WAIT_OUTSIDE: 3,
   }
-  const loadVehicleMaintenanceTable=()=>{
+  const loadVehicleMaintenanceTable = () => {
     VehicleMaintenanceService.getVehicleReadyToMaintenance().then((res) => {
       tableData = res.data.data
       let rowDataList = []
-      const filterData = tableData.filter((data) => data.vehicle_type_id.id == 1 )
+      const filterData = tableData.filter((data) => data.vehicle_type_id.id == 1)
       console.log(filterData)
       filterData.map((data, index) => {
-      // tableData.map((data, index) => {
+        // tableData.map((data, index) => {
         rowDataList.push({
           sno: index + 1,
           Tripsheet_No: '',
@@ -37,32 +37,35 @@ const VehicleMaintainence = () => {
                 : 'Gate Out'}
             </span>
           ),
-          Screen_Duration:data.updated_at ,
+          Screen_Duration: data.updated_at,
           Overall_Duration: data.created_at,
-          Action:(
+          Action: (
             <span>
-              {data.vehicle_type_id.type != 'Party Vehicle' && data.vehicle_type_id.type != 'Hire' ? (
-                 <CButton className="badge text-white" color="warning">
-                 <Link to={`vehicleMaintainence/${data.parking_yard_gate_id}`}>
-                 Vehicle Maintenance
-                 </Link>
-               </CButton>
-              ) : ('')}
-
-              </span>
-          )
+              {data.vehicle_type_id.type != 'Party Vehicle' &&
+              data.vehicle_type_id.type != 'Hire' ? (
+                <CButton className="badge" color="warning">
+                  <Link
+                    className="text-white"
+                    to={`vehicleMaintainence/${data.parking_yard_gate_id}`}
+                  >
+                    Vehicle Maintenance
+                  </Link>
+                </CButton>
+              ) : (
+                ''
+              )}
+            </span>
+          ),
         })
       })
       setRowData(rowDataList)
+      setPending(false)
     })
   }
 
-
-  useEffect(()=>{
+  useEffect(() => {
     loadVehicleMaintenanceTable()
-  },[])
-
-
+  }, [])
 
   const columns = [
     {
@@ -118,11 +121,16 @@ const VehicleMaintainence = () => {
     },
   ]
 
-
   return (
     <CCard className="mt-4">
       <CContainer className="mt-2">
-        <CustomTable columns={columns} data={rowData} />
+        <CustomTable
+          columns={columns}
+          data={rowData}
+          fieldName={'Driver_Name'}
+          showSearchFilter={true}
+          pending={pending}
+        />
       </CContainer>
     </CCard>
   )

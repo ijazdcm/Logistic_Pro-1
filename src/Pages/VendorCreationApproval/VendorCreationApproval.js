@@ -73,12 +73,16 @@ const VendorCreationApproval = () => {
 
     VendorCreationService.updateVendorRequestData(id, formData).then((res) => {
       console.log(res)
-      if (res.status == 200 && status != 0) {
-        toast.success('Vendor Approval Done!')
-        navigation('/VendorCreationApprovalHome')
+      if (res.status == 200) {
+        if (status == 3) {
+          toast.success('Vendor Approval Done!')
+          navigation('/VendorCreationApprovalHome')
+        } else {
+          toast.warning('Vendor Approval Rejected!')
+          navigation('/VendorCreationApprovalHome')
+        }
       } else {
-        toast.warning('Vendor Approval Rejected!')
-        navigation('/VendorCreationApprovalHome')
+        toast.warning('Something Went Wrong !')
       }
     })
   }
@@ -94,11 +98,13 @@ const VendorCreationApproval = () => {
   useEffect(() => {
     VendorCreationService.getVehicleDocumentInfo(id).then((res) => {
       const resData = res.data.data[0]
+      console.log(resData)
       ShedData(resData.shed_id)
       setCurrentInfo(resData)
       setFetch(true)
     })
   }, [])
+
   return (
     <>
       <CCard>
@@ -114,7 +120,7 @@ const VendorCreationApproval = () => {
                 size="sm"
                 id="shedName"
                 value={fetch ? shedData.shed_name : ''}
-                readOnly
+                
               />
             </CCol>
             <CCol xs={12} md={3}>
@@ -128,7 +134,7 @@ const VendorCreationApproval = () => {
                 size="sm"
                 id="ownerName"
                 value={fetch ? shedData.shed_owner_name : ''}
-                readOnly
+                
               />
             </CCol>
             <CCol xs={12} md={3}>
@@ -142,7 +148,7 @@ const VendorCreationApproval = () => {
                 size="sm"
                 id="shedownerMob"
                 value={fetch ? shedData.shed_owner_phone_1 : ''}
-                readOnly
+                
               />
             </CCol>
             <CCol xs={12} md={3}>
@@ -156,13 +162,243 @@ const VendorCreationApproval = () => {
                 size="sm"
                 id="shedownerWhatsapp"
                 value={fetch ? shedData.shed_owner_phone_2 : ''}
-                readOnly
+                
               />
             </CCol>
           </CRow>
           {/* Row One------------------------- */}
           {/* Row Two------------------------- */}
           <CRow className="">
+            <CCol xs={12} md={3}>
+              <CFormLabel htmlFor="panNumber">
+                PAN Card Number*
+                {errors.panNumber && <span className="small text-danger">{errors.panNumber}</span>}
+              </CFormLabel>
+              <CFormInput
+                size="sm"
+                id="panNumber"
+                value={(fetch ? currentInfo.vendor_info.pan_card_number : '') || values.panNumber}
+                
+              />
+            </CCol>
+            <CCol xs={12} md={3}>
+              <CFormLabel htmlFor="aadhar">
+                Aadhar Card Number
+                {errors.aadhar && <span className="small text-danger">{errors.aadhar}</span>}
+              </CFormLabel>
+              <CFormInput
+                size="sm"
+                id="aadhar"
+                name="aadhar"
+                value={(fetch ? currentInfo.vendor_info.aadhar_card_number : '') || values.aadhar}
+                
+              />
+            </CCol>
+            <CCol xs={12} md={3}>
+              <CFormLabel htmlFor="bankAccount">
+                Bank Account Number*
+                {errors.bankAccount && (
+                  <span className="small text-danger">{errors.bankAccount}</span>
+                )}
+              </CFormLabel>
+              <CFormInput
+                size="sm"
+                id="bankAccount"
+                value={fetch ? currentInfo.vendor_info.bank_acc_number : ''}
+                
+              />
+            </CCol>
+            <CCol xs={12} md={3}>
+              <CFormLabel htmlFor="bankaccountholderName">
+                Bank Account Holder Name*
+                {errors.bankaccountholderName && (
+                  <span className="small text-danger">{errors.bankaccountholderName}</span>
+                )}
+              </CFormLabel>
+              <CFormInput
+                size="sm"
+                id="bankaccountholderName"
+                value={fetch ? currentInfo.vendor_info.bank_acc_holder_name : ''}
+                
+              />
+            </CCol>
+          </CRow>
+          <CRow>
+            <CCol xs={12} md={3}>
+              <CFormLabel htmlFor="bankName">Bank Name</CFormLabel>
+              <CFormInput
+                type="text"
+                name="bankName"
+                size="sm"
+                id="bankName"
+                value={fetch ? currentInfo.vendor_info.bank_name : ''}
+                
+              />
+            </CCol>
+            <CCol xs={12} md={3}>
+              <CFormLabel htmlFor="bankBranch">Bank Branch</CFormLabel>
+              <CFormInput
+                type="text"
+                name="bankBranch"
+                size="sm"
+                id="bankBranch"
+                value={fetch ? currentInfo.vendor_info.bank_branch : ''}
+                
+              />
+            </CCol>
+
+            <CCol xs={12} md={3}>
+              <CFormLabel htmlFor="ifscCode">Bank IFSC Code</CFormLabel>
+              <CFormInput
+                type="text"
+                name="ifscCode"
+                size="sm"
+                id="ifscCode"
+                value={fetch ? currentInfo.vendor_info.bank_ifsc_code : ''}
+                
+              />
+            </CCol>
+            <CCol xs={12} md={3}>
+              <CFormLabel htmlFor="GSTreg">
+                GST Registeration
+                {errors.GSTreg && <span className="small text-danger">{errors.GSTreg}</span>}
+              </CFormLabel>
+              <CFormInput
+                size="sm"
+                id="GSTreg"
+                value={fetch ? currentInfo.vendor_info.gst_registration : ''}
+                
+              />
+            </CCol>
+          </CRow>
+          <CRow>
+            <CCol xs={12} md={3}>
+              <CFormLabel htmlFor="GST">
+                GST Registration Number*
+                {errors.GST && <span className="small text-danger">{errors.GST}</span>}
+              </CFormLabel>
+              <CFormInput
+                size="sm"
+                id="GST"
+                value={fetch ? currentInfo.vendor_info.gst_registration_number : ''}
+                
+              />
+            </CCol>
+            <CCol xs={12} md={3}>
+              <CFormLabel htmlFor="GSTtax">
+                GST Tax Code
+                {errors.GSTtax && <span className="small text-danger">{errors.GSTtax}</span>}
+              </CFormLabel>
+              <CFormInput
+                size="sm"
+                id="GSTtax"
+                value={fetch ? currentInfo.vendor_info.gst_tax_code : ''}
+                
+              />
+            </CCol>
+            <CCol xs={12} md={3}>
+              <CFormLabel htmlFor="Payment">
+                Payment Terms 3Days
+                {errors.Payment && <span className="small text-danger">{errors.Payment}</span>}
+              </CFormLabel>
+              <CFormInput
+                size="sm"
+                id="Payment"
+                value={fetch ? currentInfo.vendor_info.payment_term_3days : ''}
+                
+              />
+            </CCol>
+
+            <CCol xs={12} md={3}>
+              <CFormLabel htmlFor="Street">
+                Street
+                {errors.Street && <span className="small text-danger">{errors.Street}</span>}
+              </CFormLabel>
+              <CFormInput
+                size="sm"
+                id="Street"
+                value={fetch ? currentInfo.vendor_info.street : ''}
+                
+              />
+            </CCol>
+          </CRow>
+          <CRow>
+            <CCol xs={12} md={3}>
+              <CFormLabel htmlFor="Area">
+                Area
+                {errors.Area && <span className="small text-danger">{errors.Area}</span>}
+              </CFormLabel>
+              <CFormInput
+                size="sm"
+                id="Area"
+                value={fetch ? currentInfo.vendor_info.area : ''}
+                
+              />
+            </CCol>
+            <CCol xs={12} md={3}>
+              <CFormLabel htmlFor="City">
+                City
+                {errors.City && <span className="small text-danger">{errors.City}</span>}
+              </CFormLabel>
+              <CFormInput
+                size="sm"
+                id="City"
+                value={fetch ? currentInfo.vendor_info.city : ''}
+                
+              />
+            </CCol>
+            <CCol xs={12} md={3}>
+              <CFormLabel htmlFor="District">
+                District
+                {errors.District && <span className="small text-danger">{errors.District}</span>}
+              </CFormLabel>
+              <CFormInput
+                size="sm"
+                id="District"
+                value={fetch ? currentInfo.vendor_info.district : ''}
+                
+              />
+            </CCol>
+            <CCol xs={12} md={3}>
+              <CFormLabel htmlFor="State">
+                State
+                {errors.State && <span className="small text-danger">{errors.State}</span>}
+              </CFormLabel>
+              <CFormInput
+                size="sm"
+                id="State"
+                value={fetch ? currentInfo.vendor_info.state : ''}
+                
+              />
+            </CCol>
+          </CRow>
+          <CRow>
+            <CCol xs={12} md={3}>
+              <CFormLabel htmlFor="postalCode">
+                Postal Code
+                {errors.postalCode && (
+                  <span className="small text-danger">{errors.postalCode}</span>
+                )}
+              </CFormLabel>
+              <CFormInput
+                size="sm"
+                id="postalCode"
+                value={fetch ? currentInfo.vendor_info.postal_code : ''}
+                
+              />
+            </CCol>
+            <CCol xs={12} md={3}>
+              <CFormLabel htmlFor="Region">
+                Region
+                {errors.Region && <span className="small text-danger">{errors.Region}</span>}
+              </CFormLabel>
+              <CFormInput
+                size="sm"
+                id="Region"
+                value={fetch ? currentInfo.vendor_info.region : ''}
+                
+              />
+            </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="panCardattachment">
                 PAN Card Attatchment
@@ -183,18 +419,6 @@ const VendorCreationApproval = () => {
               </CButton>
             </CCol>
             <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="panNumber">
-                PAN Card Number*
-                {errors.panNumber && <span className="small text-danger">{errors.panNumber}</span>}
-              </CFormLabel>
-              <CFormInput
-                size="sm"
-                id="panNumber"
-                value={(fetch ? currentInfo.vendor_info.pan_card_number : '') || values.panNumber}
-                readOnly
-              />
-            </CCol>
-            <CCol xs={12} md={3}>
               <CFormLabel htmlFor="aadharCopy">
                 Aadhar Card Copy
                 {errors.aadharCopy && (
@@ -213,23 +437,8 @@ const VendorCreationApproval = () => {
                 </span>
               </CButton>
             </CCol>
-            <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="aadhar">
-                Aadhar Card Number
-                {errors.aadhar && <span className="small text-danger">{errors.aadhar}</span>}
-              </CFormLabel>
-              <CFormInput
-                size="sm"
-                id="aadhar"
-                name="aadhar"
-                value={(fetch ? currentInfo.vendor_info.aadhar_card_number : '') || values.aadhar}
-                readOnly
-              />
-            </CCol>
           </CRow>
-          {/* Row Two------------------------- */}
-          {/* Row Three------------------------- */}
-          <CRow className="">
+          <CRow>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="license">
                 License Copy
@@ -299,8 +508,7 @@ const VendorCreationApproval = () => {
               </CButton>
             </CCol>
           </CRow>
-          {/* Row Four------------------------- */}
-          <CRow className="">
+          <CRow>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="transportShed">
                 Transporter Shed Sheet
@@ -341,165 +549,6 @@ const VendorCreationApproval = () => {
               </CButton>
             </CCol>
             <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="bankName">Bank Name</CFormLabel>
-              <CFormInput
-                type="text"
-                name="bankName"
-                size="sm"
-                id="bankName"
-                value={fetch ? currentInfo.vendor_info.bank_name : ''}
-                readOnly
-              />
-            </CCol>
-            <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="bankBranch">Bank Branch</CFormLabel>
-              <CFormInput
-                type="text"
-                name="bankBranch"
-                size="sm"
-                id="bankBranch"
-                value={fetch ? currentInfo.vendor_info.bank_branch : ''}
-                readOnly
-              />
-            </CCol>
-          </CRow>
-          {/* Row Four------------------------- */}
-          {/* Row Five------------------------- */}
-          <CRow className="">
-            <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="ifscCode">Bank IFSC Code</CFormLabel>
-              <CFormInput
-                type="text"
-                name="ifscCode"
-                size="sm"
-                id="ifscCode"
-                value={fetch ? currentInfo.vendor_info.bank_ifsc_code : ''}
-                readOnly
-              />
-            </CCol>
-            <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="bankAccount">
-                Bank Account Number*
-                {errors.bankAccount && (
-                  <span className="small text-danger">{errors.bankAccount}</span>
-                )}
-              </CFormLabel>
-              <CFormInput
-                size="sm"
-                id="bankAccount"
-                value={fetch ? currentInfo.vendor_info.bank_acc_number : ''}
-                readOnly
-              />
-            </CCol>
-            <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="bankaccountholderName">
-                Bank Account Holder Name*
-                {errors.bankaccountholderName && (
-                  <span className="small text-danger">{errors.bankaccountholderName}</span>
-                )}
-              </CFormLabel>
-              <CFormInput
-                size="sm"
-                id="bankaccountholderName"
-                value={fetch ? currentInfo.vendor_info.bank_acc_holder_name : ''}
-                readOnly
-              />
-            </CCol>
-            <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="Street">
-                Street
-                {errors.Street && <span className="small text-danger">{errors.Street}</span>}
-              </CFormLabel>
-              <CFormInput
-                size="sm"
-                id="Street"
-                value={fetch ? currentInfo.vendor_info.street : ''}
-                readOnly
-              />
-            </CCol>
-          </CRow>
-          {/* Row Five------------------------- */}
-          {/* Row Six------------------------- */}
-          <CRow className="">
-            <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="Area">
-                Area
-                {errors.Area && <span className="small text-danger">{errors.Area}</span>}
-              </CFormLabel>
-              <CFormInput
-                size="sm"
-                id="Area"
-                value={fetch ? currentInfo.vendor_info.area : ''}
-                readOnly
-              />
-            </CCol>
-            <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="City">
-                City
-                {errors.City && <span className="small text-danger">{errors.City}</span>}
-              </CFormLabel>
-              <CFormInput
-                size="sm"
-                id="City"
-                value={fetch ? currentInfo.vendor_info.city : ''}
-                readOnly
-              />
-            </CCol>
-            <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="District">
-                District
-                {errors.District && <span className="small text-danger">{errors.District}</span>}
-              </CFormLabel>
-              <CFormInput
-                size="sm"
-                id="District"
-                value={fetch ? currentInfo.vendor_info.district : ''}
-                readOnly
-              />
-            </CCol>
-            <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="State">
-                State
-                {errors.State && <span className="small text-danger">{errors.State}</span>}
-              </CFormLabel>
-              <CFormInput
-                size="sm"
-                id="State"
-                value={fetch ? currentInfo.vendor_info.state : ''}
-                readOnly
-              />
-            </CCol>
-          </CRow>
-          {/* Row Six------------------------- */}
-          {/* Row Seven------------------------- */}
-          <CRow className="">
-            <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="postalCode">
-                Postal Code
-                {errors.postalCode && (
-                  <span className="small text-danger">{errors.postalCode}</span>
-                )}
-              </CFormLabel>
-              <CFormInput
-                size="sm"
-                id="postalCode"
-                value={fetch ? currentInfo.vendor_info.postal_code : ''}
-                readOnly
-              />
-            </CCol>
-            <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="Region">
-                Region
-                {errors.Region && <span className="small text-danger">{errors.Region}</span>}
-              </CFormLabel>
-              <CFormInput
-                size="sm"
-                id="Region"
-                value={fetch ? currentInfo.vendor_info.region : ''}
-                readOnly
-              />
-            </CCol>
-            <CCol xs={12} md={3}>
               <CFormLabel htmlFor="TDSfront">
                 TDS Declaration Form Front
                 {errors.TDSfront && <span className="small text-danger">{errors.TDSfront}</span>}
@@ -533,63 +582,7 @@ const VendorCreationApproval = () => {
                 </span>
               </CButton>
             </CCol>
-          </CRow>
-          {/* Row Seven------------------------- */}
 
-          {/* Row Eight------------------------- */}
-          <CRow className="">
-            <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="GSTreg">
-                GST Registeration
-                {errors.GSTreg && <span className="small text-danger">{errors.GSTreg}</span>}
-              </CFormLabel>
-              <CFormInput
-                size="sm"
-                id="GSTreg"
-                value={fetch ? currentInfo.vendor_info.gst_registration : ''}
-                readOnly
-              />
-            </CCol>
-            <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="GST">
-                GST Registration Number*
-                {errors.GST && <span className="small text-danger">{errors.GST}</span>}
-              </CFormLabel>
-              <CFormInput
-                size="sm"
-                id="GST"
-                value={fetch ? currentInfo.vendor_info.gst_registration_number : ''}
-                readOnly
-              />
-            </CCol>
-            <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="GSTtax">
-                GST Tax Code
-                {errors.GSTtax && <span className="small text-danger">{errors.GSTtax}</span>}
-              </CFormLabel>
-              <CFormInput
-                size="sm"
-                id="GSTtax"
-                value={fetch ? currentInfo.vendor_info.gst_tax_code : ''}
-                readOnly
-              />
-            </CCol>
-            <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="Payment">
-                Payment Terms 3Days
-                {errors.Payment && <span className="small text-danger">{errors.Payment}</span>}
-              </CFormLabel>
-              <CFormInput
-                size="sm"
-                id="Payment"
-                value={fetch ? currentInfo.vendor_info.payment_term_3days : ''}
-                readOnly
-              />
-            </CCol>
-          </CRow>
-          {/* Row Eight------------------------- */}
-          {/* Row Nine------------------------- */}
-          <CRow className="">
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="remarks">
                 Remarks
@@ -607,7 +600,7 @@ const VendorCreationApproval = () => {
               />
             </CCol>
           </CRow>
-          {/* Row Nine------------------------- */}
+
           <CRow>
             <CCol>
               <Link to="/VendorCreationApprovalHome">
@@ -637,6 +630,7 @@ const VendorCreationApproval = () => {
                 color="warning"
                 className="mx-1 px-2 text-white"
                 type="button"
+                disabled={fetch ? false : true}
                 onClick={() => setApproveBtn(true)}
               >
                 Approve
@@ -646,6 +640,7 @@ const VendorCreationApproval = () => {
                 color="warning"
                 className="mx-1 px-2 text-white"
                 type="button"
+                disabled={fetch ? false : true}
                 onClick={() => addVendorApproval(0)}
               >
                 Reject

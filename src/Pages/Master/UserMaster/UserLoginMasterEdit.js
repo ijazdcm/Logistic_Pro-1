@@ -100,7 +100,7 @@ const UserLoginMasterEdit = () => {
     values.trip_sheet_creation_page = false
   }
 
-  const { values, errors, handleChange, onFocus, handleSubmit, enableSubmit, onBlur } = useForm(
+  const { values, errors, handleChange, handleMultipleChange, onFocus, handleSubmit, enableSubmit, onBlur } = useForm(
     updateUser,
     validate,
     formValues
@@ -169,7 +169,7 @@ const UserLoginMasterEdit = () => {
       values.userid = res.data.data.user_auto_id
       values.usermobile = res.data.data.mobile_no
       values.email = res.data.data.email
-      values.location = res.data.data.location_info.id
+      values.location = res.data.data.location_info.filter(location => location.location_name).map(location => location.id).join(', '),
       values.parking_yard_gate_in = pagePermission.parking_yard_gate_in
       values.vehicle_inspection_page = pagePermission.vehicle_inspection_page
       values.vehicle_maintenance_page = pagePermission.vehicle_maintenance_page
@@ -424,27 +424,25 @@ const UserLoginMasterEdit = () => {
                   </CModal>
                   {/*user image biew model*/}
                 </CCol>
-                <CCol md={3}>
+                <CCol md={6}>
                   <CFormLabel htmlFor="location">
                     Location*{' '}
                     {errors.location && (
                       <span className="small text-danger">{errors.location}</span>
                     )}
                   </CFormLabel>
-
-                  <CFormSelect
+                  <LocationListComponent 
                     size="sm"
                     name="location"
                     id="location"
                     onFocus={onFocus}
                     onBlur={onBlur}
-                    onChange={handleChange}
-                    value={values.location}
+                    onChange={handleMultipleChange}
+                    selectedValue={values.location}
+                    isMultiple={true}
                     className={`mb-1 ${errors.location && 'is-invalid'}`}
-                    aria-label="Small select example"
-                  >
-                    <LocationListComponent />
-                  </CFormSelect>
+                    label="Select Location"
+                    noOptionsMessage="No Location found"/>
                 </CCol>
               </CRow>
               <CRow className="mb-md-1">

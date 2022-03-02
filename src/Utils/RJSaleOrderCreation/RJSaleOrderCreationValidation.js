@@ -60,36 +60,36 @@ export default function RJSaleOrderCreationValidation(values, isTouched) {
   //Order Quantity Validation Rule
   if (isTouched.orderQuantity && !values.orderQuantity) {
     errors.orderQuantity = 'Required'
-  } else if (isTouched.orderQuantity && !/^[\d]{4}$/.test(values.orderQuantity)) {
-    errors.orderQuantity = 'Only have 4 Digit Numeric'
+  } else if (isTouched.orderQuantity && !/^[1-9]\d*(\.\d+)?$/.test(values.orderQuantity)) {
+    errors.orderQuantity = 'Only have Numeric Value'
   }
 
   //Empty Load KM Validation Rule
   if (isTouched.emptyLoad && !values.emptyLoad) {
     errors.emptyLoad = 'Required'
-  } else if (isTouched.emptyLoad && !/^[\d]{3}$/.test(values.emptyLoad)) {
-    errors.emptyLoad = 'Only have 3 Digit Numeric'
+  } else if (isTouched.emptyLoad && !values.emptyLoad.match(/^[0-9]{0,3}$/)) {
+    errors.emptyLoad = 'Only have Numeric Value'
   }
 
   //Empty Load KM After Unload Validation Rule
   if (isTouched.emptyUnload && !values.emptyUnload) {
     errors.emptyUnload = 'Required'
-  } else if (isTouched.emptyUnload && !/^[\d]{3}$/.test(values.emptyUnload)) {
-    errors.emptyUnload = 'Only have 3 Digit Numeric'
+  } else if (isTouched.emptyUnload && !values.emptyUnload.match(/^[0-9]{0,3}$/)) {
+    errors.emptyUnload = 'Only have Numeric Value'
   }
 
   //Freight Income Validation Rule
   if (isTouched.freight_income && !values.freight_income) {
     errors.freight_income = 'Required'
-  } else if (isTouched.freight_income && !/^[0-9]*\.[0-9][0-9]$/.test(values.freight_income)) {
-    errors.freight_income = 'Invalid Format (Ex. 12345.67)'
+  } else if (isTouched.freight_income && !values.freight_income.match(/^[0-9]{0,5}$/)) {
+    errors.freight_income = 'Only have Numeric Value'
   }
 
   //Advance Amount Validation Rule
   if (isTouched.advance_amount && !values.advance_amount) {
     errors.advance_amount = 'Required'
-  } else if (isTouched.advance_amount && !/^[0-9]*\.[0-9][0-9]$/.test(values.advance_amount)) {
-    errors.advance_amount = 'Invalid Format (Ex. 12345.67)'
+  } else if (isTouched.advance_amount && !values.advance_amount.match(/^[0-9]{0,5}$/)) {
+    errors.advance_amount = 'Only have Numeric Value'
   }
 
   //Material Description Validation Rule

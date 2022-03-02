@@ -6,6 +6,7 @@ import VehicleInspectionService from 'src/Service/VehicleInspection/VehicleInspe
 
 const VInspection = () => {
   const [rowData, setRowData] = useState([])
+  const [pending, setPending] = useState(true)
   let tableData = []
 
   const ACTION = {
@@ -37,13 +38,14 @@ const VInspection = () => {
           Screen_Duration: data.updated_at,
           Overall_Duration: data.created_at,
           Action: (
-            <CButton className="badge text-white" color="warning">
-              <Link to={`vehicleInspection/${data.parking_yard_gate_id}`}>Vehicle Inspection</Link>
+            <CButton className="badge" color="warning">
+              <Link className="text-white" to={`vehicleInspection/${data.parking_yard_gate_id}`}>Vehicle Inspection</Link>
             </CButton>
           ),
         })
       })
       setRowData(rowDataList)
+      setPending(false)
     })
   }
 
@@ -114,6 +116,7 @@ const VInspection = () => {
           data={rowData}
           fieldName={'Driver_Name'}
           showSearchFilter={true}
+          pending={pending}
         />
       </CContainer>
     </CCard>

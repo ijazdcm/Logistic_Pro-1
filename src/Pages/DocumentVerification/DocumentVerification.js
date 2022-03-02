@@ -94,16 +94,15 @@ const DocVerifyVendorAvail = () => {
   // GET PAN DETAILS FROM SAP
   const getPanData = (e) => {
     e.preventDefault()
-    // PanDataService.getPanData(values.panNumber).then((res) => {
-    //   console.log(res.data)
-    // })
-    let panDetail = PanDataService.getPanData(values.panNumber)
-    if (panDetail != '') {
-      setPanData(panDetail)
-      toast.success('Pan Details Detected!')
-    } else {
-      toast.warning('No Pan Details Detected! Fill Up The Fields')
-    }
+
+    let panDetail = PanDataService.getPanData(values.panNumber).then((res) => {
+      if (res.status == 200) {
+        setPanData(res.data[0])
+        toast.success('Pan Details Detected!')
+      } else {
+        toast.warning('No Pan Details Detected! Fill Up The Fields')
+      }
+    })
 
     setReadOnly(true)
     setWrite(true)
@@ -177,15 +176,15 @@ const DocVerifyVendorAvail = () => {
 
   // ERROR VALIDATIONS
   useEffect(() => {
-    if (Object.keys(isTouched).length == Object.keys(formValues).length) {
-      if (Object.keys(errors).length == 0) {
-        setAcceptBtn(false)
-        setRejectBtn(true)
-      } else {
-        setAcceptBtn(true)
-        setRejectBtn(false)
-      }
+    // if (Object.keys(isTouched).length == Object.keys(formValues).length) {
+    if (Object.keys(errors).length == 0) {
+      setAcceptBtn(false)
+      setRejectBtn(false)
+    } else {
+      setAcceptBtn(true)
+      setRejectBtn(false)
     }
+    // }
   }, [values, errors])
 
   return (
@@ -418,7 +417,7 @@ const DocVerifyVendorAvail = () => {
                     name="bankAcc"
                     size="sm"
                     id="bankAcc"
-                    maxLength={18}
+                    maxLength={20}
                     value={panData ? panData.BANKN : values.bankAcc}
                     onFocus={onFocus}
                     onBlur={onBlur}
@@ -746,7 +745,7 @@ const DocVerifyVendorAvail = () => {
                     color="warning"
                     className="mx-1 px-2 text-white"
                     type="button"
-                    // disabled={acceptBtn}
+                    disabled={acceptBtn}
                     onClick={() => addDocumentVerification(1)}
                   >
                     Accept
@@ -767,6 +766,7 @@ const DocVerifyVendorAvail = () => {
           </CTabPane>
         </CTabContent>
       </CCard>
+
       {/* Modal Area */}
       <CModal visible={visible} onClose={() => setVisible(false)}>
         <CModalHeader>

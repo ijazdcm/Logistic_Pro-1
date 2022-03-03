@@ -32,13 +32,10 @@ import useForm from 'src/Hooks/useForm.js'
 const VendorCreationConfirmation = () => {
   const { id } = useParams()
   const navigation = useNavigate()
-
   const [fetch, setFetch] = useState(false)
   const [currentInfo, setCurrentInfo] = useState({})
   const [shedData, setShedData] = useState({})
-
   const [confirmBtn, setConfirmBtn] = useState(false)
-
   const [adharvisible, setAdharVisible] = useState(false)
   const [BankPassbook, setBankPassbook] = useState(false)
   const [PanCard, setPanCard] = useState(false)
@@ -66,28 +63,29 @@ const VendorCreationConfirmation = () => {
   // ADD VENDOR REQUEST DETAILS
   const addVendorConfirmation = (status) => {
     const formData = new FormData()
-
-    formData.append('vendor_id', currentInfo.vendor_info.vendor_id)
-    formData.append('vendor_code', currentInfo.vendor_info.vendor_code)
-    // formData.append('owner_name', currentInfo.vendor_info.owner_name)
-    // formData.append('owner_name', currentInfo.vendor_info.owner_name)
-    // formData.append('owner_name', currentInfo.vendor_info.owner_name)
-    // formData.append('owner_name', currentInfo.vendor_info.owner_name)
-    // formData.append('owner_name', currentInfo.vendor_info.owner_name)
-    // formData.append('owner_name', currentInfo.vendor_info.owner_name)
-    // formData.append('owner_name', currentInfo.vendor_info.owner_name)
-    // formData.append('owner_name', currentInfo.vendor_info.owner_name)
-    // formData.append('owner_name', currentInfo.vendor_info.owner_name)
-    // formData.append('owner_name', currentInfo.vendor_info.owner_name)
-    // formData.append('owner_name', currentInfo.vendor_info.owner_name)
-    // formData.append('owner_name', currentInfo.vendor_info.owner_name)
-    // formData.append('owner_name', currentInfo.vendor_info.owner_name)
-    // formData.append('owner_name', currentInfo.vendor_info.owner_name)
-
+    formData.append('_method', 'PUT')
+    let vendorInfo = currentInfo.vendor_info
+    for (const key in vendorInfo) {
+      if (key != 'vendor_status') {
+        formData.append(key, vendorInfo[key])
+      }
+    }
     formData.append('vendor_status', status)
     formData.append('remarks', values.remarks)
 
+    // for (const pair of formData.entries()) {
+    //   console.log(pair[0] + ' ' + pair[1])
+    // }
+
     setConfirmBtn(false)
+
+    VendorToSAP.vendorCreation(id, formData).then((res) => {
+      if (res.status == 200) {
+        toast.success('Vendor Information Sent To SAP!')
+      } else {
+        toast.warning('Something Went Wrong !')
+      }
+    })
 
     VendorCreationService.updateVendorConfirmationData(id, formData).then((res) => {
       if (res.status == 200) {
@@ -289,18 +287,22 @@ const VendorCreationConfirmation = () => {
                 readOnly
               />
             </CCol>
-            <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="GST">
-                GST Registration Number*
-                {errors.GST && <span className="small text-danger">{errors.GST}</span>}
-              </CFormLabel>
-              <CFormInput
-                size="sm"
-                id="GST"
-                value={fetch ? currentInfo.vendor_info.gst_registration_number : ''}
-                readOnly
-              />
-            </CCol>
+
+            {fetch && currentInfo.vendor_info.gst_registration_number && (
+              <CCol xs={12} md={3}>
+                <CFormLabel htmlFor="GST">
+                  GST Registration Number*
+                  {errors.GST && <span className="small text-danger">{errors.GST}</span>}
+                </CFormLabel>
+                <CFormInput
+                  size="sm"
+                  id="GST"
+                  value={currentInfo.vendor_info.gst_registration_number}
+                  readOnly
+                />
+              </CCol>
+            )}
+
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="GSTtax">
                 GST Tax Code
@@ -337,10 +339,7 @@ const VendorCreationConfirmation = () => {
                 readOnly
               />
             </CCol>
-          </CRow>
-          {/* Row Five------------------------- */}
-          {/* Row Six------------------------- */}
-          <CRow className="">
+
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="Area">
                 Area
@@ -389,10 +388,7 @@ const VendorCreationConfirmation = () => {
                 readOnly
               />
             </CCol>
-          </CRow>
-          {/* Row Six------------------------- */}
-          {/* Row Seven------------------------- */}
-          <CRow className="">
+
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="postalCode">
                 Postal Code
@@ -525,9 +521,7 @@ const VendorCreationConfirmation = () => {
                 </span>
               </CButton>
             </CCol>
-          </CRow>
-          {/* Row Four------------------------- */}
-          <CRow className="">
+
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="transportShed">
                 Transporter Shed Sheet
@@ -601,14 +595,7 @@ const VendorCreationConfirmation = () => {
                 </span>
               </CButton>
             </CCol>
-          </CRow>
-          {/* Row Seven------------------------- */}
 
-          {/* Row Eight------------------------- */}
-          <CRow className=""></CRow>
-          {/* Row Eight------------------------- */}
-          {/* Row Nine------------------------- */}
-          <CRow className="">
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="remarks">
                 Remarks

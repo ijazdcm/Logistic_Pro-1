@@ -19,10 +19,6 @@ import React, { useState, useEffect } from 'react'
 import { Link, useNavigate, useParams } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { Country, State, City } from 'country-state-city'
-import Select from 'react-select'
-import Async, { useAsync } from 'react-select/async'
-import AsyncSelect from 'react-select/async'
 
 // SERVICES FILE
 import VendorCreationService from 'src/Service/VendorCreation/VendorCreationService'
@@ -69,12 +65,6 @@ const VendorCreationRequest = () => {
   const [tdsFrontDel, setTdsFrontDel] = useState(false)
   const [tdsBackDel, setTdsBackDel] = useState(false)
   const [fileUpdate, setFileUpdate] = useState(true)
-
-  const options = [
-    { value: 'chocolate', label: 'Chocolate' },
-    { value: 'strawberry', label: 'Strawberry' },
-    { value: 'vanilla', label: 'Vanilla' },
-  ]
 
   // SET FORM VALUES
   const formValues = {
@@ -162,6 +152,7 @@ const VendorCreationRequest = () => {
     formData.append('_method', 'PUT')
     // formData.append('vehicle_id', id)
     // formData.append('shed_id', currentInfo.vendor_info.shed_id)
+    formData.append('vendor_id', currentInfo.vendor_info.vendor_id)
     formData.append('vendor_code', currentInfo.vendor_info.vendor_code)
     formData.append('owner_name', currentInfo.vendor_info.owner_name)
     formData.append('owner_number', currentInfo.vendor_info.owner_number)
@@ -189,10 +180,15 @@ const VendorCreationRequest = () => {
     formData.append('vendor_status', status)
     formData.append('remarks', values.remarks)
 
+    // for (const pair of formData.entries()) {
+    //   console.log(pair[0] + ' ' + pair[1])
+    // }
+    // return
+
     VendorCreationService.updateVendorRequestData(id, formData).then((res) => {
       console.log(res)
       if (res.status == 200) {
-        if (status == 1) {
+        if (status == 2) {
           toast.success('Vendor Creation Done!')
           // navigation('/VendorCreationHome')
         } else {

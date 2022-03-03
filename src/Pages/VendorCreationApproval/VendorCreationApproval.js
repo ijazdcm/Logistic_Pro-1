@@ -30,13 +30,10 @@ import useForm from 'src/Hooks/useForm.js'
 const VendorCreationApproval = () => {
   const { id } = useParams()
   const navigation = useNavigate()
-
   const [fetch, setFetch] = useState(false)
   const [currentInfo, setCurrentInfo] = useState({})
   const [shedData, setShedData] = useState({})
-
   const [approveBtn, setApproveBtn] = useState(false)
-
   const [adharvisible, setAdharVisible] = useState(false)
   const [BankPassbook, setBankPassbook] = useState(false)
   const [PanCard, setPanCard] = useState(false)
@@ -48,8 +45,51 @@ const VendorCreationApproval = () => {
   const [TDSFormFront, setTDSFormFront] = useState(false)
   const [TDSFormBack, setTDSFormBack] = useState(false)
 
+  const [panDel, setPanDel] = useState(false)
+  const [adharDel, setAdharDel] = useState(false)
+  const [licenseDel, setLicenseDel] = useState(false)
+  const [rcFrontDel, setRcFrontDel] = useState(false)
+  const [rcBackDel, setRcBackDel] = useState(false)
+  const [insuranceDel, setInsuranceDel] = useState(false)
+  const [transShedDel, setTransShedDel] = useState(false)
+  const [passBookDel, setPassBookDel] = useState(false)
+  const [tdsFrontDel, setTdsFrontDel] = useState(false)
+  const [tdsBackDel, setTdsBackDel] = useState(false)
+  const [fileUpdate, setFileUpdate] = useState(true)
+
   const formValues = {
+    shedownerMob: '',
+    shedownerWhatsapp: '',
+    panNumber: '',
+    aadhar: '',
+    bankName: '',
+    bankBranch: '',
+    bankAccount: '',
+    bankAccHolderName: '',
+    ifscCode: '',
+    street: '',
+    area: '',
+    city: '',
+    district: '',
+    state: '',
+    postalCode: '',
+    region: '',
+    GSTreg: '',
+    GSTNumber: '',
+    GSTtax: '',
+    payment: '',
     remarks: '',
+    // Files
+    panCopy: '',
+    aadharCopy: '',
+    licenseCopy: '',
+    rcFront: '',
+    rcBack: '',
+    insurance: '',
+    transportShed: '',
+    bankPass: '',
+    TDSfront: '',
+    TDSback: '',
   }
 
   function VendorRequestValidation() {}
@@ -105,6 +145,46 @@ const VendorCreationApproval = () => {
     })
   }, [])
 
+  // UPDATE VENDOR DOCUMENTS
+  const updateVendorDocument = () => {
+    const fileData = new FormData()
+    // File Update
+    fileData.append('_method', 'PUT')
+    panDel && fileData.append('pan_copy', values.panCopy)
+    adharDel && fileData.append('aadhar_copy', values.aadharCopy)
+    licenseDel && fileData.append('license_copy', values.licenseCopy)
+    rcFrontDel && fileData.append('rc_copy_front', values.rcFront)
+    rcBackDel && fileData.append('rc_copy_back', values.rcBack)
+    insuranceDel && fileData.append('insurance_copy_front ', values.insurance)
+    transShedDel && fileData.append('transport_shed_sheet', values.transportShed)
+    passBookDel && fileData.append('bank_pass_copy', values.bankPass)
+    tdsFrontDel && fileData.append('tds_dec_form_front', values.TDSfront)
+    tdsBackDel && fileData.append('tds_dec_form_back', values.TDSback)
+
+    DocumentVerificationService.updateDocumentVerificationData(id, fileData)
+      .then((res) => {
+        console.log(res)
+        if (res.status == 200) {
+          toast.success('Vendor Documents Updated !')
+          setTimeout(() => setFileUpdate(true), 500)
+          setPanDel(false)
+          setAdharDel(false)
+          setLicenseDel(false)
+          setRcFrontDel(false)
+          setRcBackDel(false)
+          setInsuranceDel(false)
+          setTransShedDel(false)
+          setPassBookDel(false)
+          setTdsFrontDel(false)
+          setTdsBackDel(false)
+          setFileUpdate(false)
+        }
+      })
+      .catch((err) => {
+        toast.warning(err)
+      })
+  }
+
   return (
     <>
       <CCard>
@@ -114,55 +194,43 @@ const VendorCreationApproval = () => {
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="shedName">
                 Shed Name
-                {errors.shedName && <span className="small text-danger">{errors.shedName}</span>}
+                {/* {errors.shedName && <span className="small text-danger">{errors.shedName}</span>} */}
               </CFormLabel>
-              <CFormInput
-                size="sm"
-                id="shedName"
-                value={fetch ? shedData.shed_name : ''}
-                
-              />
+              <CFormInput size="sm" id="shedName" value={fetch ? shedData.shed_name : ''} />
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="ownerName">
                 Owner Name
-                {errors.vehicleType && (
+                {/* {errors.vehicleType && (
                   <span className="small text-danger">{errors.vehicleType}</span>
-                )}
+                )} */}
               </CFormLabel>
-              <CFormInput
-                size="sm"
-                id="ownerName"
-                value={fetch ? shedData.shed_owner_name : ''}
-                
-              />
+              <CFormInput size="sm" id="ownerName" value={fetch ? shedData.shed_owner_name : ''} />
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="shedownerMob">
                 Shed Mobile Number
-                {errors.shedownerMob && (
+                {/* {errors.shedownerMob && (
                   <span className="small text-danger">{errors.shedownerMob}</span>
-                )}
+                )} */}
               </CFormLabel>
               <CFormInput
                 size="sm"
                 id="shedownerMob"
                 value={fetch ? shedData.shed_owner_phone_1 : ''}
-                
               />
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="shedownerWhatsapp">
                 Shed Whatsapp Number
-                {errors.shedownerWhatsapp && (
+                {/* {errors.shedownerWhatsapp && (
                   <span className="small text-danger">{errors.shedownerWhatsapp}</span>
-                )}
+                )} */}
               </CFormLabel>
               <CFormInput
                 size="sm"
                 id="shedownerWhatsapp"
                 value={fetch ? shedData.shed_owner_phone_2 : ''}
-                
               />
             </CCol>
           </CRow>
@@ -172,54 +240,50 @@ const VendorCreationApproval = () => {
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="panNumber">
                 PAN Card Number*
-                {errors.panNumber && <span className="small text-danger">{errors.panNumber}</span>}
+                {/* {errors.panNumber && <span className="small text-danger">{errors.panNumber}</span>} */}
               </CFormLabel>
               <CFormInput
                 size="sm"
                 id="panNumber"
                 value={(fetch ? currentInfo.vendor_info.pan_card_number : '') || values.panNumber}
-                
               />
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="aadhar">
                 Aadhar Card Number
-                {errors.aadhar && <span className="small text-danger">{errors.aadhar}</span>}
+                {/* {errors.aadhar && <span className="small text-danger">{errors.aadhar}</span>} */}
               </CFormLabel>
               <CFormInput
                 size="sm"
                 id="aadhar"
                 name="aadhar"
                 value={(fetch ? currentInfo.vendor_info.aadhar_card_number : '') || values.aadhar}
-                
               />
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="bankAccount">
                 Bank Account Number*
-                {errors.bankAccount && (
+                {/* {errors.bankAccount && (
                   <span className="small text-danger">{errors.bankAccount}</span>
-                )}
+                )} */}
               </CFormLabel>
               <CFormInput
                 size="sm"
                 id="bankAccount"
                 value={fetch ? currentInfo.vendor_info.bank_acc_number : ''}
-                
               />
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="bankaccountholderName">
                 Bank Account Holder Name*
-                {errors.bankaccountholderName && (
+                {/* {errors.bankaccountholderName && (
                   <span className="small text-danger">{errors.bankaccountholderName}</span>
-                )}
+                )} */}
               </CFormLabel>
               <CFormInput
                 size="sm"
                 id="bankaccountholderName"
                 value={fetch ? currentInfo.vendor_info.bank_acc_holder_name : ''}
-                
               />
             </CCol>
           </CRow>
@@ -232,7 +296,6 @@ const VendorCreationApproval = () => {
                 size="sm"
                 id="bankName"
                 value={fetch ? currentInfo.vendor_info.bank_name : ''}
-                
               />
             </CCol>
             <CCol xs={12} md={3}>
@@ -243,7 +306,6 @@ const VendorCreationApproval = () => {
                 size="sm"
                 id="bankBranch"
                 value={fetch ? currentInfo.vendor_info.bank_branch : ''}
-                
               />
             </CCol>
 
@@ -255,19 +317,17 @@ const VendorCreationApproval = () => {
                 size="sm"
                 id="ifscCode"
                 value={fetch ? currentInfo.vendor_info.bank_ifsc_code : ''}
-                
               />
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="GSTreg">
                 GST Registeration
-                {errors.GSTreg && <span className="small text-danger">{errors.GSTreg}</span>}
+                {/* {errors.GSTreg && <span className="small text-danger">{errors.GSTreg}</span>} */}
               </CFormLabel>
               <CFormInput
                 size="sm"
                 id="GSTreg"
                 value={fetch ? currentInfo.vendor_info.gst_registration : ''}
-                
               />
             </CCol>
           </CRow>
@@ -275,50 +335,46 @@ const VendorCreationApproval = () => {
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="GST">
                 GST Registration Number*
-                {errors.GST && <span className="small text-danger">{errors.GST}</span>}
+                {/* {errors.GST && <span className="small text-danger">{errors.GST}</span>} */}
               </CFormLabel>
               <CFormInput
                 size="sm"
                 id="GST"
                 value={fetch ? currentInfo.vendor_info.gst_registration_number : ''}
-                
               />
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="GSTtax">
                 GST Tax Code
-                {errors.GSTtax && <span className="small text-danger">{errors.GSTtax}</span>}
+                {/* {errors.GSTtax && <span className="small text-danger">{errors.GSTtax}</span>} */}
               </CFormLabel>
               <CFormInput
                 size="sm"
                 id="GSTtax"
                 value={fetch ? currentInfo.vendor_info.gst_tax_code : ''}
-                
               />
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="Payment">
                 Payment Terms 3Days
-                {errors.Payment && <span className="small text-danger">{errors.Payment}</span>}
+                {/* {errors.Payment && <span className="small text-danger">{errors.Payment}</span>} */}
               </CFormLabel>
               <CFormInput
                 size="sm"
                 id="Payment"
                 value={fetch ? currentInfo.vendor_info.payment_term_3days : ''}
-                
               />
             </CCol>
 
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="Street">
                 Street
-                {errors.Street && <span className="small text-danger">{errors.Street}</span>}
+                {/* {errors.Street && <span className="small text-danger">{errors.Street}</span>} */}
               </CFormLabel>
               <CFormInput
                 size="sm"
                 id="Street"
                 value={fetch ? currentInfo.vendor_info.street : ''}
-                
               />
             </CCol>
           </CRow>
@@ -326,97 +382,109 @@ const VendorCreationApproval = () => {
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="Area">
                 Area
-                {errors.Area && <span className="small text-danger">{errors.Area}</span>}
+                {/* {errors.Area && <span className="small text-danger">{errors.Area}</span>} */}
               </CFormLabel>
-              <CFormInput
-                size="sm"
-                id="Area"
-                value={fetch ? currentInfo.vendor_info.area : ''}
-                
-              />
+              <CFormInput size="sm" id="Area" value={fetch ? currentInfo.vendor_info.area : ''} />
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="City">
                 City
-                {errors.City && <span className="small text-danger">{errors.City}</span>}
+                {/* {errors.City && <span className="small text-danger">{errors.City}</span>} */}
               </CFormLabel>
-              <CFormInput
-                size="sm"
-                id="City"
-                value={fetch ? currentInfo.vendor_info.city : ''}
-                
-              />
+              <CFormInput size="sm" id="City" value={fetch ? currentInfo.vendor_info.city : ''} />
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="District">
                 District
-                {errors.District && <span className="small text-danger">{errors.District}</span>}
+                {/* {errors.District && <span className="small text-danger">{errors.District}</span>} */}
               </CFormLabel>
               <CFormInput
                 size="sm"
                 id="District"
                 value={fetch ? currentInfo.vendor_info.district : ''}
-                
               />
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="State">
                 State
-                {errors.State && <span className="small text-danger">{errors.State}</span>}
+                {/* {errors.State && <span className="small text-danger">{errors.State}</span>} */}
               </CFormLabel>
-              <CFormInput
-                size="sm"
-                id="State"
-                value={fetch ? currentInfo.vendor_info.state : ''}
-                
-              />
+              <CFormInput size="sm" id="State" value={fetch ? currentInfo.vendor_info.state : ''} />
             </CCol>
           </CRow>
           <CRow>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="postalCode">
                 Postal Code
-                {errors.postalCode && (
+                {/* {errors.postalCode && (
                   <span className="small text-danger">{errors.postalCode}</span>
-                )}
+                )} */}
               </CFormLabel>
               <CFormInput
                 size="sm"
                 id="postalCode"
                 value={fetch ? currentInfo.vendor_info.postal_code : ''}
-                
               />
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="Region">
                 Region
-                {errors.Region && <span className="small text-danger">{errors.Region}</span>}
+                {/* {errors.Region && <span className="small text-danger">{errors.Region}</span>} */}
               </CFormLabel>
               <CFormInput
                 size="sm"
                 id="Region"
                 value={fetch ? currentInfo.vendor_info.region : ''}
-                
               />
             </CCol>
             <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="panCardattachment">
-                PAN Card Attatchment
-                {errors.panCardattachment && (
-                  <span className="small text-danger">{errors.panCardattachment}</span>
-                )}
+              <CFormLabel htmlFor="panCopy">
+                PAN Card Attachment
+                {errors.panCopy && <span className="small text-danger">{errors.panCopy}</span>}
               </CFormLabel>
-              <CButton
-                // onClick={() => setAdharVisible(!adharvisible)}
-                className="w-100 m-0"
-                color="info"
-                size="sm"
-                id="panCardattachment"
-              >
-                <span className="float-start" onClick={() => setPanCard(!PanCard)}>
-                  <i className="fa fa-eye" aria-hidden="true"></i> &nbsp;View
-                </span>
-              </CButton>
+
+              {panDel ? (
+                <CFormInput
+                  type="file"
+                  name="panCopy"
+                  size="sm"
+                  id="panCopy"
+                  accept=".jpg,.jpeg,.png,.pdf"
+                  onFocus={onFocus}
+                  onBlur={onBlur}
+                  onChange={handleChange}
+                />
+              ) : (
+                <CButton
+                  className="w-100 m-0"
+                  color="info"
+                  size="sm"
+                  onFocus={onFocus}
+                  onBlur={onBlur}
+                  onChange={handleChange}
+                >
+                  <span className="float-start" onClick={() => setPanCard(!PanCard)}>
+                    <i className="fa fa-eye" aria-hidden="true"></i> &nbsp;View
+                  </span>
+                  <span
+                    className="float-end"
+                    id="pan"
+                    onClick={(useEffect) => {
+                      if (window.confirm('Are you sure to remove this file?')) {
+                        setPanDel(true)
+                        setFileUpdate(false)
+                      }
+                    }}
+                  >
+                    <i
+                      className="fa fa-trash"
+                      aria-hidden="true"
+                      // onMouseOver={changeBackground}
+                      // onMouseLeave={changeBackground1}
+                    ></i>
+                  </span>
+                </CButton>
+              )}
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="aadharCopy">
@@ -425,90 +493,293 @@ const VendorCreationApproval = () => {
                   <span className="small text-danger">{errors.aadharCopy}</span>
                 )}
               </CFormLabel>
-              <CButton
-                // onClick={() => setAdharVisible(!adharvisible)}
-                className="w-100 m-0"
-                color="info"
-                size="sm"
-                id="aadharCopy"
-              >
-                <span className="float-start" onClick={() => setAdharVisible(!adharvisible)}>
-                  <i className="fa fa-eye" aria-hidden="true"></i> &nbsp;View
-                </span>
-              </CButton>
+              {adharDel ? (
+                <CFormInput
+                  type="file"
+                  size="sm"
+                  id="aadharCopy"
+                  name="aadharCopy"
+                  accept=".jpg,.jpeg,.png,.pdf"
+                  className={`${errors.aadharCopy && 'is-invalid'}`}
+                  onFocus={onFocus}
+                  onBlur={onBlur}
+                  onChange={handleChange}
+                />
+              ) : (
+                <CButton
+                  className="w-100 m-0"
+                  color="info"
+                  size="sm"
+                  onFocus={onFocus}
+                  onBlur={onBlur}
+                  onChange={handleChange}
+                >
+                  <span className="float-start" onClick={() => setAdharVisible(!adharvisible)}>
+                    <i className="fa fa-eye" aria-hidden="true"></i> &nbsp;View
+                  </span>
+                  <span
+                    className="float-end"
+                    onClick={() => {
+                      if (window.confirm('Are you sure to remove this file?')) {
+                        setAdharDel(true)
+                        setFileUpdate(false)
+                      }
+                    }}
+                  >
+                    <i
+                      className="fa fa-trash"
+                      aria-hidden="true"
+                      // onMouseOver={changeBackground}
+                      // onMouseLeave={changeBackground1}
+                    ></i>
+                  </span>
+                </CButton>
+              )}
             </CCol>
-          </CRow>
-          <CRow>
+
             <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="license">
+              <CFormLabel htmlFor="licenseCopy">
                 License Copy
-                {errors.vehicleType && <span className="small text-danger">{errors.license}</span>}
+                {errors.licenseCopy && (
+                  <span className="small text-danger">{errors.licenseCopy}</span>
+                )}
               </CFormLabel>
-              <CButton
-                // onClick={() => setLicence(!PanCard)}
-                className="w-100 m-0"
-                color="info"
-                size="sm"
-                id="license"
-              >
-                <span className="float-start" onClick={() => setLicence(!PanCard)}>
-                  <i className="fa fa-eye" aria-hidden="true"></i> &nbsp;View
-                </span>
-              </CButton>
-            </CCol>
-            <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="rcFront">
-                RC Copy -Front
-                {errors.rcFront && <span className="small text-danger">{errors.rcFront}</span>}
-              </CFormLabel>
-              <CButton
-                // onClick={() => setRcFront(!RcFront)}
-                className="w-100 m-0"
-                color="info"
-                size="sm"
-                id="rcFront"
-              >
-                <span className="float-start" onClick={() => setRcFront(!RcFront)}>
-                  <i className="fa fa-eye" aria-hidden="true"></i> &nbsp;View
-                </span>
-              </CButton>
-            </CCol>
-            <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="rcBack">
-                RC Copy Back
-                {errors.rcBack && <span className="small text-danger">{errors.rcBack}</span>}
-              </CFormLabel>
-              <CButton
-                // onClick={() => setRcBack(!RcBack)}
-                className="w-100 m-0"
-                color="info"
-                size="sm"
-                id="rcBack"
-              >
-                <span className="float-start" onClick={() => setRcBack(!RcBack)}>
-                  <i className="fa fa-eye" aria-hidden="true"></i> &nbsp;View
-                </span>
-              </CButton>
+
+              {licenseDel ? (
+                <CFormInput
+                  type="file"
+                  size="sm"
+                  id="licenseCopy"
+                  name="licenseCopy"
+                  accept=".jpg,.jpeg,.png,.pdf"
+                  className={`${errors.aadharCopy && 'is-invalid'}`}
+                  onFocus={onFocus}
+                  onBlur={onBlur}
+                  onChange={handleChange}
+                />
+              ) : (
+                <CButton
+                  className="w-100 m-0"
+                  color="info"
+                  size="sm"
+                  onFocus={onFocus}
+                  onBlur={onBlur}
+                  onChange={handleChange}
+                >
+                  <span className="float-start" onClick={() => setLicence(!Licence)}>
+                    <i className="fa fa-eye" aria-hidden="true"></i> &nbsp;View
+                  </span>
+                  <span
+                    className="float-end"
+                    onClick={() => {
+                      if (window.confirm('Are you sure to remove this file?')) {
+                        setLicenseDel(true)
+                        setFileUpdate(false)
+                      }
+                    }}
+                  >
+                    <i
+                      className="fa fa-trash"
+                      aria-hidden="true"
+                      // onMouseOver={changeBackground}
+                      // onMouseLeave={changeBackground1}
+                    ></i>
+                  </span>
+                </CButton>
+              )}
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="insurance">
                 Insurance Copy
                 {errors.insurance && <span className="small text-danger">{errors.insurance}</span>}
               </CFormLabel>
-              <CButton
-                // onClick={() => setInsurance(!Insurance)}
-                className="w-100 m-0"
-                color="info"
-                size="sm"
-                id="insurance"
-              >
-                <span className="float-start" onClick={() => setInsurance(!Insurance)}>
-                  <i className="fa fa-eye" aria-hidden="true"></i> &nbsp;View
-                </span>
-              </CButton>
+              {insuranceDel ? (
+                <CFormInput
+                  type="file"
+                  size="sm"
+                  id="insurance"
+                  name="insurance"
+                  accept=".jpg,.jpeg,.png,.pdf"
+                  className={`${errors.insurance && 'is-invalid'}`}
+                  onFocus={onFocus}
+                  onBlur={onBlur}
+                  onChange={handleChange}
+                />
+              ) : (
+                <CButton
+                  className="w-100 m-0"
+                  color="info"
+                  size="sm"
+                  onFocus={onFocus}
+                  onBlur={onBlur}
+                  onChange={handleChange}
+                >
+                  <span className="float-start" onClick={() => setInsurance(!Insurance)}>
+                    <i className="fa fa-eye" aria-hidden="true"></i> &nbsp;View
+                  </span>
+                  <span
+                    className="float-end"
+                    onClick={() => {
+                      if (window.confirm('Are you sure to remove this file?')) {
+                        setInsuranceDel(true)
+                        setFileUpdate(false)
+                      }
+                    }}
+                  >
+                    <i
+                      className="fa fa-trash"
+                      aria-hidden="true"
+                      // onMouseOver={changeBackground}
+                      // onMouseLeave={changeBackground1}
+                    ></i>
+                  </span>
+                </CButton>
+              )}
             </CCol>
-          </CRow>
-          <CRow>
+            <CCol xs={12} md={3}>
+              <CFormLabel htmlFor="bankPass">
+                Bank Pass Book
+                {errors.bankPass && <span className="small text-danger">{errors.bankPass}</span>}
+              </CFormLabel>
+              {passBookDel ? (
+                <CFormInput
+                  type="file"
+                  size="sm"
+                  id="bankPass"
+                  name="bankPass"
+                  accept=".jpg,.jpeg,.png,.pdf"
+                  className={`${errors.bankPass && 'is-invalid'}`}
+                  onFocus={onFocus}
+                  onBlur={onBlur}
+                  onChange={handleChange}
+                />
+              ) : (
+                <CButton
+                  className="w-100 m-0"
+                  color="info"
+                  size="sm"
+                  onFocus={onFocus}
+                  onBlur={onBlur}
+                  onChange={handleChange}
+                >
+                  <span className="float-start" onClick={() => setBankPassbook(!BankPassbook)}>
+                    <i className="fa fa-eye" aria-hidden="true"></i> &nbsp;View
+                  </span>
+                  <span
+                    className="float-end"
+                    onClick={() => {
+                      if (window.confirm('Are you sure to remove this file?')) {
+                        setPassBookDel(true)
+                        setFileUpdate(false)
+                      }
+                    }}
+                  >
+                    <i
+                      className="fa fa-trash"
+                      aria-hidden="true"
+                      // onMouseOver={changeBackground}
+                      // onMouseLeave={changeBackground1}
+                    ></i>
+                  </span>
+                </CButton>
+              )}
+            </CCol>
+            <CCol xs={12} md={3}>
+              <CFormLabel htmlFor="rcFront">
+                RC Copy - Front
+                {errors.rcFront && <span className="small text-danger">{errors.rcFront}</span>}
+              </CFormLabel>
+              {rcFrontDel ? (
+                <CFormInput
+                  type="file"
+                  size="sm"
+                  id="rcFront"
+                  name="rcFront"
+                  accept=".jpg,.jpeg,.png,.pdf"
+                  className={`${errors.rcFront && 'is-invalid'}`}
+                  onFocus={onFocus}
+                  onBlur={onBlur}
+                  onChange={handleChange}
+                />
+              ) : (
+                <CButton
+                  className="w-100 m-0"
+                  color="info"
+                  size="sm"
+                  onFocus={onFocus}
+                  onBlur={onBlur}
+                  onChange={handleChange}
+                >
+                  <span className="float-start" onClick={() => setRcFront(!RcFront)}>
+                    <i className="fa fa-eye" aria-hidden="true"></i> &nbsp;View
+                  </span>
+                  <span
+                    className="float-end"
+                    onClick={() => {
+                      if (window.confirm('Are you sure to remove this file?')) {
+                        setRcFrontDel(true)
+                        setFileUpdate(false)
+                      }
+                    }}
+                  >
+                    <i
+                      className="fa fa-trash"
+                      aria-hidden="true"
+                      // onMouseOver={changeBackground}
+                      // onMouseLeave={changeBackground1}
+                    ></i>
+                  </span>
+                </CButton>
+              )}
+            </CCol>
+            <CCol xs={12} md={3}>
+              <CFormLabel htmlFor="rcBack">
+                RC Copy Back
+                {errors.rcBack && <span className="small text-danger">{errors.rcBack}</span>}
+              </CFormLabel>
+              {rcBackDel ? (
+                <CFormInput
+                  type="file"
+                  size="sm"
+                  id="rcBack"
+                  name="rcBack"
+                  accept=".jpg,.jpeg,.png,.pdf"
+                  className={`${errors.rcBack && 'is-invalid'}`}
+                  onFocus={onFocus}
+                  onBlur={onBlur}
+                  onChange={handleChange}
+                />
+              ) : (
+                <CButton
+                  className="w-100 m-0"
+                  color="info"
+                  size="sm"
+                  onFocus={onFocus}
+                  onBlur={onBlur}
+                  onChange={handleChange}
+                >
+                  <span className="float-start" onClick={() => setRcBack(!RcBack)}>
+                    <i className="fa fa-eye" aria-hidden="true"></i> &nbsp;View
+                  </span>
+                  <span
+                    className="float-end"
+                    onClick={() => {
+                      if (window.confirm('Are you sure to remove this file?')) {
+                        setRcBackDel(true)
+                        setFileUpdate(false)
+                      }
+                    }}
+                  >
+                    <i
+                      className="fa fa-trash"
+                      aria-hidden="true"
+                      // onMouseOver={changeBackground}
+                      // onMouseLeave={changeBackground1}
+                    ></i>
+                  </span>
+                </CButton>
+              )}
+            </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="transportShed">
                 Transporter Shed Sheet
@@ -516,71 +787,148 @@ const VendorCreationApproval = () => {
                   <span className="small text-danger">{errors.transportShed}</span>
                 )}
               </CFormLabel>
-              <CButton
-                // onClick={() => setTransporterShedSheet(!TransporterShedSheet)}
-                className="w-100 m-0"
-                color="info"
-                size="sm"
-                id="transportShed"
-              >
-                <span
-                  className="float-start"
-                  onClick={() => setTransporterShedSheet(!TransporterShedSheet)}
+              {transShedDel ? (
+                <CFormInput
+                  type="file"
+                  size="sm"
+                  id="transportShed"
+                  name="transportShed"
+                  accept=".jpg,.jpeg,.png,.pdf"
+                  className={`${errors.transportShed && 'is-invalid'}`}
+                  onFocus={onFocus}
+                  onBlur={onBlur}
+                  onChange={handleChange}
+                />
+              ) : (
+                <CButton
+                  className="w-100 m-0"
+                  color="info"
+                  size="sm"
+                  onFocus={onFocus}
+                  onBlur={onBlur}
+                  onChange={handleChange}
                 >
-                  <i className="fa fa-eye" aria-hidden="true"></i> &nbsp;View
-                </span>
-              </CButton>
+                  <span
+                    className="float-start"
+                    onClick={() => setTransporterShedSheet(!TransporterShedSheet)}
+                  >
+                    <i className="fa fa-eye" aria-hidden="true"></i> &nbsp;View
+                  </span>
+                  <span
+                    className="float-end"
+                    onClick={() => {
+                      if (window.confirm('Are you sure to remove this file?')) {
+                        setTransShedDel(true)
+                        setFileUpdate(false)
+                      }
+                    }}
+                  >
+                    <i
+                      className="fa fa-trash"
+                      aria-hidden="true"
+                      // onMouseOver={changeBackground}
+                      // onMouseLeave={changeBackground1}
+                    ></i>
+                  </span>
+                </CButton>
+              )}
             </CCol>
-            <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="bankPass">
-                Bank Pass Book
-                {errors.bankPass && <span className="small text-danger">{errors.bankPass}</span>}
-              </CFormLabel>
-              <CButton
-                // onClick={() => setTDSFormFront(!TDSFormFront)}
-                className="w-100 m-0"
-                color="info"
-                size="sm"
-                id="bankPass"
-              >
-                <span className="float-start" onClick={() => setBankPassbook(!BankPassbook)}>
-                  <i className="fa fa-eye" aria-hidden="true"></i> &nbsp;View
-                </span>
-              </CButton>
-            </CCol>
+
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="TDSfront">
                 TDS Declaration Form Front
                 {errors.TDSfront && <span className="small text-danger">{errors.TDSfront}</span>}
               </CFormLabel>
-              <CButton
-                // onClick={() => setTransporterShedSheet(!TransporterShedSheet)}
-                className="w-100 m-0"
-                color="info"
-                size="sm"
-                id="TDSfront"
-              >
-                <span className="float-start" onClick={() => setTDSFormFront(!TDSFormFront)}>
-                  <i className="fa fa-eye" aria-hidden="true"></i> &nbsp;View
-                </span>
-              </CButton>
+              {tdsFrontDel ? (
+                <CFormInput
+                  type="file"
+                  size="sm"
+                  id="TDSfront"
+                  name="TDSfront"
+                  accept=".jpg,.jpeg,.png,.pdf"
+                  className={`${errors.TDSfront && 'is-invalid'}`}
+                  onFocus={onFocus}
+                  onBlur={onBlur}
+                  onChange={handleChange}
+                />
+              ) : (
+                <CButton
+                  className="w-100 m-0"
+                  color="info"
+                  size="sm"
+                  onFocus={onFocus}
+                  onBlur={onBlur}
+                  onChange={handleChange}
+                >
+                  <span className="float-start" onClick={() => setTDSFormFront(!TDSFormFront)}>
+                    <i className="fa fa-eye" aria-hidden="true"></i> &nbsp;View
+                  </span>
+                  <span
+                    className="float-end"
+                    onClick={() => {
+                      if (window.confirm('Are you sure to remove this file?')) {
+                        setTdsFrontDel(true)
+                        setFileUpdate(false)
+                      }
+                    }}
+                  >
+                    <i
+                      className="fa fa-trash"
+                      aria-hidden="true"
+                      // onMouseOver={changeBackground}
+                      // onMouseLeave={changeBackground1}
+                    ></i>
+                  </span>
+                </CButton>
+              )}
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="TDSback">
                 TDS Declaration Form Back
                 {errors.TDSback && <span className="small text-danger">{errors.TDSback}</span>}
               </CFormLabel>
-              <CButton
-                // onClick={() => setTransporterShedSheet(!TransporterShedSheet)}
-                className="w-100 m-0"
-                color="info"
-                size="sm"
-                id="TDSback"
-              >
-                <span className="float-start" onClick={() => setTDSFormBack(!TDSFormBack)}>
-                  <i className="fa fa-eye" aria-hidden="true"></i> &nbsp;View
-                </span>
-              </CButton>
+              {tdsBackDel ? (
+                <CFormInput
+                  type="file"
+                  size="sm"
+                  id="TDSback"
+                  name="TDSback"
+                  accept=".jpg,.jpeg,.png,.pdf"
+                  className={`${errors.TDSback && 'is-invalid'}`}
+                  onFocus={onFocus}
+                  onBlur={onBlur}
+                  onChange={handleChange}
+                />
+              ) : (
+                <CButton
+                  className="w-100 m-0"
+                  color="info"
+                  size="sm"
+                  onFocus={onFocus}
+                  onBlur={onBlur}
+                  onChange={handleChange}
+                >
+                  <span className="float-start" onClick={() => setTDSFormBack(!TDSFormBack)}>
+                    <i className="fa fa-eye" aria-hidden="true"></i> &nbsp;View
+                  </span>
+                  <span
+                    className="float-end"
+                    onClick={() => {
+                      if (window.confirm('Are you sure to remove this file?')) {
+                        setTdsBackDel(true)
+                        setFileUpdate(false)
+                      }
+                    }}
+                  >
+                    <i
+                      className="fa fa-trash"
+                      aria-hidden="true"
+                      // onMouseOver={changeBackground}
+                      // onMouseLeave={changeBackground1}
+                    ></i>
+                  </span>
+                </CButton>
+              )}
             </CCol>
 
             <CCol xs={12} md={3}>

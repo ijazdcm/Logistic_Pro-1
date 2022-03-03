@@ -194,10 +194,10 @@ const VendorCreationRequest = () => {
       if (res.status == 200) {
         if (status == 1) {
           toast.success('Vendor Creation Done!')
-          navigation('/VendorCreationHome')
+          // navigation('/VendorCreationHome')
         } else {
           toast.warning('Vendor Creation Rejected!')
-          navigation('/VendorCreationHome')
+          // navigation('/VendorCreationHome')
         }
       } else {
         toast.warning('Something Went Wrong !')

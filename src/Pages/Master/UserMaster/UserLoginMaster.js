@@ -36,13 +36,14 @@ import DivisonListComponent from 'src/components/commoncomponent/DivisonListComp
 import LocationListComponent from 'src/components/commoncomponent/LocationListComponent'
 import useForm from 'src/Hooks/useForm.js'
 import UserLoginMasterService from 'src/Service/Master/UserLoginMasterService'
-import validate from 'src/Utils/Validation'
 import { DepartmentMap } from './Mapping/DepartmentMap'
 import { DesignationMap } from './Mapping/DesignationMap'
 import { DivisionMap } from './Mapping/DivisonMap'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { Link, useNavigate } from 'react-router-dom'
+import UserMasterValidation from 'src/Utils/Master/UserMasterValidation'
+
 
 const UserLoginMaster = () => {
   const formValues = {
@@ -69,35 +70,20 @@ const UserLoginMaster = () => {
     trip_sheet_creation_page: '',
   }
 
-  const select_all_pages = () => {
-    values.parking_yard_gate_in = true
-    values.vehicle_inspection_page = true
-    values.vehicle_maintenance_page = true
-    values.trip_sto_page = true
-    values.document_verification_page = true
-    values.vendor_creation_page = true
-    values.vendor_approval_page = true
-    values.vendor_confirmation_page = true
-    values.trip_sheet_creation_page = true
-  }
 
-  const de_select_all_pages = () => {
-    values.parking_yard_gate_in = false
-    values.vehicle_inspection_page = false
-    values.vehicle_maintenance_page = false
-    values.trip_sto_page = false
-    values.document_verification_page = false
-    values.vendor_creation_page = false
-    values.vendor_approval_page = false
-    values.vendor_confirmation_page = false
-    values.trip_sheet_creation_page = false
-  }
+  const {
+    values,
+    errors,
+    handleChange,
+    handleMultipleChange,
+    onFocus,
+    handleSubmit,
+    enableSubmit,
+    onBlur,
+    isTouched,
+  } = useForm(addUser, UserMasterValidation, formValues)
 
-  const { values, errors, handleChange, handleMultipleChange, onFocus, handleSubmit, enableSubmit, onBlur } = useForm(
-    addUser,
-    validate,
-    formValues
-  )
+
 
   const navigation = useNavigate()
 
@@ -151,7 +137,56 @@ const UserLoginMaster = () => {
     } else {
       de_select_all_pages()
     }
-  }, [values.selectAll])
+  },[values.selectAll])
+
+  const select_all_pages = () => {
+    values.parking_yard_gate_in = true
+    values.vehicle_inspection_page = true
+    values.vehicle_maintenance_page = true
+    values.trip_sto_page = true
+    values.document_verification_page = true
+    values.vendor_creation_page = true
+    values.vendor_approval_page = true
+    values.vendor_confirmation_page = true
+    values.trip_sheet_creation_page = true
+  }
+
+  const de_select_all_pages = () => {
+    values.parking_yard_gate_in = false
+    values.vehicle_inspection_page = false
+    values.vehicle_maintenance_page = false
+    values.trip_sto_page = false
+    values.document_verification_page = false
+    values.vendor_creation_page = false
+    values.vendor_approval_page = false
+    values.vendor_confirmation_page = false
+    values.trip_sheet_creation_page = false
+  }
+
+
+  //validation part for making not selecting parking gate page if location is more than one
+
+  // useEffect(() => {
+  //   if (values.location.length>1) {
+  //     setDisableSlectedAll(true)
+  //     setDisableParkingGatePagePermission(true)
+  //   }
+  //   else
+  //   {
+  //     if(isTouched.location)
+  //     {
+  //       setDisableSlectedAll(false)
+  //       setDisableParkingGatePagePermission(false)
+  //     }
+
+  //   }
+  // }, [values.location])
+
+  console.log("User login master")
+
+  useEffect(()=>{
+
+  },[])
 
   useEffect(() => {
     if (values.Divison && values.Department && values.Designation && values.serial) {
@@ -168,6 +203,7 @@ const UserLoginMaster = () => {
               <CRow className="mb-md-1">
                 <CCol md={3}>
                   <CFormLabel htmlFor="username">User Name*</CFormLabel>
+                  {errors.username && <span className="small text-danger">{errors.username}</span>}
                   <CFormInput
                     onFocus={onFocus}
                     onBlur={onBlur}
@@ -181,6 +217,7 @@ const UserLoginMaster = () => {
                 </CCol>
                 <CCol md={3}>
                   <CFormLabel htmlFor="password">Password*</CFormLabel>
+                  {errors.password && <span className="small text-danger">{errors.password}</span>}
                   <CFormInput
                     onFocus={onFocus}
                     onBlur={onBlur}
@@ -257,7 +294,10 @@ const UserLoginMaster = () => {
                   </CFormSelect>
                 </CCol>
                 <CCol md={3}>
-                  <CFormLabel htmlFor="serial">Serial No*</CFormLabel>
+                  <CFormLabel htmlFor="serial">
+                    Serial No*
+                    {errors.serial && <span className="small text-danger">{errors.serial}</span>}
+                  </CFormLabel>
                   <CFormSelect
                     name="serial"
                     onFocus={onFocus}
@@ -297,7 +337,12 @@ const UserLoginMaster = () => {
                   />
                 </CCol>
                 <CCol md={3}>
-                  <CFormLabel htmlFor="usermobile">User Mobile Number*</CFormLabel>
+                  <CFormLabel htmlFor="usermobile">
+                    User Mobile Number*{' '}
+                    {errors.usermobile && (
+                      <span className="small text-danger">{errors.usermobile}</span>
+                    )}
+                  </CFormLabel>
                   <CFormInput
                     type="number"
                     onFocus={onFocus}
@@ -314,7 +359,10 @@ const UserLoginMaster = () => {
               </CRow>
               <CRow className="mb-md-1">
                 <CCol md={3}>
-                  <CFormLabel htmlFor="email">User Mail ID*</CFormLabel>
+                  <CFormLabel htmlFor="email">
+                    User Mail ID*{' '}
+                    {errors.email && <span className="small text-danger">{errors.email}</span>}
+                  </CFormLabel>
                   <CFormInput
                     onFocus={onFocus}
                     onBlur={onBlur}
@@ -351,7 +399,7 @@ const UserLoginMaster = () => {
                       <span className="small text-danger">{errors.location}</span>
                     )}
                   </CFormLabel>
-                    <LocationListComponent 
+                  <LocationListComponent
                     size="sm"
                     name="location"
                     id="location"
@@ -362,7 +410,8 @@ const UserLoginMaster = () => {
                     isMultiple={true}
                     className={`mb-1 ${errors.location && 'is-invalid'}`}
                     label="Select Location"
-                    noOptionsMessage="No Location found"/>
+                    noOptionsMessage="No Location found"
+                  />
                   {/* </CFormSelect> */}
                 </CCol>
               </CRow>
@@ -384,14 +433,14 @@ const UserLoginMaster = () => {
                   </CButton>
 
                   <Link to={'/UserLoginMasterTable'}>
-                  <CButton
-                    size="s-lg"
-                    color="warning"
-                    className="mx-1 px-2 text-white"
-                    type="button"
-                  >
-                    Cancel
-                  </CButton>
+                    <CButton
+                      size="s-lg"
+                      color="warning"
+                      className="mx-1 px-2 text-white"
+                      type="button"
+                    >
+                      Cancel
+                    </CButton>
                   </Link>
                 </CCol>
               </CRow>
@@ -399,241 +448,237 @@ const UserLoginMaster = () => {
           </CTabPane>
         </CTabContent>
         <CContainer>
-          <CRow>
-            <CCol md={4}>
-              <h4>Permission to Pages</h4>
-            </CCol>
-            <CCol md={6}>
-              <div className="d-flex ">
-                <h4 className="px-2">Select All</h4>
-                <div>
-                  <CFormCheck
-                    className="mt-3"
-                    onChange={handleChange}
-                    value={values.selectAll}
-                    name="selectAll"
-                    id="select_all_btn"
-                    aria-label="..."
-                  />
-                </div>
+        <CRow>
+          <CCol md={4}>
+            <h4>Permission to Pages</h4>
+          </CCol>
+          <CCol md={6}>
+            <div className="d-flex ">
+              <h4 className="px-2">Select All</h4>
+              <div>
+                <CFormCheck
+                  className="mt-3"
+                  onChange={handleChange}
+                  values={values.selectAll}
+                  name="selectAll"
+                  id="select_all_btn"
+                  aria-label="..."
+                />
               </div>
-            </CCol>
-          </CRow>
-          <CRow className="mt-1">
-            <CCol md={4}>
-              <CTable>
-                <CTableHead>
-                  <CTableRow>
-                    <CTableHeaderCell scope="col">#</CTableHeaderCell>
+            </div>
+          </CCol>
+        </CRow>
+        <CRow className="mt-1">
+          <CCol md={4}>
+            <CTable>
+              <CTableHead>
+                <CTableRow>
+                  <CTableHeaderCell scope="col">#</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">Page</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">permission</CTableHeaderCell>
+                </CTableRow>
+              </CTableHead>
+              <CTableBody>
+                <CTableRow>
+                  <CTableHeaderCell scope="row">1</CTableHeaderCell>
+                  <CTableDataCell>Parking Gate</CTableDataCell>
+                  <CTableDataCell>
+                    <div>
+                      <CFormCheck
+                        checked={values.parking_yard_gate_in}
+                        onChange={handleChange}
+                        values={values.parking_yard_gate_in}
+                        name="parking_yard_gate_in"
+                        id="parking_yard_gate_in"
+                        aria-label="..."
+                      />
+                    </div>
+                  </CTableDataCell>
+                </CTableRow>
+                <CTableRow>
+                  <CTableHeaderCell scope="row">2</CTableHeaderCell>
 
-                    <CTableHeaderCell scope="col">Page</CTableHeaderCell>
+                  <CTableDataCell>Vehicle Inspection</CTableDataCell>
 
-                    <CTableHeaderCell scope="col">permission</CTableHeaderCell>
-                  </CTableRow>
-                </CTableHead>
-                <CTableBody>
-                  <CTableRow>
-                    <CTableHeaderCell scope="row">1</CTableHeaderCell>
+                  <CTableDataCell>
+                    <div>
+                      <CFormCheck
+                        checked={values.vehicle_inspection_page}
+                        onChange={handleChange}
+                        values={values.vehicle_inspection_page}
+                        name="vehicle_inspection_page"
+                        id="vehicle_inspection_page"
+                        aria-label="..."
+                      />
+                    </div>
+                  </CTableDataCell>
+                </CTableRow>
 
-                    <CTableDataCell>Parking Gate</CTableDataCell>
-                    <CTableDataCell>
-                      <div>
-                        <CFormCheck
-                          checked={values.parking_yard_gate_in}
-                          onChange={handleChange}
-                          value={values.parking_yard_gate_in}
-                          name="parking_yard_gate_in"
-                          id="parking_yard_gate_in"
-                          aria-label="..."
-                        />
-                      </div>
-                    </CTableDataCell>
-                  </CTableRow>
+                <CTableRow>
+                  <CTableHeaderCell scope="row">3</CTableHeaderCell>
 
-                  <CTableRow>
-                    <CTableHeaderCell scope="row">2</CTableHeaderCell>
+                  <CTableDataCell>Vehicle Maintenance</CTableDataCell>
 
-                    <CTableDataCell>Vehicle Inspection</CTableDataCell>
+                  <CTableDataCell>
+                    <div>
+                      <CFormCheck
+                        checked={values.vehicle_maintenance_page}
+                        onChange={handleChange}
+                        values={values.vehicle_maintenance_page}
+                        name="vehicle_maintenance_page"
+                        id="vehicle_maintenance_page"
+                        aria-label="..."
+                      />
+                    </div>
+                  </CTableDataCell>
+                </CTableRow>
+              </CTableBody>
+            </CTable>
+          </CCol>
+          <CCol md={4}>
+            <CTable>
+              <CTableHead>
+                <CTableRow>
+                  <CTableHeaderCell scope="col">#</CTableHeaderCell>
 
-                    <CTableDataCell>
-                      <div>
-                        <CFormCheck
-                          checked={values.vehicle_inspection_page}
-                          onChange={handleChange}
-                          value={values.vehicle_inspection_page}
-                          name="vehicle_inspection_page"
-                          id="vehicle_inspection_page"
-                          aria-label="..."
-                        />
-                      </div>
-                    </CTableDataCell>
-                  </CTableRow>
+                  <CTableHeaderCell scope="col">Page</CTableHeaderCell>
 
-                  <CTableRow>
-                    <CTableHeaderCell scope="row">3</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">permission</CTableHeaderCell>
+                </CTableRow>
+              </CTableHead>
 
-                    <CTableDataCell>Vehicle Maintenance</CTableDataCell>
+              <CTableBody>
+                <CTableRow>
+                  <CTableHeaderCell scope="row">4</CTableHeaderCell>
 
-                    <CTableDataCell>
-                      <div>
-                        <CFormCheck
-                          checked={values.vehicle_maintenance_page}
-                          onChange={handleChange}
-                          value={values.vehicle_maintenance_page}
-                          name="vehicle_maintenance_page"
-                          id="vehicle_maintenance_page"
-                          aria-label="..."
-                        />
-                      </div>
-                    </CTableDataCell>
-                  </CTableRow>
-                </CTableBody>
-              </CTable>
-            </CCol>
-            <CCol md={4}>
-              <CTable>
-                <CTableHead>
-                  <CTableRow>
-                    <CTableHeaderCell scope="col">#</CTableHeaderCell>
+                  <CTableDataCell>Trip STO</CTableDataCell>
 
-                    <CTableHeaderCell scope="col">Page</CTableHeaderCell>
+                  <CTableDataCell>
+                    <div>
+                      <CFormCheck
+                        checked={values.trip_sto_page}
+                        onChange={handleChange}
+                        values={values.trip_sto_page}
+                        name="trip_sto_page"
+                        id="trip_sto_page"
+                        aria-label="..."
+                      />
+                    </div>
+                  </CTableDataCell>
+                </CTableRow>
 
-                    <CTableHeaderCell scope="col">permission</CTableHeaderCell>
-                  </CTableRow>
-                </CTableHead>
+                <CTableRow>
+                  <CTableHeaderCell scope="row">5</CTableHeaderCell>
 
-                <CTableBody>
-                  <CTableRow>
-                    <CTableHeaderCell scope="row">4</CTableHeaderCell>
+                  <CTableDataCell>Document Verification</CTableDataCell>
 
-                    <CTableDataCell>Trip STO</CTableDataCell>
+                  <CTableDataCell>
+                    <div>
+                      <CFormCheck
+                        checked={values.document_verification_page}
+                        onChange={handleChange}
+                        values={values.document_verification_page}
+                        name="document_verification_page"
+                        id="document_verification_page"
+                        aria-label="..."
+                      />
+                    </div>
+                  </CTableDataCell>
+                </CTableRow>
 
-                    <CTableDataCell>
-                      <div>
-                        <CFormCheck
-                          checked={values.trip_sto_page}
-                          onChange={handleChange}
-                          value={values.trip_sto_page}
-                          name="trip_sto_page"
-                          id="trip_sto_page"
-                          aria-label="..."
-                        />
-                      </div>
-                    </CTableDataCell>
-                  </CTableRow>
+                <CTableRow>
+                  <CTableHeaderCell scope="row">6</CTableHeaderCell>
 
-                  <CTableRow>
-                    <CTableHeaderCell scope="row">5</CTableHeaderCell>
+                  <CTableDataCell>Vendor Creation</CTableDataCell>
 
-                    <CTableDataCell>Document Verification</CTableDataCell>
+                  <CTableDataCell>
+                    <div>
+                      <CFormCheck
+                        checked={values.vendor_creation_page}
+                        onChange={handleChange}
+                        values={values.vendor_creation_page}
+                        name="vendor_creation_page"
+                        id="vendor_creation_page"
+                        aria-label="..."
+                      />
+                    </div>
+                  </CTableDataCell>
+                </CTableRow>
+              </CTableBody>
+            </CTable>
+          </CCol>
+          <CCol md={4}>
+            <CTable>
+              <CTableHead>
+                <CTableRow>
+                  <CTableHeaderCell scope="col">#</CTableHeaderCell>
 
-                    <CTableDataCell>
-                      <div>
-                        <CFormCheck
-                          checked={values.document_verification_page}
-                          onChange={handleChange}
-                          value={values.document_verification_page}
-                          name="document_verification_page"
-                          id="document_verification_page"
-                          aria-label="..."
-                        />
-                      </div>
-                    </CTableDataCell>
-                  </CTableRow>
+                  <CTableHeaderCell scope="col">Page</CTableHeaderCell>
 
-                  <CTableRow>
-                    <CTableHeaderCell scope="row">6</CTableHeaderCell>
+                  <CTableHeaderCell scope="col">permission</CTableHeaderCell>
+                </CTableRow>
+              </CTableHead>
 
-                    <CTableDataCell>Vendor Creation</CTableDataCell>
+              <CTableBody>
+                <CTableRow>
+                  <CTableHeaderCell scope="row">7</CTableHeaderCell>
 
-                    <CTableDataCell>
-                      <div>
-                        <CFormCheck
-                          checked={values.vendor_creation_page}
-                          onChange={handleChange}
-                          value={values.vendor_creation_page}
-                          name="vendor_creation_page"
-                          id="vendor_creation_page"
-                          aria-label="..."
-                        />
-                      </div>
-                    </CTableDataCell>
-                  </CTableRow>
-                </CTableBody>
-              </CTable>
-            </CCol>
-            <CCol md={4}>
-              <CTable>
-                <CTableHead>
-                  <CTableRow>
-                    <CTableHeaderCell scope="col">#</CTableHeaderCell>
+                  <CTableDataCell>Vendor Approval</CTableDataCell>
 
-                    <CTableHeaderCell scope="col">Page</CTableHeaderCell>
+                  <CTableDataCell>
+                    <div>
+                      <CFormCheck
+                        checked={values.vendor_approval_page}
+                        onChange={handleChange}
+                        values={values.vendor_approval_page}
+                        name="vendor_approval_page"
+                        id="vendor_approval_page"
+                        aria-label="..."
+                      />
+                    </div>
+                  </CTableDataCell>
+                </CTableRow>
 
-                    <CTableHeaderCell scope="col">permission</CTableHeaderCell>
-                  </CTableRow>
-                </CTableHead>
+                <CTableRow>
+                  <CTableHeaderCell scope="row">8</CTableHeaderCell>
 
-                <CTableBody>
-                  <CTableRow>
-                    <CTableHeaderCell scope="row">7</CTableHeaderCell>
+                  <CTableDataCell>Vendor Confirmation</CTableDataCell>
 
-                    <CTableDataCell>Vendor Approval</CTableDataCell>
+                  <CTableDataCell>
+                    <div>
+                      <CFormCheck
+                        checked={values.vendor_confirmation_page}
+                        onChange={handleChange}
+                        values={values.vendor_confirmation_page}
+                        name="vendor_confirmation_page"
+                        id="vendor_confirmation_page"
+                        aria-label="..."
+                      />
+                    </div>
+                  </CTableDataCell>
+                </CTableRow>
 
-                    <CTableDataCell>
-                      <div>
-                        <CFormCheck
-                          checked={values.vendor_approval_page}
-                          onChange={handleChange}
-                          value={values.vendor_approval_page}
-                          name="vendor_approval_page"
-                          id="vendor_approval_page"
-                          aria-label="..."
-                        />
-                      </div>
-                    </CTableDataCell>
-                  </CTableRow>
-
-                  <CTableRow>
-                    <CTableHeaderCell scope="row">8</CTableHeaderCell>
-
-                    <CTableDataCell>Vendor Confirmation</CTableDataCell>
-
-                    <CTableDataCell>
-                      <div>
-                        <CFormCheck
-                          checked={values.vendor_confirmation_page}
-                          onChange={handleChange}
-                          value={values.vendor_confirmation_page}
-                          name="vendor_confirmation_page"
-                          id="vendor_confirmation_page"
-                          aria-label="..."
-                        />
-                      </div>
-                    </CTableDataCell>
-                  </CTableRow>
-
-                  <CTableRow>
-                    <CTableHeaderCell scope="row">9</CTableHeaderCell>
-                    <CTableDataCell>TS-Creation</CTableDataCell>
-                    <CTableDataCell>
-                      <div>
-                        <CFormCheck
-                          checked={values.trip_sheet_creation_page}
-                          onChange={handleChange}
-                          value={values.trip_sheet_creation_page}
-                          name="trip_sheet_creation_page"
-                          id="trip_sheet_creation_page"
-                          aria-label="..."
-                        />
-                      </div>
-                    </CTableDataCell>
-                  </CTableRow>
-                </CTableBody>
-              </CTable>
-            </CCol>
-          </CRow>
-        </CContainer>
+                <CTableRow>
+                  <CTableHeaderCell scope="row">9</CTableHeaderCell>
+                  <CTableDataCell>TS-Creation</CTableDataCell>
+                  <CTableDataCell>
+                    <div>
+                      <CFormCheck
+                        checked={values.trip_sheet_creation_page}
+                        onChange={handleChange}
+                        values={values.trip_sheet_creation_page}
+                        name="trip_sheet_creation_page"
+                        id="trip_sheet_creation_page"
+                        aria-label="..."
+                      />
+                    </div>
+                  </CTableDataCell>
+                </CTableRow>
+              </CTableBody>
+            </CTable>
+          </CCol>
+        </CRow>
+      </CContainer>
       </CCard>
     </>
   )

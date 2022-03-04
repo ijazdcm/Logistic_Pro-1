@@ -83,7 +83,33 @@ export default function VendorRequestValidation(values, isTouched) {
     errors.ownerMob = 'Must Have 10 Digit Numeric'
   }
 
-  // console.log(errors)
+  if (isTouched.bankAccount && !values.bankAccount) {
+    errors.bankAccount = 'Required'
+  } else if (isTouched.bankAccount && !/^[\d]{20}$/.test(values.bankAccount)) {
+    errors.bankAccount = 'Must Have 20 Digit Numeric'
+  }
+
+  if (isTouched.ifscCode && !values.ifscCode) {
+    errors.ifscCode = 'Required'
+  } else if (isTouched.ifscCode && !/^[A-Z]{4}[\d]{7}$/.test(values.ifscCode)) {
+    errors.ifscCode = 'Must Like 20 "IOBA0001234"'
+  }
+
+  if (isTouched.street && !values.street) {
+    errors.street = 'Required'
+  } else if (isTouched.street && /^[A-Z0-9 _]*[A-Z0-9][A-Z0-9 _]*$/.test(values.street)) {
+    errors.street = 'Letters & Number Only'
+  }
+  if (isTouched.city && !values.city) {
+    errors.city = 'Required'
+  } else if (isTouched.city && /^[A-Z0-9 _]*[A-Z0-9][A-Z0-9 _]*$/.test(values.city)) {
+    errors.city = 'Letters & Number Only'
+  }
+  if (isTouched.state && !values.state) {
+    errors.state = 'Required'
+  } else if (isTouched.state && /^[A-Z0-9 _]*[A-Z0-9][A-Z0-9 _]*$/.test(values.state)) {
+    errors.state = 'Letters & Number Only'
+  }
 
   return errors
 }

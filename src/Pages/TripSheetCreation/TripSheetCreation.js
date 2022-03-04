@@ -62,11 +62,11 @@ const TripSheetCreation = () => {
   useEffect(() => {
     TripSheetCreationService.getSingleVehicleInfoOnGate(id).then((res) => {
       if (res.status === 200) {
-        ;(isTouched.vehicle_id = true),
-          (isTouched.driver_id = true),
-          (isTouched.vehicle_type_id = true),
-          (values.vehicle_type_id = res.data.data.vehicle_type_id.id),
-          (values.vehicle_id = res.data.data.vehicle_id)
+        isTouched.vehicle_id = true
+        isTouched.driver_id = true
+        isTouched.vehicle_type_id = true
+        values.vehicle_type_id = res.data.data.vehicle_type_id.id
+        values.vehicle_id = res.data.data.vehicle_id
         values.driver_id =
           res.data.data.driver_info != null ? res.data.data.driver_info.driver_id : ''
         values.driveMobile =
@@ -80,25 +80,22 @@ const TripSheetCreation = () => {
     useForm(createTripSheet, TripSheetCreationValidation, formValues)
 
   function createTripSheet() {
+    let data = []
 
-      let data=[]
-
-     if(values.vehicle_type_id===vehicleType.OWN || values.vehicle_type_id===vehicleType.CONTRACT)
-     {
-         data=OwnAndContractCreateTripSheetRequest(values)
-     }
-     else{
-        data=HireCreateTripSheetRequest(values)
-     }
-     TripSheetCreationService.createTripSheet(data).then(res=>{
-
-      if(res.status===200)
-      {
+    if (
+      values.vehicle_type_id === vehicleType.OWN ||
+      values.vehicle_type_id === vehicleType.CONTRACT
+    ) {
+      data = OwnAndContractCreateTripSheetRequest(values)
+    } else {
+      data = HireCreateTripSheetRequest(values)
+    }
+    TripSheetCreationService.createTripSheet(data).then((res) => {
+      if (res.status === 200) {
         toast.success('TripSheet Created')
         navigation('/TripSheetCreation')
       }
-     })
-
+    })
   }
 
   useEffect(() => {

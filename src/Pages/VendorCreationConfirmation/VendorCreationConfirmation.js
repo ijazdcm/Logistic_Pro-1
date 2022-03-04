@@ -32,13 +32,10 @@ import useForm from 'src/Hooks/useForm.js'
 const VendorCreationConfirmation = () => {
   const { id } = useParams()
   const navigation = useNavigate()
-
   const [fetch, setFetch] = useState(false)
   const [currentInfo, setCurrentInfo] = useState({})
   const [shedData, setShedData] = useState({})
-
   const [confirmBtn, setConfirmBtn] = useState(false)
-
   const [adharvisible, setAdharVisible] = useState(false)
   const [BankPassbook, setBankPassbook] = useState(false)
   const [PanCard, setPanCard] = useState(false)
@@ -63,41 +60,44 @@ const VendorCreationConfirmation = () => {
     formValues
   )
 
-  useEffect(() => {
-    const formData = new FormData()
-    formData.append('vendor_code', 'currentInfo.vendor_info.vendor_code')
-    formData.append('owner_name', 'currentInfo.vendor_info.owner_name')
-    formData.append('vendor_status', 'status')
-    formData.append('remarks', 'values.remarks')
-
-    let form = JSON.stringify(formData)
-
-    debugger
-    console.log(form)
-    return
-  }, [])
-
   // ADD VENDOR REQUEST DETAILS
   const addVendorConfirmation = (status) => {
     const formData = new FormData()
-    formData.append('vendor_code', 'currentInfo.vendor_info.vendor_code')
-    formData.append('owner_name', 'currentInfo.vendor_info.owner_name')
-    formData.append('vendor_status', 'status')
-    formData.append('remarks', 'values.remarks')
+    formData.append('_method', 'PUT')
+    let vendorInfo = currentInfo.vendor_info
+    for (const key in vendorInfo) {
+      if (key != 'vendor_status') {
+        formData.append(key, vendorInfo[key])
+      }
+    }
+    formData.append('vendor_status', status)
+    formData.append('remarks', values.remarks)
 
-    console.log(json.stringify(formData))
-    return
+    // for (const pair of formData.entries()) {
+    //   console.log(pair[0] + ' ' + pair[1])
+    // }
 
     setConfirmBtn(false)
 
-    VendorCreationService.updateVendorConfirmationData(id, formData).then((res) => {
-      console.log(res)
-      if (res.status == 200 && status != 0) {
-        toast.success('Vendor Approval Done!')
-        navigation('/VendorCreationConfrimationHome')
+    VendorToSAP.vendorCreation(id, formData).then((res) => {
+      if (res.status == 200) {
+        toast.success('Vendor Information Sent To SAP!')
       } else {
-        toast.success('Vendor Approval Rejected!')
-        navigation('/VendorCreationConfrimationHome')
+        toast.warning('Something Went Wrong !')
+      }
+    })
+
+    VendorCreationService.updateVendorConfirmationData(id, formData).then((res) => {
+      if (res.status == 200) {
+        if (status == 4) {
+          toast.success('Vendor Confirmation Done!')
+          navigation('/VendorCreationConfrimationHome')
+        } else {
+          toast.warning('Vendor Confirmation Rejected!')
+          navigation('/VendorCreationConfrimationHome')
+        }
+      } else {
+        toast.warning('Something Went Wrong !')
       }
     })
   }
@@ -183,6 +183,239 @@ const VendorCreationConfirmation = () => {
           {/* Row Two------------------------- */}
           <CRow className="">
             <CCol xs={12} md={3}>
+              <CFormLabel htmlFor="panNumber">
+                PAN Card Number*
+                {errors.panNumber && <span className="small text-danger">{errors.panNumber}</span>}
+              </CFormLabel>
+              <CFormInput
+                size="sm"
+                id="panNumber"
+                value={(fetch ? currentInfo.vendor_info.pan_card_number : '') || values.panNumber}
+                readOnly
+              />
+            </CCol>
+
+            <CCol xs={12} md={3}>
+              <CFormLabel htmlFor="aadhar">
+                Aadhar Card Number
+                {errors.aadhar && <span className="small text-danger">{errors.aadhar}</span>}
+              </CFormLabel>
+              <CFormInput
+                size="sm"
+                id="aadhar"
+                name="aadhar"
+                value={(fetch ? currentInfo.vendor_info.aadhar_card_number : '') || values.aadhar}
+                readOnly
+              />
+            </CCol>
+            <CCol xs={12} md={3}>
+              <CFormLabel htmlFor="bankAccount">
+                Bank Account Number*
+                {errors.bankAccount && (
+                  <span className="small text-danger">{errors.bankAccount}</span>
+                )}
+              </CFormLabel>
+              <CFormInput
+                size="sm"
+                id="bankAccount"
+                value={fetch ? currentInfo.vendor_info.bank_acc_number : ''}
+                readOnly
+              />
+            </CCol>
+            <CCol xs={12} md={3}>
+              <CFormLabel htmlFor="bankaccountholderName">
+                Bank Account Holder Name*
+                {errors.bankaccountholderName && (
+                  <span className="small text-danger">{errors.bankaccountholderName}</span>
+                )}
+              </CFormLabel>
+              <CFormInput
+                size="sm"
+                id="bankaccountholderName"
+                value={fetch ? currentInfo.vendor_info.bank_acc_holder_name : ''}
+                readOnly
+              />
+            </CCol>
+          </CRow>
+          {/* Row Two------------------------- */}
+          {/* Row Three------------------------- */}
+          <CRow className="">
+            <CCol xs={12} md={3}>
+              <CFormLabel htmlFor="bankName">Bank Name</CFormLabel>
+              <CFormInput
+                type="text"
+                name="bankName"
+                size="sm"
+                id="bankName"
+                value={fetch ? currentInfo.vendor_info.bank_name : ''}
+                readOnly
+              />
+            </CCol>
+            <CCol xs={12} md={3}>
+              <CFormLabel htmlFor="bankBranch">Bank Branch</CFormLabel>
+              <CFormInput
+                type="text"
+                name="bankBranch"
+                size="sm"
+                id="bankBranch"
+                value={fetch ? currentInfo.vendor_info.bank_branch : ''}
+                readOnly
+              />
+            </CCol>
+
+            <CCol xs={12} md={3}>
+              <CFormLabel htmlFor="ifscCode">Bank IFSC Code</CFormLabel>
+              <CFormInput
+                type="text"
+                name="ifscCode"
+                size="sm"
+                id="ifscCode"
+                value={fetch ? currentInfo.vendor_info.bank_ifsc_code : ''}
+                readOnly
+              />
+            </CCol>
+
+            <CCol xs={12} md={3}>
+              <CFormLabel htmlFor="GSTreg">
+                GST Registeration
+                {errors.GSTreg && <span className="small text-danger">{errors.GSTreg}</span>}
+              </CFormLabel>
+              <CFormInput
+                size="sm"
+                id="GSTreg"
+                value={fetch ? currentInfo.vendor_info.gst_registration : ''}
+                readOnly
+              />
+            </CCol>
+
+            {fetch && currentInfo.vendor_info.gst_registration_number && (
+              <CCol xs={12} md={3}>
+                <CFormLabel htmlFor="GST">
+                  GST Registration Number*
+                  {errors.GST && <span className="small text-danger">{errors.GST}</span>}
+                </CFormLabel>
+                <CFormInput
+                  size="sm"
+                  id="GST"
+                  value={currentInfo.vendor_info.gst_registration_number}
+                  readOnly
+                />
+              </CCol>
+            )}
+
+            <CCol xs={12} md={3}>
+              <CFormLabel htmlFor="GSTtax">
+                GST Tax Code
+                {errors.GSTtax && <span className="small text-danger">{errors.GSTtax}</span>}
+              </CFormLabel>
+              <CFormInput
+                size="sm"
+                id="GSTtax"
+                value={fetch ? currentInfo.vendor_info.gst_tax_code : ''}
+                readOnly
+              />
+            </CCol>
+            <CCol xs={12} md={3}>
+              <CFormLabel htmlFor="Payment">
+                Payment Terms 3Days
+                {errors.Payment && <span className="small text-danger">{errors.Payment}</span>}
+              </CFormLabel>
+              <CFormInput
+                size="sm"
+                id="Payment"
+                value={fetch ? currentInfo.vendor_info.payment_term_3days : ''}
+                readOnly
+              />
+            </CCol>
+            <CCol xs={12} md={3}>
+              <CFormLabel htmlFor="Street">
+                Street
+                {errors.Street && <span className="small text-danger">{errors.Street}</span>}
+              </CFormLabel>
+              <CFormInput
+                size="sm"
+                id="Street"
+                value={fetch ? currentInfo.vendor_info.street : ''}
+                readOnly
+              />
+            </CCol>
+
+            <CCol xs={12} md={3}>
+              <CFormLabel htmlFor="Area">
+                Area
+                {errors.Area && <span className="small text-danger">{errors.Area}</span>}
+              </CFormLabel>
+              <CFormInput
+                size="sm"
+                id="Area"
+                value={fetch ? currentInfo.vendor_info.area : ''}
+                readOnly
+              />
+            </CCol>
+            <CCol xs={12} md={3}>
+              <CFormLabel htmlFor="City">
+                City
+                {errors.City && <span className="small text-danger">{errors.City}</span>}
+              </CFormLabel>
+              <CFormInput
+                size="sm"
+                id="City"
+                value={fetch ? currentInfo.vendor_info.city : ''}
+                readOnly
+              />
+            </CCol>
+            <CCol xs={12} md={3}>
+              <CFormLabel htmlFor="District">
+                District
+                {errors.District && <span className="small text-danger">{errors.District}</span>}
+              </CFormLabel>
+              <CFormInput
+                size="sm"
+                id="District"
+                value={fetch ? currentInfo.vendor_info.district : ''}
+                readOnly
+              />
+            </CCol>
+            <CCol xs={12} md={3}>
+              <CFormLabel htmlFor="State">
+                State
+                {errors.State && <span className="small text-danger">{errors.State}</span>}
+              </CFormLabel>
+              <CFormInput
+                size="sm"
+                id="State"
+                value={fetch ? currentInfo.vendor_info.state : ''}
+                readOnly
+              />
+            </CCol>
+
+            <CCol xs={12} md={3}>
+              <CFormLabel htmlFor="postalCode">
+                Postal Code
+                {errors.postalCode && (
+                  <span className="small text-danger">{errors.postalCode}</span>
+                )}
+              </CFormLabel>
+              <CFormInput
+                size="sm"
+                id="postalCode"
+                value={fetch ? currentInfo.vendor_info.postal_code : ''}
+                readOnly
+              />
+            </CCol>
+            <CCol xs={12} md={3}>
+              <CFormLabel htmlFor="Region">
+                Region
+                {errors.Region && <span className="small text-danger">{errors.Region}</span>}
+              </CFormLabel>
+              <CFormInput
+                size="sm"
+                id="Region"
+                value={fetch ? currentInfo.vendor_info.region : ''}
+                readOnly
+              />
+            </CCol>
+            <CCol xs={12} md={3}>
               <CFormLabel htmlFor="panCardattachment">
                 PAN Card Attatchment
                 {errors.panCardattachment && (
@@ -200,18 +433,6 @@ const VendorCreationConfirmation = () => {
                   <i className="fa fa-eye" aria-hidden="true"></i> &nbsp;View
                 </span>
               </CButton>
-            </CCol>
-            <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="panNumber">
-                PAN Card Number*
-                {errors.panNumber && <span className="small text-danger">{errors.panNumber}</span>}
-              </CFormLabel>
-              <CFormInput
-                size="sm"
-                id="panNumber"
-                value={(fetch ? currentInfo.vendor_info.pan_card_number : '') || values.panNumber}
-                readOnly
-              />
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="aadharCopy">
@@ -232,23 +453,6 @@ const VendorCreationConfirmation = () => {
                 </span>
               </CButton>
             </CCol>
-            <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="aadhar">
-                Aadhar Card Number
-                {errors.aadhar && <span className="small text-danger">{errors.aadhar}</span>}
-              </CFormLabel>
-              <CFormInput
-                size="sm"
-                id="aadhar"
-                name="aadhar"
-                value={(fetch ? currentInfo.vendor_info.aadhar_card_number : '') || values.aadhar}
-                readOnly
-              />
-            </CCol>
-          </CRow>
-          {/* Row Two------------------------- */}
-          {/* Row Three------------------------- */}
-          <CRow className="">
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="license">
                 License Copy
@@ -317,9 +521,7 @@ const VendorCreationConfirmation = () => {
                 </span>
               </CButton>
             </CCol>
-          </CRow>
-          {/* Row Four------------------------- */}
-          <CRow className="">
+
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="transportShed">
                 Transporter Shed Sheet
@@ -360,165 +562,6 @@ const VendorCreationConfirmation = () => {
               </CButton>
             </CCol>
             <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="bankName">Bank Name</CFormLabel>
-              <CFormInput
-                type="text"
-                name="bankName"
-                size="sm"
-                id="bankName"
-                value={fetch ? currentInfo.vendor_info.bank_name : ''}
-                readOnly
-              />
-            </CCol>
-            <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="bankBranch">Bank Branch</CFormLabel>
-              <CFormInput
-                type="text"
-                name="bankBranch"
-                size="sm"
-                id="bankBranch"
-                value={fetch ? currentInfo.vendor_info.bank_branch : ''}
-                readOnly
-              />
-            </CCol>
-          </CRow>
-          {/* Row Four------------------------- */}
-          {/* Row Five------------------------- */}
-          <CRow className="">
-            <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="ifscCode">Bank IFSC Code</CFormLabel>
-              <CFormInput
-                type="text"
-                name="ifscCode"
-                size="sm"
-                id="ifscCode"
-                value={fetch ? currentInfo.vendor_info.bank_ifsc_code : ''}
-                readOnly
-              />
-            </CCol>
-            <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="bankAccount">
-                Bank Account Number*
-                {errors.bankAccount && (
-                  <span className="small text-danger">{errors.bankAccount}</span>
-                )}
-              </CFormLabel>
-              <CFormInput
-                size="sm"
-                id="bankAccount"
-                value={fetch ? currentInfo.vendor_info.bank_acc_number : ''}
-                readOnly
-              />
-            </CCol>
-            <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="bankaccountholderName">
-                Bank Account Holder Name*
-                {errors.bankaccountholderName && (
-                  <span className="small text-danger">{errors.bankaccountholderName}</span>
-                )}
-              </CFormLabel>
-              <CFormInput
-                size="sm"
-                id="bankaccountholderName"
-                value={fetch ? currentInfo.vendor_info.bank_acc_holder_name : ''}
-                readOnly
-              />
-            </CCol>
-            <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="Street">
-                Street
-                {errors.Street && <span className="small text-danger">{errors.Street}</span>}
-              </CFormLabel>
-              <CFormInput
-                size="sm"
-                id="Street"
-                value={fetch ? currentInfo.vendor_info.street : ''}
-                readOnly
-              />
-            </CCol>
-          </CRow>
-          {/* Row Five------------------------- */}
-          {/* Row Six------------------------- */}
-          <CRow className="">
-            <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="Area">
-                Area
-                {errors.Area && <span className="small text-danger">{errors.Area}</span>}
-              </CFormLabel>
-              <CFormInput
-                size="sm"
-                id="Area"
-                value={fetch ? currentInfo.vendor_info.area : ''}
-                readOnly
-              />
-            </CCol>
-            <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="City">
-                City
-                {errors.City && <span className="small text-danger">{errors.City}</span>}
-              </CFormLabel>
-              <CFormInput
-                size="sm"
-                id="City"
-                value={fetch ? currentInfo.vendor_info.city : ''}
-                readOnly
-              />
-            </CCol>
-            <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="District">
-                District
-                {errors.District && <span className="small text-danger">{errors.District}</span>}
-              </CFormLabel>
-              <CFormInput
-                size="sm"
-                id="District"
-                value={fetch ? currentInfo.vendor_info.district : ''}
-                readOnly
-              />
-            </CCol>
-            <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="State">
-                State
-                {errors.State && <span className="small text-danger">{errors.State}</span>}
-              </CFormLabel>
-              <CFormInput
-                size="sm"
-                id="State"
-                value={fetch ? currentInfo.vendor_info.state : ''}
-                readOnly
-              />
-            </CCol>
-          </CRow>
-          {/* Row Six------------------------- */}
-          {/* Row Seven------------------------- */}
-          <CRow className="">
-            <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="postalCode">
-                Postal Code
-                {errors.postalCode && (
-                  <span className="small text-danger">{errors.postalCode}</span>
-                )}
-              </CFormLabel>
-              <CFormInput
-                size="sm"
-                id="postalCode"
-                value={fetch ? currentInfo.vendor_info.postal_code : ''}
-                readOnly
-              />
-            </CCol>
-            <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="Region">
-                Region
-                {errors.Region && <span className="small text-danger">{errors.Region}</span>}
-              </CFormLabel>
-              <CFormInput
-                size="sm"
-                id="Region"
-                value={fetch ? currentInfo.vendor_info.region : ''}
-                readOnly
-              />
-            </CCol>
-            <CCol xs={12} md={3}>
               <CFormLabel htmlFor="TDSfront">
                 TDS Declaration Form Front
                 {errors.TDSfront && <span className="small text-danger">{errors.TDSfront}</span>}
@@ -552,63 +595,7 @@ const VendorCreationConfirmation = () => {
                 </span>
               </CButton>
             </CCol>
-          </CRow>
-          {/* Row Seven------------------------- */}
 
-          {/* Row Eight------------------------- */}
-          <CRow className="">
-            <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="GSTreg">
-                GST Registeration
-                {errors.GSTreg && <span className="small text-danger">{errors.GSTreg}</span>}
-              </CFormLabel>
-              <CFormInput
-                size="sm"
-                id="GSTreg"
-                value={fetch ? currentInfo.vendor_info.gst_registration : ''}
-                readOnly
-              />
-            </CCol>
-            <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="GST">
-                GST Registration Number*
-                {errors.GST && <span className="small text-danger">{errors.GST}</span>}
-              </CFormLabel>
-              <CFormInput
-                size="sm"
-                id="GST"
-                value={fetch ? currentInfo.vendor_info.gst_registration_number : ''}
-                readOnly
-              />
-            </CCol>
-            <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="GSTtax">
-                GST Tax Code
-                {errors.GSTtax && <span className="small text-danger">{errors.GSTtax}</span>}
-              </CFormLabel>
-              <CFormInput
-                size="sm"
-                id="GSTtax"
-                value={fetch ? currentInfo.vendor_info.gst_tax_code : ''}
-                readOnly
-              />
-            </CCol>
-            <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="Payment">
-                Payment Terms 3Days
-                {errors.Payment && <span className="small text-danger">{errors.Payment}</span>}
-              </CFormLabel>
-              <CFormInput
-                size="sm"
-                id="Payment"
-                value={fetch ? currentInfo.vendor_info.payment_term_3days : ''}
-                readOnly
-              />
-            </CCol>
-          </CRow>
-          {/* Row Eight------------------------- */}
-          {/* Row Nine------------------------- */}
-          <CRow className="">
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="remarks">
                 Remarks
@@ -656,6 +643,7 @@ const VendorCreationConfirmation = () => {
                 color="warning"
                 className="mx-1 px-2 text-white"
                 type="button"
+                disabled={fetch ? false : true}
                 onClick={() => setConfirmBtn(true)}
               >
                 Confirm
@@ -665,7 +653,8 @@ const VendorCreationConfirmation = () => {
                 color="warning"
                 className="mx-1 px-2 text-white"
                 type="button"
-                onClick={() => addVendorConfirmation(0)}
+                disabled={fetch ? false : true}
+                onClick={() => addVendorConfirmation(1)}
               >
                 Reject
               </CButton>

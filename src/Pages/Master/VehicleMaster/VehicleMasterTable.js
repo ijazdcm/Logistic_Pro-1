@@ -225,9 +225,8 @@ const VehicleMasterTable = () => {
       selector: (row) => row.Insurance_Validity,
       center: true,
       sortable: true,
-      Cell: ({ row }) => {
-        return format(row, 'DD/mm/yyyy')
-      },
+      // Cell: ({ row }) => row,
+      Cell: ({ row }) => format(row, 'DD/mm/yyyy'),
     },
     {
       name: 'FC Validity',

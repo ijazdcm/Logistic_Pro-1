@@ -19,13 +19,15 @@ const VendorCreationHome = () => {
   const loadVendorCreationTable = () => {
     VendorCreationService.getVendorRequestTableData().then((res) => {
       tableData = res.data.data
-
+      console.log(res.data.data)
       let rowDataList = []
       const filterData = tableData.filter(
         (data) =>
           data.vehicle_document != null &&
           data.vehicle_type_id.id == 3 &&
-          data.vendor_info.vendor_status == 1
+          data.vendor_info.vendor_status == 1 &&
+          data.vehicle_document.document_status == 1 &&
+          data.vehicle_document.vendor_flag == 0
       )
 
       filterData.map((data, index) => {

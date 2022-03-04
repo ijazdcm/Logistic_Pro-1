@@ -19,7 +19,6 @@ const CustomTable = ({ columns, data, fieldName, showSearchFilter, pending = fal
   const filteredItems = data.filter(
     (item) => item[fieldName] && item[fieldName].toLowerCase().includes(filterText.toLowerCase())
   )
-  console.log(filteredItems)
 
   const subHeaderComponentMemo = React.useMemo(() => {
     const handleClear = () => {

@@ -93,7 +93,7 @@ const DocVerifyVendorAvail = () => {
     e.preventDefault()
 
     let panDetail = PanDataService.getPanData(values.panNumber).then((res) => {
-      if (res.status == 200) {
+      if (res.status == 200 && res.data != '') {
         setPanData(res.data[0])
         toast.success('Pan Details Detected!')
       } else {

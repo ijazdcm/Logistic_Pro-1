@@ -22,6 +22,7 @@ import {
   CTabPane,
   CFormFloating,
   CFormTextarea,
+  CIcon
 } from '@coreui/react'
 import { React, useState } from 'react'
 import useForm from 'src/Hooks/useForm'
@@ -35,15 +36,15 @@ const DieselIntentOwn = () => {
     odometerPhoto: '',
   }
 
-  const { values, errors, handleChange, onFocus, handleSubmit, enableSubmit, onBlur } = useForm(
-    login,
-    validate,
-    formValues
-  )
+  // const { values, errors, handleChange, onFocus, handleSubmit, enableSubmit, onBlur } = useForm(
+  //   login,
+  //   validate,
+  //   formValues
+  // )
 
-  function login() {
-    alert('No Errors CallBack Called')
-  }
+  // function login() {
+  //   alert('No Errors CallBack Called')
+  // }
   return (
     <>
       <CCard>

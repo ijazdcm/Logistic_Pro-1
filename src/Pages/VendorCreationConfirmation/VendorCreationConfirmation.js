@@ -35,6 +35,7 @@ const VendorCreationConfirmation = () => {
   const [fetch, setFetch] = useState(false)
   const [currentInfo, setCurrentInfo] = useState({})
   const [shedData, setShedData] = useState({})
+  const [SAPBtn, setSAPBtn] = useState(false)
   const [confirmBtn, setConfirmBtn] = useState(false)
   const [adharvisible, setAdharVisible] = useState(false)
   const [BankPassbook, setBankPassbook] = useState(false)
@@ -60,6 +61,57 @@ const VendorCreationConfirmation = () => {
     formValues
   )
 
+  const updateSAP = () => {
+    setSAPBtn(true)
+    const SAPdata = new FormData()
+    SAPdata.append('NAME1', shedData.shed_owner_name || '')
+    SAPdata.append('STRAS', currentInfo.vendor_info.street || '')
+    SAPdata.append('street2', currentInfo.vendor_info.street || '')
+    SAPdata.append('ORT02', currentInfo.vendor_info.district || '')
+    SAPdata.append('PSTLZ', currentInfo.vendor_info.postal_code || '')
+    SAPdata.append('ORT01', currentInfo.vendor_info.city || '')
+    SAPdata.append('REGIO', currentInfo.vendor_info.region || '')
+    SAPdata.append('TELF1', shedData.shed_owner_phone_1 || '')
+    SAPdata.append('STCD3', currentInfo.vendor_info.gst_registration_number || '')
+    SAPdata.append('BANKL', currentInfo.vendor_info.bank_ifsc_code || '')
+    SAPdata.append('BANKN', currentInfo.vendor_info.bank_acc_number || '')
+    SAPdata.append('KOINH', currentInfo.vendor_info.bank_acc_holder_name || '')
+    SAPdata.append('ZTERM', currentInfo.vendor_info.payment_term_3days || '')
+    SAPdata.append('WITHT', currentInfo.vendor_info.gst_tax_code || '')
+    SAPdata.append('J_1IPANNO', currentInfo.vendor_info.pan_card_number || '')
+    SAPdata.append('partnertype', '')
+
+    // Name  --> 	NAME1
+    // Street  --> 	STRAS
+    // Street  --> 	street2
+    // District  --> 	ORT02
+    // PostalCode  --> 	PSTLZ
+    // City  --> 	ORT01
+    // Region  --> 	REGIO
+    // MobileNo  --> 	TELF1
+    // GSTNumber  --> 	STCD3
+    // BankKey  --> (IFSC) 	BANKL
+    // BankAccountNumber  --> 	BANKN
+    // BankHolderName  --> 	KOINH
+    // PaymentTerms  --> 	ZTERM
+    // WithHoldingTaxType  --> 	WITHT
+    // PANNumber  --> 	J_1IPANNO
+    // Bptype  --> 	partnertype
+
+    // for (const pair of SAPdata.entries()) {
+    //   console.log(pair[0] + ' ' + pair[1])
+    // }
+    // return
+
+    VendorToSAP.vendorCreation(SAPdata).then((res) => {
+      if (res.status == 200) {
+        toast.success('Vendor Information Updated in SAP!')
+      } else {
+        toast.warning('Something Went Wrong !')
+      }
+    })
+  }
+
   // ADD VENDOR REQUEST DETAILS
   const addVendorConfirmation = (status) => {
     const formData = new FormData()
@@ -76,16 +128,9 @@ const VendorCreationConfirmation = () => {
     // for (const pair of formData.entries()) {
     //   console.log(pair[0] + ' ' + pair[1])
     // }
+    // return
 
     setConfirmBtn(false)
-
-    VendorToSAP.vendorCreation(id, formData).then((res) => {
-      if (res.status == 200) {
-        toast.success('Vendor Information Sent To SAP!')
-      } else {
-        toast.warning('Something Went Wrong !')
-      }
-    })
 
     VendorCreationService.updateVendorConfirmationData(id, formData).then((res) => {
       if (res.status == 200) {
@@ -643,6 +688,16 @@ const VendorCreationConfirmation = () => {
                 color="warning"
                 className="mx-1 px-2 text-white"
                 type="button"
+                disabled={SAPBtn}
+                onClick={() => updateSAP()}
+              >
+                Update To SAP
+              </CButton>
+              <CButton
+                size="sm"
+                color="success"
+                className="mx-1 px-2 text-white"
+                type="button"
                 disabled={fetch ? false : true}
                 onClick={() => setConfirmBtn(true)}
               >
@@ -650,7 +705,7 @@ const VendorCreationConfirmation = () => {
               </CButton>
               <CButton
                 size="sm"
-                color="warning"
+                color="danger"
                 className="mx-1 px-2 text-white"
                 type="button"
                 disabled={fetch ? false : true}

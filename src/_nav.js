@@ -89,12 +89,14 @@ const _nav = [
   },
   {
     component: CNavItem,
-    name: 'Trip STO',
-    to: '/TripSTO',
+    name: 'RM STO',
+    // to: '/TripSTOTable',
+    to: '/RMSTOTable',
     icon: <CIcon icon={cilReload} customClassName="nav-icon" />,
     datatoggle: 'tooltip',
-    title: 'Trip Sheet STO',
+    title: 'RM STO',
   },
+
   {
     component: CNavItem,
     name: 'Docs. Verification',

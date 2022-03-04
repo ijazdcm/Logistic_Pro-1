@@ -53,7 +53,8 @@ import TripSheetCreationFG from './Pages/TripSheetCreation/TripSheetCreationFG'
 import TripSheetCreationOwnFG from './Pages/TripSheetCreation/TripSheetCreation'
 import TripSheetCreationHome from './Pages/TripSheetCreation/TripSheetCreationHome'
 import TripSheetCreationSTO from './Pages/TripSheetCreation/TripSheetCreationSTO'
-import TripSTO from './Pages/TripSTO/TripSto'
+import RMSTOTable from './Pages/TripSTO/TripSto'
+import RMSTOHire from './Pages/TripSTO/RMSTOHire'
 import TripSheetSettleMentFG from './Pages/TripSheetSettleMent/TripSheetSettleMentFG'
 import TripSheetSettleMentNew from './Pages/TripSheetSettleMent/TripSheetSettleMentNew'
 import TripSheetSettleMentHome from './Pages/TripSheetSettleMent/TripSheetSettleMentHome'
@@ -94,17 +95,11 @@ import DriverMasterEdit from './Pages/Master/DriverMaster/DriverMasterEdit'
 import BankMasterTable from './Pages/Master/Submaster/Bank/BankMasterTable'
 import DriverMasterTable from './Pages/Master/DriverMaster/DriverMasterTable'
 
-
-import LocationTable from './Pages/Master/Submaster/LocationTable';
+import LocationTable from './Pages/Master/Submaster/LocationTable'
 import UserLoginMasterEdit from './Pages/Master/UserMaster/UserLoginMasterEdit'
-
 
 // import UserLoginMasterEdit from './Pages/Master/UserMaster/UserLoginMasterEdit'
 import TripSheetCreation from './Pages/TripSheetCreation/TripSheetCreation'
-
-
-
-
 
 // import LocationTable from './Pages/Master/Submaster/LocationTable'
 // =======
@@ -116,7 +111,6 @@ import TripSheetCreation from './Pages/TripSheetCreation/TripSheetCreation'
 // import LocationTable from './Pages/Master/Submaster/LocationTable'
 // import UserLoginMasterEdit from './Pages/Master/UserMaster/UserLoginMasterEdit'
 // import TripSheetCreation from './Pages/TripSheetCreation/TripSheetCreation'
-
 
 const routes = [
   // Master
@@ -240,7 +234,6 @@ const routes = [
     name: 'DocVerifyVendorAvail',
     component: DocVerifyVendorAvail,
   },
-
 
   {
     path: '/DocsVerify/DocVerifyVendorNotAvail',
@@ -380,11 +373,12 @@ const routes = [
     component: TripSheetCreationSTO,
   },
   {
-    path: '/TripSTO',
+    path: '/RMSTOTable',
     exact: true,
     name: 'Trip - STO',
-    component: TripSTO,
+    component: RMSTOTable,
   },
+  { path: '/RMSTOHire/:id', exact: true, name: 'RMSTOHire', component: RMSTOHire },
   {
     path: '/TripSheetSettleMentHome',
     exact: true,

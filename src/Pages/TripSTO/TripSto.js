@@ -24,8 +24,8 @@ function assignTripSTO(vehicleId) {
     if (res.status === 204) {
       toast.success('TripSto Assigned Successfully!')
       setTimeout(() => {
-        window.location.href = '/TripSheetCreation'
-      }, 2000)
+        window.location.href = '/RMSTOTable'
+      }, 1000)
     } else {
       toast.warning('Failed To Assign Trip STO..Kindly Contact Admin.!')
     }
@@ -38,12 +38,6 @@ const TripSto = () => {
   const [vehicleSto, setVehicleSto] = useState('')
   let tableData = []
 
-  const ACTION = {
-    GATE_IN: 1,
-    GATE_OUT: 2,
-    WAIT_OUTSIDE: 3,
-  }
-
   const loadTripStoTable = () => {
     TripStoService.getVehicleReadyToTripSto().then((res) => {
       tableData = res.data.data
@@ -55,12 +49,13 @@ const TripSto = () => {
           Vehicle_Type: data.vehicle_type_id.type,
           Vehicle_No: data.vehicle_number,
           Driver_Name: data.driver_name,
-          Waiting_At: <span className="badge rounded-pill bg-info">Trip STO</span>,
+          Waiting_At: <span className="badge rounded-pill bg-info">RM STO</span>,
           Screen_Duration: data.updated_at,
           Overall_Duration: data.created_at,
           Action: (
             <span>
-              {data.vehicle_type_id.type != 'Party Vehicle' ? (
+              {data.vehicle_type_id.type != 'Party Vehicle' &&
+              data.vehicle_type_id.type != 'Hire' ? (
                 <CButton
                   className="badge text-white"
                   color="warning"
@@ -69,8 +64,17 @@ const TripSto = () => {
                     setVehicleSto(data.vehicle_id)
                   }}
                 >
-                  Trip STO
-                  {/* <Link to="/TripSheetCreation">Trip STO </Link> */}
+                  RM STO
+                </CButton>
+              ) : (
+                ''
+              )}
+              {data.vehicle_type_id.type == 'Hire' ? (
+                <CButton className="badge text-white" color="warning">
+                  <Link to={`/RMSTOHire/${data.parking_yard_gate_id}`}>RM STO</Link>
+                  {/* <Link className="text-white" to="/RMSTOHire">
+                    RM STO
+                  </Link> */}
                 </CButton>
               ) : (
                 ''
@@ -166,7 +170,6 @@ const TripSto = () => {
         </CModalBody>
         <CModalFooter>
           <CButton color="primary" onClick={() => assignTripSTO(vehicleSto)}>
-            {/* <Link to="/TripSheetCreation"> Yes </Link> */}
             Yes
           </CButton>
           <CButton onClick={() => setErrorModal(false)} color="primary">

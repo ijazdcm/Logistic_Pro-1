@@ -162,7 +162,7 @@ const VendorCreationRequest = () => {
       currentInfo.vendor_info.aadhar_card_number || values.aadhar
     )
     formData.append('bank_name', values.bankName)
-    formData.append('bank_acc_number', currentInfo.vendor_info.bank_acc_number)
+    formData.append('bank_acc_number', currentInfo.vendor_info.bank_acc_number || values.bankAccount)
     formData.append('bank_acc_holder_name', values.bankAccHolderName)
     formData.append('bank_branch', values.bankBranch)
     formData.append('bank_ifsc_code', values.ifscCode)
@@ -433,7 +433,7 @@ const VendorCreationRequest = () => {
                 id="bankBranch"
                 maxLength={30}
                 className={`${errors.bankBranch && 'is-invalid'}`}
-                value={values.bankBranch || ''}
+                value={values.bankBranch}
                 onFocus={onFocus}
                 onBlur={onBlur}
                 onChange={handleChange}

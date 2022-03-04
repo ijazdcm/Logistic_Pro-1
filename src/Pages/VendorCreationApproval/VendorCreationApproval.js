@@ -59,7 +59,8 @@ const VendorCreationApproval = () => {
   const [fileUpdate, setFileUpdate] = useState(true)
 
   const formValues = {
-    shedownerMob: '',
+    shedName: '',
+    // shedownerMob: '',
     shedownerWhatsapp: '',
     panNumber: '',
     aadhar: '',
@@ -92,7 +93,6 @@ const VendorCreationApproval = () => {
     TDSfront: '',
     TDSback: '',
   }
-
 
   function callBack() {}
 
@@ -135,7 +135,6 @@ const VendorCreationApproval = () => {
     formData.append('vendor_status', status)
     formData.append('remarks', values.remarks)
 
-
     setApproveBtn(false)
 
     VendorCreationService.updateVendorRequestData(id, formData).then((res) => {
@@ -165,7 +164,6 @@ const VendorCreationApproval = () => {
   useEffect(() => {
     VendorCreationService.getVehicleDocumentInfo(id).then((res) => {
       const resData = res.data.data[0]
-      console.log(resData)
       ShedData(resData.shed_id)
       setCurrentInfo(resData)
       setFetch(true)
@@ -362,25 +360,47 @@ const VendorCreationApproval = () => {
                 GST Registeration
                 {/* {errors.GSTreg && <span className="small text-danger">{errors.GSTreg}</span>} */}
               </CFormLabel>
-              <CFormInput
+
+              <CFormSelect
                 size="sm"
                 id="GSTreg"
-                defaultValue={fetch ? currentInfo.vendor_info.gst_registration : ''}
-              />
+                name="GSTreg"
+                onFocus={onFocus}
+                onBlur={onBlur}
+                onChange={handleChange}
+                value={values.GSTreg}
+                className={`${errors.GSTreg && 'is-invalid'}`}
+                aria-label="Small select example"
+              >
+                {fetch &&
+                  (currentInfo.vendor_info.gst_registration == 0 ? (
+                    <option value="0" selected hidden>
+                      No
+                    </option>
+                  ) : (
+                    <option value="1" selected hidden>
+                      Yes
+                    </option>
+                  ))}
+                <option value="1">Yes</option>
+                <option value="0">No</option>
+              </CFormSelect>
             </CCol>
-          </CRow>
-          <CRow>
-            <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="GST">
-                GST Registration Number*
-                {/* {errors.GST && <span className="small text-danger">{errors.GST}</span>} */}
-              </CFormLabel>
-              <CFormInput
-                size="sm"
-                id="GST"
-                defaultValue={fetch ? currentInfo.vendor_info.gst_registration_number : ''}
-              />
-            </CCol>
+
+            {(fetch && currentInfo.vendor_info.gst_registration == 1) ||
+              (values.GSTreg == 1 && (
+                <CCol xs={12} md={3}>
+                  <CFormLabel htmlFor="GST">
+                    GST Registration Number*
+                    {/* {errors.GST && <span className="small text-danger">{errors.GST}</span>} */}
+                  </CFormLabel>
+                  <CFormInput
+                    size="sm"
+                    id="GST"
+                    defaultValue={fetch ? currentInfo.vendor_info.gst_registration_number : ''}
+                  />
+                </CCol>
+              ))}
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="GSTtax">
                 GST Tax Code
@@ -415,8 +435,7 @@ const VendorCreationApproval = () => {
                 defaultValue={fetch ? currentInfo.vendor_info.street : ''}
               />
             </CCol>
-          </CRow>
-          <CRow>
+
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="Area">
                 Area
@@ -461,8 +480,7 @@ const VendorCreationApproval = () => {
                 defaultValue={fetch ? currentInfo.vendor_info.state : ''}
               />
             </CCol>
-          </CRow>
-          <CRow>
+
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="postalCode">
                 Postal Code
@@ -1039,7 +1057,7 @@ const VendorCreationApproval = () => {
                 className="mx-1 px-2 text-white"
                 type="button"
                 disabled={fetch ? false : true}
-                onClick={() => addVendorApproval(0)}
+                onClick={() => addVendorApproval(1)}
               >
                 Reject
               </CButton>

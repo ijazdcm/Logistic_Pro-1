@@ -138,7 +138,7 @@ const DocVerifyVendorAvail = () => {
     formData.append('pan_copy', values.panCopy)
     formData.append('pass_copy', values.passCopy)
     formData.append('transport_shed_sheet', values.transportShedSheet)
-    formData.append('shed_id', shedData && shedData.shed_id)
+    formData.append('shed_id', shedData.shed_id)
     formData.append('shed_name', shedData && shedData.shed_name)
     formData.append('ownership_transfer_form', values.ownershipTrans)
     formData.append('shed_owner_number', shedData.shed_owner_phone_1)
@@ -148,6 +148,9 @@ const DocVerifyVendorAvail = () => {
     formData.append('document_status', status)
     formData.append('document_verification_status', status)
 
+    // for (const pair of formData.entries()) {
+    //   console.log(pair[0] + ' .' + pair[1])
+    // }
     DocumentVerificationService.addDocumentVerificationData(formData)
       .then((res) => {
         console.log(res)

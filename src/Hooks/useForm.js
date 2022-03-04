@@ -44,8 +44,18 @@ const useForm = (callback, validate, formValues) => {
         ...values,
         [event.target.name]: event.target.files[0],
       }))
-    } else {
-      // console.log(event.target.name + ':\t' + value)
+    }
+    // if(event.target.type==='checkbox')
+    // {
+    //   console.log( event.target.value);
+    //   setValues((values) => ({
+    //     ...values,
+    //     [event.target.name]: value==='on'?true:false,
+    //   }))
+    // }
+
+    else {
+
       setValues((values) => ({
         ...values,
         [event.target.name]: value,

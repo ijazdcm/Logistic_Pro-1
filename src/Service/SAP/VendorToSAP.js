@@ -6,9 +6,7 @@ const VENDOR_CREATION = AppConfig.api.baseUrl + '/sap/vendor-creation-confirmati
 class VendorToSAP {
   // GET SINGLE PAN DATA FROM SAP
   vendorCreation(data) {
-    let formData = JSON.stringify(data)
-
-    return api.post(VENDOR_CREATION, formData)
+    return api.post(VENDOR_CREATION, data)
   }
 }
 

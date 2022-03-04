@@ -1,5 +1,5 @@
 import DataTable from 'react-data-table-component'
-import React, { useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import {
   CButton,
   CCol,
@@ -9,18 +9,20 @@ import {
   CRow,
   CSpinner,
 } from '@coreui/react'
-import { FilterComponent } from './FilterComponent'
+import FilterComponent from './FilterComponent'
 import { CustomLoader } from './CustomLoader'
 
 const CustomTable = ({ columns, data, fieldName, showSearchFilter, pending = false }) => {
-  const [filterText, setFilterText] = React.useState('')
+  const [filterText, setFilterText] = useState('')
   const [resetPaginationToggle, setResetPaginationToggle] = React.useState(false)
-
+  // const filteredItems = data.filter(
+  //   item => item.name && item.name.includes(filterText)
+  // );
   const filteredItems = data.filter(
-    (item) => item[fieldName] && item[fieldName].toLowerCase().includes(filterText.toLowerCase())
+    (item) => JSON.stringify(item).toLowerCase().indexOf(filterText.toLowerCase()) !== -1
   )
 
-  const subHeaderComponentMemo = React.useMemo(() => {
+  const subHeaderComponentMemo = useMemo(() => {
     const handleClear = () => {
       if (filterText) {
         setResetPaginationToggle(!resetPaginationToggle)
@@ -29,40 +31,40 @@ const CustomTable = ({ columns, data, fieldName, showSearchFilter, pending = fal
     }
 
     return (
-      <>
-        <FilterComponent
-          onFilter={(e) => setFilterText(e.target.value)}
-          onClear={handleClear}
-          filterText={filterText}
-          fieldName={fieldName}
-        />
-      </>
+      <FilterComponent
+        onFilter={(e) => setFilterText(e.target.value)}
+        onClear={handleClear}
+        filterText={filterText}
+      />
     )
   }, [filterText, resetPaginationToggle])
 
   const customStyles = {
     rows: {
       style: {
-        minHeight: '1rem', // override the row height
+        minHeight: 'auto', // override the row height
       },
     },
     headCells: {
       style: {
-        padding: '0px',
-        margin: '0px',
+        width: 'fit-content',
+        padding: 'auto',
+        margin: 'auto',
+        textTransform: 'uppercase',
         paddingLeft: '1px', // override the cell padding for head cells
         paddingRight: '1px',
         backgroundColor: '#4d3227',
         color: '#fff',
-        fontSize: '0.8rem',
-        fontWeight: 'bold',
+        fontSize: '0.75rem',
         height: '3.25rem',
+        overFlow:'unset'
       },
     },
     cells: {
       style: {
-        paddingLeft: '8px', // override the cell padding for data cells
-        paddingRight: '8px',
+        paddingLeft: '0', // override the cell padding for data cells
+        paddingRight: '0',
+
         fontSize: '0.75rem',
         textAlign: 'center',
       },
@@ -98,3 +100,31 @@ const CustomTable = ({ columns, data, fieldName, showSearchFilter, pending = fal
 }
 
 export default CustomTable
+
+// OLD
+// const [filterText, setFilterText] = React.useState('')
+// const [resetPaginationToggle, setResetPaginationToggle] = React.useState(false)
+
+// const filteredItems = data.filter(
+//   (item) => item[fieldName] && item[fieldName].toLowerCase().includes(filterText.toLowerCase())
+// )
+
+// const subHeaderComponentMemo = React.useMemo(() => {
+//   const handleClear = () => {
+//     if (filterText) {
+//       setResetPaginationToggle(!resetPaginationToggle)
+//       setFilterText('')
+//     }
+//   }
+
+//   return (
+//     <>
+//       <FilterComponent
+//         onFilter={(e) => setFilterText(e.target.value)}
+//         onClear={handleClear}
+//         filterText={filterText}
+//         fieldName={fieldName}
+//       />
+//     </>
+//   )
+// }, [filterText, resetPaginationToggle])

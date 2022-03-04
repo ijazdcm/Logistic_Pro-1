@@ -33,6 +33,9 @@ export default function ParkingYardGateValidation(values, isTouched) {
   //vehicle driverName validation rule
   if (isTouched.driverName && values.driverName==="") {
     errors.driverName = "Enter Driver Name"
+  }else if(isTouched.driverName &&  !/^[a-zA-Z ]{1,30}$/.test(values.driverName))
+  {
+    errors.driverName = 'No Special Characters'
   }
 
 
@@ -47,6 +50,9 @@ export default function ParkingYardGateValidation(values, isTouched) {
    //odometer Kilometer validation rule
   if (isTouched.odometerKm && !values.odometerKm) {
     errors.odometerKm = 'Odometer KM Required & Numeric'
+  }else if(isTouched.odometerKm && values.odometerKm.length>6)
+  {
+    errors.odometerKm = 'Only 6 digits '
   }
 
     //odometerImg validation rule
@@ -56,7 +62,10 @@ export default function ParkingYardGateValidation(values, isTouched) {
 
     //partyName validation rule
     if (isTouched.partyName && !values.partyName) {
-      errors.partyName = 'Party Name Required'
+      errors.partyName = 'Required'
+    }else if(isTouched.partyName &&  !/^[a-zA-Z ]{1,30}$/.test(values.partyName))
+    {
+      errors.partyName = '30 Characters Only'
     }
 
      //vehicleBody validation rule

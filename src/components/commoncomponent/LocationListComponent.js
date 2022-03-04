@@ -28,7 +28,7 @@ const LocationListComponent = ({
 
   return (
     <>
-      <Select 
+      <Select
       id={id}
       size={size}
       options={location}

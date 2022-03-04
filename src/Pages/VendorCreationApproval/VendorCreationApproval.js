@@ -612,49 +612,50 @@ const VendorCreationApproval = () => {
                   <span className="small text-danger">{errors.licenseCopy}</span>
                 )}
               </CFormLabel>
-
-              {licenseDel ? (
-                <CFormInput
-                  type="file"
-                  size="sm"
-                  id="licenseCopy"
-                  name="licenseCopy"
-                  accept=".jpg,.jpeg,.png,.pdf"
-                  className={`${errors.aadharCopy && 'is-invalid'}`}
-                  onFocus={onFocus}
-                  onBlur={onBlur}
-                  onChange={handleChange}
-                />
-              ) : (
-                <CButton
-                  className="w-100 m-0"
-                  color="info"
-                  size="sm"
-                  onFocus={onFocus}
-                  onBlur={onBlur}
-                  onChange={handleChange}
-                >
-                  <span className="float-start" onClick={() => setLicence(!Licence)}>
-                    <i className="fa fa-eye" aria-hidden="true"></i> &nbsp;View
-                  </span>
-                  <span
-                    className="float-end"
-                    onClick={() => {
-                      if (window.confirm('Are you sure to remove this file?')) {
-                        setLicenseDel(true)
-                        setFileUpdate(false)
-                      }
-                    }}
+              {fetch &&
+                currentInfo.license_copy != '' &&
+                (licenseDel ? (
+                  <CFormInput
+                    type="file"
+                    size="sm"
+                    id="licenseCopy"
+                    name="licenseCopy"
+                    accept=".jpg,.jpeg,.png,.pdf"
+                    className={`${errors.licenseCopy && 'is-invalid'}`}
+                    onFocus={onFocus}
+                    onBlur={onBlur}
+                    onChange={handleChange}
+                  />
+                ) : (
+                  <CButton
+                    className="w-100 m-0"
+                    color="info"
+                    size="sm"
+                    onFocus={onFocus}
+                    onBlur={onBlur}
+                    onChange={handleChange}
                   >
-                    <i
-                      className="fa fa-trash"
-                      aria-hidden="true"
-                      // onMouseOver={changeBackground}
-                      // onMouseLeave={changeBackground1}
-                    ></i>
-                  </span>
-                </CButton>
-              )}
+                    <span className="float-start" onClick={() => setLicence(!Licence)}>
+                      <i className="fa fa-eye" aria-hidden="true"></i> &nbsp;View
+                    </span>
+                    <span
+                      className="float-end"
+                      onClick={() => {
+                        if (window.confirm('Are you sure to remove this file?')) {
+                          setLicenseDel(true)
+                          setFileUpdate(false)
+                        }
+                      }}
+                    >
+                      <i
+                        className="fa fa-trash"
+                        aria-hidden="true"
+                        // onMouseOver={changeBackground}
+                        // onMouseLeave={changeBackground1}
+                      ></i>
+                    </span>
+                  </CButton>
+                ))}
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="insurance">

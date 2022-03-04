@@ -102,10 +102,10 @@ const VehicleInspection = () => {
   const [fetch, setFetch] = useState(false)
   const [pending, setPending] = useState(true)
   const VEHICLE_TYPE = {
-    OWN: 1,
-    CONTRACT: 2,
-    HIRE: 3,
-    PARTY: 4,
+    OWN: "1",
+    CONTRACT:"2",
+    HIRE: "3",
+    PARTY: "4",
   }
 
   const { id } = useParams()
@@ -592,8 +592,8 @@ const VehicleInspection = () => {
                       Accept
                     </CButton>
 
-                    {(!changeDriver && currentVehicleInfo.vehicle_type_id.id == VEHICLE_TYPE.OWN) ||
-                    currentVehicleInfo.vehicle_type_id.id == VEHICLE_TYPE.CONTRACT ? (
+                    {(currentVehicleInfo.vehicle_type_id.id != VEHICLE_TYPE.OWN)
+                    && currentVehicleInfo.vehicle_type_id.id != VEHICLE_TYPE.CONTRACT ? (
                       <CButton
                         size="sm"
                         color="warning"

@@ -246,6 +246,7 @@ const RMSTOHire = () => {
   useEffect(() => {
     TripStoService.getSingleVehicleInfoOnParkingYardGate(id).then((res) => {
       console.log(res.data.data)
+      console.log(id)
       // values.vehicle_id = res.data.data.vehicle_id
       isTouched.vehicle_id = true
       isTouched.remarks = true

@@ -19,7 +19,7 @@ export default function VendorRequestValidation(values, isTouched) {
     isTouched.GSTNumber &&
     !/^[\d]{2}[A-Z]{5}[\d]{4}[A-Z]{1}[\d]{1}[A-Z]{1}[A-Z\d]{1}$/.test(values.GSTNumber)
   ) {
-    errors.GSTNumber = 'Must Like 07AAGFF2194N1Z1'
+    errors.GSTNumber = 'Must Like "07AAGFF2194N1Z1"'
   }
 
   if (isTouched.bankName && !values.bankName) {

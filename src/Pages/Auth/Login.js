@@ -52,6 +52,8 @@ const Login = () => {
       .then((res) => {
         if (res.status == 200) {
           LocalStorageService.setLocalstorage('auth_token', res.data.token)
+          LocalStorageService.setLocalstorage('user_info', JSON.stringify(res.data.data))
+          LocalStorageService.setLocalstorage('page_permission', JSON.stringify(res.data.data.page_permissions))
           window.location.href = '/dashboard'
         }
       })

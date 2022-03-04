@@ -654,7 +654,7 @@ const VendorCreationConfirmation = () => {
                 className="mx-1 px-2 text-white"
                 type="button"
                 disabled={fetch ? false : true}
-                onClick={() => addVendorConfirmation(0)}
+                onClick={() => addVendorConfirmation(1)}
               >
                 Reject
               </CButton>

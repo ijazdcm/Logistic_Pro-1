@@ -7,9 +7,9 @@ export default function DocumentVerificationValidation(values, isTouched) {
     errors.panNumber = 'Must Like "AMIPR8417L"'
   }
 
-  if (isTouched.license && !values.license) {
-    errors.license = 'Required'
-  }
+  // if (isTouched.license && !values.license) {
+  //   errors.license = 'Required'
+  // }
 
   if (isTouched.rcFront && !values.rcFront) {
     errors.rcFront = 'Required'
@@ -29,20 +29,20 @@ export default function DocumentVerificationValidation(values, isTouched) {
   if (isTouched.TDSback && !values.TDSback) {
     errors.TDSback = 'Required'
   }
-  if (isTouched.transportShed && !values.transportShed) {
-    errors.transportShed = 'Required'
-  }
+  // if (isTouched.transportShed && !values.transportShed) {
+  //   errors.transportShed = 'Required'
+  // }
   if (isTouched.shedName && !values.shedName) {
     errors.shedName = 'Required'
   }
-  if (isTouched.ownershipTrans && !values.ownershipTrans) {
-    errors.ownershipTrans = 'Required'
-  }
+  // if (isTouched.ownershipTrans && !values.ownershipTrans) {
+  //   errors.ownershipTrans = 'Required'
+  // }
 
-  if (isTouched.freightRate && !values.freightRate) {
-    errors.freightRate = 'Required'
-  } else if (isTouched.freightRate && !/^[0-9]*\.[0-9][0-9]$/.test(values.freightRate)) {
-    errors.freightRate = 'Invalid Format (Ex. 12345.67)'
+  if (values.freightRate) {
+    if (!/^[0-9]*\.[0-9][0-9]$/.test(values.freightRate)) {
+      errors.freightRate = 'Invalid Format (Ex. 12345.67)'
+    }
   }
 
   if (isTouched.ownerName && !values.ownerName) {

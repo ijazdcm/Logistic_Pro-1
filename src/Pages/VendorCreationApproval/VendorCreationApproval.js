@@ -58,7 +58,8 @@ const VendorCreationApproval = () => {
   const [fileUpdate, setFileUpdate] = useState(true)
 
   const formValues = {
-    shedownerMob: '',
+    shedName: '',
+    // shedownerMob: '',
     shedownerWhatsapp: '',
     panNumber: '',
     aadhar: '',
@@ -105,6 +106,9 @@ const VendorCreationApproval = () => {
   const addVendorApproval = (status) => {
     const formData = new FormData()
 
+    console.log(values)
+    return
+
     formData.append('_method', 'PUT')
     formData.append('vendor_status', status)
     formData.append('remarks', values.remarks)
@@ -138,7 +142,6 @@ const VendorCreationApproval = () => {
   useEffect(() => {
     VendorCreationService.getVehicleDocumentInfo(id).then((res) => {
       const resData = res.data.data[0]
-      console.log(resData)
       ShedData(resData.shed_id)
       setCurrentInfo(resData)
       setFetch(true)
@@ -196,7 +199,12 @@ const VendorCreationApproval = () => {
                 Shed Name
                 {/* {errors.shedName && <span className="small text-danger">{errors.shedName}</span>} */}
               </CFormLabel>
-              <CFormInput size="sm" id="shedName" value={fetch ? shedData.shed_name : ''} />
+              <CFormInput
+                size="sm"
+                id="shedName"
+                name="shedName"
+                value={fetch ? shedData.shed_name : ''}
+              />
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="ownerName">
@@ -989,7 +997,7 @@ const VendorCreationApproval = () => {
                 className="mx-1 px-2 text-white"
                 type="button"
                 disabled={fetch ? false : true}
-                onClick={() => addVendorApproval(0)}
+                onClick={() => addVendorApproval(1)}
               >
                 Reject
               </CButton>

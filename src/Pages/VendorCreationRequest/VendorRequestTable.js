@@ -26,7 +26,8 @@ const VendorCreationHome = () => {
           data.vehicle_document != null &&
           data.vehicle_type_id.id == 3 &&
           data.vendor_info.vendor_status == 1 &&
-          data.vehicle_document.document_status == 1
+          data.vehicle_document.document_status == 1 &&
+          data.vehicle_document.vendor_flag == 0
       )
 
       filterData.map((data, index) => {

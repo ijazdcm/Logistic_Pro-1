@@ -31,6 +31,8 @@ class VendorCreationService {
     return api.get(VENDOR_CONFIRMATION)
   }
   updateVendorConfirmationData(id, data) {
+    // does not do anything useful
+
     return api.post(VENDOR + '/' + id, data)
   }
 }

@@ -26,6 +26,7 @@ import ShedService from 'src/Service/SmallMaster/Shed/ShedService'
 
 // VALIDATIONS FILE
 import useForm from 'src/Hooks/useForm.js'
+import VendorRequestValidation from 'src/Utils/TransactionPages/VendorCreation/VendorRequestValidation'
 
 const VendorCreationApproval = () => {
   const { id } = useParams()
@@ -93,7 +94,6 @@ const VendorCreationApproval = () => {
     TDSback: '',
   }
 
-  function VendorRequestValidation() {}
   function callBack() {}
 
   const { values, errors, handleChange, onFocus, handleSubmit, enableSubmit, onBlur } = useForm(
@@ -106,10 +106,32 @@ const VendorCreationApproval = () => {
   const addVendorApproval = (status) => {
     const formData = new FormData()
 
-    console.log(values)
-    return
-
     formData.append('_method', 'PUT')
+    formData.append('vendor_id', currentInfo.vendor_info.vendor_id)
+    formData.append('vendor_code', currentInfo.vendor_info.vendor_code)
+    formData.append('owner_name', currentInfo.vendor_info.owner_name)
+    formData.append('owner_number', currentInfo.vendor_info.owner_number)
+    formData.append('pan_card_number', currentInfo.vendor_info.pan_card_number || values.panNumber)
+    formData.append(
+      'aadhar_card_number',
+      currentInfo.vendor_info.aadhar_card_number || values.aadhar
+    )
+    formData.append('bank_name', values.bankName)
+    formData.append('bank_acc_number', currentInfo.vendor_info.bank_acc_number)
+    formData.append('bank_acc_holder_name', values.bankAccHolderName)
+    formData.append('bank_branch', values.bankBranch)
+    formData.append('bank_ifsc_code', values.ifscCode)
+    formData.append('street', values.street)
+    formData.append('area', values.area)
+    formData.append('city', values.city)
+    formData.append('district', values.district)
+    formData.append('state', values.state)
+    formData.append('region', values.state.substring(0, 2))
+    formData.append('postal_code', values.postalCode)
+    formData.append('gst_registration', values.GSTreg)
+    formData.append('gst_registration_number', values.GSTNumber)
+    formData.append('gst_tax_code', values.GSTtax || 1245)
+    formData.append('payment_term_3days', values.payment || 3000)
     formData.append('vendor_status', status)
     formData.append('remarks', values.remarks)
 
@@ -146,13 +168,14 @@ const VendorCreationApproval = () => {
       setCurrentInfo(resData)
       setFetch(true)
     })
-  }, [])
+  }, [fileUpdate])
 
   // UPDATE VENDOR DOCUMENTS
-  const updateVendorDocument = () => {
+  const updateVendorDocument = (status) => {
     const fileData = new FormData()
     // File Update
     fileData.append('_method', 'PUT')
+
     panDel && fileData.append('pan_copy', values.panCopy)
     adharDel && fileData.append('aadhar_copy', values.aadharCopy)
     licenseDel && fileData.append('license_copy', values.licenseCopy)
@@ -197,23 +220,22 @@ const VendorCreationApproval = () => {
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="shedName">
                 Shed Name
-                {/* {errors.shedName && <span className="small text-danger">{errors.shedName}</span>} */}
+                {errors.shedName && <span className="small text-danger">{errors.shedName}</span>}
               </CFormLabel>
-              <CFormInput
-                size="sm"
-                id="shedName"
-                name="shedName"
-                value={fetch ? shedData.shed_name : ''}
-              />
+              <CFormInput size="sm" id="shedName" defaultValue={fetch ? shedData.shed_name : ''} />
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="ownerName">
                 Owner Name
-                {/* {errors.vehicleType && (
+                {errors.vehicleType && (
                   <span className="small text-danger">{errors.vehicleType}</span>
-                )} */}
+                )}
               </CFormLabel>
-              <CFormInput size="sm" id="ownerName" value={fetch ? shedData.shed_owner_name : ''} />
+              <CFormInput
+                size="sm"
+                id="ownerName"
+                defaultValue={fetch ? shedData.shed_owner_name : ''}
+              />
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="shedownerMob">
@@ -225,7 +247,8 @@ const VendorCreationApproval = () => {
               <CFormInput
                 size="sm"
                 id="shedownerMob"
-                value={fetch ? shedData.shed_owner_phone_1 : ''}
+                defaultValue={fetch ? shedData.shed_owner_phone_1 : ''}
+                maxLength={10}
               />
             </CCol>
             <CCol xs={12} md={3}>
@@ -238,7 +261,8 @@ const VendorCreationApproval = () => {
               <CFormInput
                 size="sm"
                 id="shedownerWhatsapp"
-                value={fetch ? shedData.shed_owner_phone_2 : ''}
+                defaultValue={fetch ? shedData.shed_owner_phone_2 : ''}
+                maxLength={10}
               />
             </CCol>
           </CRow>
@@ -253,7 +277,9 @@ const VendorCreationApproval = () => {
               <CFormInput
                 size="sm"
                 id="panNumber"
-                value={(fetch ? currentInfo.vendor_info.pan_card_number : '') || values.panNumber}
+                defaultValue={
+                  (fetch ? currentInfo.vendor_info.pan_card_number : '') || values.panNumber
+                }
               />
             </CCol>
             <CCol xs={12} md={3}>
@@ -265,7 +291,9 @@ const VendorCreationApproval = () => {
                 size="sm"
                 id="aadhar"
                 name="aadhar"
-                value={(fetch ? currentInfo.vendor_info.aadhar_card_number : '') || values.aadhar}
+                defaultValue={
+                  (fetch ? currentInfo.vendor_info.aadhar_card_number : '') || values.aadhar
+                }
               />
             </CCol>
             <CCol xs={12} md={3}>
@@ -278,7 +306,7 @@ const VendorCreationApproval = () => {
               <CFormInput
                 size="sm"
                 id="bankAccount"
-                value={fetch ? currentInfo.vendor_info.bank_acc_number : ''}
+                defaultValue={fetch ? currentInfo.vendor_info.bank_acc_number : ''}
               />
             </CCol>
             <CCol xs={12} md={3}>
@@ -291,7 +319,7 @@ const VendorCreationApproval = () => {
               <CFormInput
                 size="sm"
                 id="bankaccountholderName"
-                value={fetch ? currentInfo.vendor_info.bank_acc_holder_name : ''}
+                defaultValue={fetch ? currentInfo.vendor_info.bank_acc_holder_name : ''}
               />
             </CCol>
           </CRow>
@@ -303,7 +331,7 @@ const VendorCreationApproval = () => {
                 name="bankName"
                 size="sm"
                 id="bankName"
-                value={fetch ? currentInfo.vendor_info.bank_name : ''}
+                defaultValue={fetch ? currentInfo.vendor_info.bank_name : ''}
               />
             </CCol>
             <CCol xs={12} md={3}>
@@ -313,7 +341,7 @@ const VendorCreationApproval = () => {
                 name="bankBranch"
                 size="sm"
                 id="bankBranch"
-                value={fetch ? currentInfo.vendor_info.bank_branch : ''}
+                defaultValue={fetch ? currentInfo.vendor_info.bank_branch : ''}
               />
             </CCol>
 
@@ -324,7 +352,7 @@ const VendorCreationApproval = () => {
                 name="ifscCode"
                 size="sm"
                 id="ifscCode"
-                value={fetch ? currentInfo.vendor_info.bank_ifsc_code : ''}
+                defaultValue={fetch ? currentInfo.vendor_info.bank_ifsc_code : ''}
               />
             </CCol>
             <CCol xs={12} md={3}>
@@ -332,25 +360,47 @@ const VendorCreationApproval = () => {
                 GST Registeration
                 {/* {errors.GSTreg && <span className="small text-danger">{errors.GSTreg}</span>} */}
               </CFormLabel>
-              <CFormInput
+
+              <CFormSelect
                 size="sm"
                 id="GSTreg"
-                value={fetch ? currentInfo.vendor_info.gst_registration : ''}
-              />
+                name="GSTreg"
+                onFocus={onFocus}
+                onBlur={onBlur}
+                onChange={handleChange}
+                value={values.GSTreg}
+                className={`${errors.GSTreg && 'is-invalid'}`}
+                aria-label="Small select example"
+              >
+                {fetch &&
+                  (currentInfo.vendor_info.gst_registration == 0 ? (
+                    <option value="0" selected hidden>
+                      No
+                    </option>
+                  ) : (
+                    <option value="1" selected hidden>
+                      Yes
+                    </option>
+                  ))}
+                <option value="1">Yes</option>
+                <option value="0">No</option>
+              </CFormSelect>
             </CCol>
-          </CRow>
-          <CRow>
-            <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="GST">
-                GST Registration Number*
-                {/* {errors.GST && <span className="small text-danger">{errors.GST}</span>} */}
-              </CFormLabel>
-              <CFormInput
-                size="sm"
-                id="GST"
-                value={fetch ? currentInfo.vendor_info.gst_registration_number : ''}
-              />
-            </CCol>
+
+            {(fetch && currentInfo.vendor_info.gst_registration == 1) ||
+              (values.GSTreg == 1 && (
+                <CCol xs={12} md={3}>
+                  <CFormLabel htmlFor="GST">
+                    GST Registration Number*
+                    {/* {errors.GST && <span className="small text-danger">{errors.GST}</span>} */}
+                  </CFormLabel>
+                  <CFormInput
+                    size="sm"
+                    id="GST"
+                    defaultValue={fetch ? currentInfo.vendor_info.gst_registration_number : ''}
+                  />
+                </CCol>
+              ))}
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="GSTtax">
                 GST Tax Code
@@ -359,7 +409,7 @@ const VendorCreationApproval = () => {
               <CFormInput
                 size="sm"
                 id="GSTtax"
-                value={fetch ? currentInfo.vendor_info.gst_tax_code : ''}
+                defaultValue={fetch ? currentInfo.vendor_info.gst_tax_code : ''}
               />
             </CCol>
             <CCol xs={12} md={3}>
@@ -370,7 +420,7 @@ const VendorCreationApproval = () => {
               <CFormInput
                 size="sm"
                 id="Payment"
-                value={fetch ? currentInfo.vendor_info.payment_term_3days : ''}
+                defaultValue={fetch ? currentInfo.vendor_info.payment_term_3days : ''}
               />
             </CCol>
 
@@ -382,24 +432,31 @@ const VendorCreationApproval = () => {
               <CFormInput
                 size="sm"
                 id="Street"
-                value={fetch ? currentInfo.vendor_info.street : ''}
+                defaultValue={fetch ? currentInfo.vendor_info.street : ''}
               />
             </CCol>
-          </CRow>
-          <CRow>
+
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="Area">
                 Area
                 {/* {errors.Area && <span className="small text-danger">{errors.Area}</span>} */}
               </CFormLabel>
-              <CFormInput size="sm" id="Area" value={fetch ? currentInfo.vendor_info.area : ''} />
+              <CFormInput
+                size="sm"
+                id="Area"
+                defaultValue={fetch ? currentInfo.vendor_info.area : ''}
+              />
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="City">
                 City
                 {/* {errors.City && <span className="small text-danger">{errors.City}</span>} */}
               </CFormLabel>
-              <CFormInput size="sm" id="City" value={fetch ? currentInfo.vendor_info.city : ''} />
+              <CFormInput
+                size="sm"
+                id="City"
+                defaultValue={fetch ? currentInfo.vendor_info.city : ''}
+              />
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="District">
@@ -409,7 +466,7 @@ const VendorCreationApproval = () => {
               <CFormInput
                 size="sm"
                 id="District"
-                value={fetch ? currentInfo.vendor_info.district : ''}
+                defaultValue={fetch ? currentInfo.vendor_info.district : ''}
               />
             </CCol>
             <CCol xs={12} md={3}>
@@ -417,10 +474,13 @@ const VendorCreationApproval = () => {
                 State
                 {/* {errors.State && <span className="small text-danger">{errors.State}</span>} */}
               </CFormLabel>
-              <CFormInput size="sm" id="State" value={fetch ? currentInfo.vendor_info.state : ''} />
+              <CFormInput
+                size="sm"
+                id="State"
+                defaultValue={fetch ? currentInfo.vendor_info.state : ''}
+              />
             </CCol>
-          </CRow>
-          <CRow>
+
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="postalCode">
                 Postal Code
@@ -431,7 +491,7 @@ const VendorCreationApproval = () => {
               <CFormInput
                 size="sm"
                 id="postalCode"
-                value={fetch ? currentInfo.vendor_info.postal_code : ''}
+                defaultValue={fetch ? currentInfo.vendor_info.postal_code : ''}
               />
             </CCol>
             <CCol xs={12} md={3}>
@@ -442,7 +502,7 @@ const VendorCreationApproval = () => {
               <CFormInput
                 size="sm"
                 id="Region"
-                value={fetch ? currentInfo.vendor_info.region : ''}
+                defaultValue={fetch ? currentInfo.vendor_info.region : ''}
               />
             </CCol>
             <CCol xs={12} md={3}>
@@ -948,7 +1008,7 @@ const VendorCreationApproval = () => {
                 size="sm"
                 name="remarks"
                 id="remarks"
-                value={(fetch ? currentInfo.vendor_info.remarks : '') || values.remarks}
+                defaultValue={(fetch ? currentInfo.vendor_info.remarks : '') || values.remarks}
                 onKeyUp={() => (currentInfo.vendor_info.remarks = '')}
                 onFocus={onFocus}
                 onBlur={onBlur}
@@ -1037,7 +1097,7 @@ const VendorCreationApproval = () => {
           <CButton color="secondary" onClick={() => setPanCard(false)}>
             Close
           </CButton>
-          {/* <CButton color="primary">Save changes</CButton> */}
+          <CButton color="primary">Save changes</CButton>
         </CModalFooter>
       </CModal>
 

@@ -47,8 +47,6 @@ const VehicleMasterTable = () => {
       case 'RC_FRONT':
         {
           let singleVehicleInfo = viewData.filter((data) => data.vehicle_id == id)
-          console.log(viewData)
-          console.log(singleVehicleInfo[0].rc_copy_front)
           setDocumentSrc(singleVehicleInfo[0].rc_copy_front)
           setRCCopyFront(true)
         }
@@ -283,7 +281,7 @@ const VehicleMasterTable = () => {
             <CModalTitle>RC Copy Front</CModalTitle>
           </CModalHeader>
           <CModalBody>
-            <CCardImage orientation="top" src={documentSrc} />
+          {(!documentSrc.includes(".pdf"))?<CCardImage orientation="top" src={documentSrc} />: <iframe orientation="top" height={500} width={475} src={documentSrc} ></iframe> }
           </CModalBody>
           <CModalFooter>
             <CButton color="secondary" onClick={() => setRCCopyFront(false)}>
@@ -298,7 +296,8 @@ const VehicleMasterTable = () => {
             <CModalTitle>RC Copy Back</CModalTitle>
           </CModalHeader>
           <CModalBody>
-            <CCardImage orientation="top" src={documentSrc} />
+          {(!documentSrc.includes(".pdf"))?<CCardImage orientation="top" src={documentSrc} />: <iframe orientation="top" height={500} width={475} src={documentSrc} ></iframe> }
+
           </CModalBody>
           <CModalFooter>
             <CButton color="secondary" onClick={() => setRCCopyBack(false)}>
@@ -315,7 +314,7 @@ const VehicleMasterTable = () => {
             <CModalTitle>Insurance Copy Front</CModalTitle>
           </CModalHeader>
           <CModalBody>
-            <CCardImage orientation="top" src={documentSrc} />
+          {(!documentSrc.includes(".pdf"))?<CCardImage orientation="top" src={documentSrc} />: <iframe orientation="top" height={500} width={475} src={documentSrc} ></iframe> }
           </CModalBody>
           <CModalFooter>
             <CButton color="secondary" onClick={() => setInsuranceCopyFront(false)}>
@@ -330,7 +329,7 @@ const VehicleMasterTable = () => {
             <CModalTitle>Insurance Copy Back</CModalTitle>
           </CModalHeader>
           <CModalBody>
-            <CCardImage orientation="top" src={documentSrc} />
+          {(!documentSrc.includes(".pdf"))?<CCardImage orientation="top" src={documentSrc} />: <iframe orientation="top" height={500} width={475} src={documentSrc} ></iframe> }
           </CModalBody>
           <CModalFooter>
             <CButton color="secondary" onClick={() => setInsuranceCopyBack(false)}>

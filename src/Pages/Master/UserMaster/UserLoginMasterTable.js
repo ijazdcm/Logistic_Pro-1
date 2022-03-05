@@ -109,8 +109,9 @@ const UserLoginMasterTable = () => {
           ),
         })
       })
-      setRowData(rowDataList)
       setPending(false)
+      setRowData(rowDataList)
+
     })
   }, [mount])
 

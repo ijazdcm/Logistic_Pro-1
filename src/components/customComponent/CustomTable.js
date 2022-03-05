@@ -57,6 +57,7 @@ const CustomTable = ({ columns, data, fieldName, showSearchFilter, pending = fal
         color: '#fff',
         fontSize: '0.75rem',
         height: '3.25rem',
+        overFlow:'unset'
       },
     },
     cells: {

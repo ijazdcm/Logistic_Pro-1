@@ -13,7 +13,9 @@ export default function VehicleMasterValidation(values, isTouched) {
     isTouched.vechileNumber &&
     !/^[A-Z]{2}[\d]{2}[A-Z]{1,2}[\d]{4}$/.test(values.vechileNumber)
   ) {
-    errors.vechileNumber = 'Not Valid'
+
+    errors.vechileNumber = 'Invalid Vehicle number '
+
   }
 
   //vehicle Capacity validation rule

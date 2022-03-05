@@ -13,14 +13,17 @@ export default function VendorRequestValidation(values, isTouched) {
     errors.aadhar = 'Must Have 12 Digit Numeric'
   }
 
-  if (isTouched.GSTNumber && !values.GSTNumber) {
-    errors.GSTNumber = 'Required'
-  } else if (
-    isTouched.GSTNumber &&
-    !/^[\d]{2}[A-Z]{5}[\d]{4}[A-Z]{1}[\d]{1}[A-Z]{1}[A-Z\d]{1}$/.test(values.GSTNumber)
-  ) {
+  if (!/^[\d]{2}[A-Z]{5}[\d]{4}[A-Z]{1}[\d]{1}[A-Z]{1}[A-Z\d]{1}$/.test(values.GSTNumber)) {
     errors.GSTNumber = 'Must Like "07AAGFF2194N1Z1"'
   }
+
+  // if (isTouched.GSTNumber && !values.GSTNumber) {
+  //   errors.GSTNumber = 'Required'
+  // } else if (
+  //   isTouched.GSTNumber && !/^[\d]{2}[A-Z]{5}[\d]{4}[A-Z]{1}[\d]{1}[A-Z]{1}[A-Z\d]{1}$/.test(values.GSTNumber)
+  // ) {
+  //   errors.GSTNumber = 'Must Like "07AAGFF2194N1Z1"'
+  // }
 
   if (isTouched.bankName && !values.bankName) {
     errors.bankName = 'Required'
@@ -28,47 +31,27 @@ export default function VendorRequestValidation(values, isTouched) {
 
   if (isTouched.bankBranch && !values.bankBranch) {
     errors.bankBranch = 'Required'
+  } else if (isTouched.bankBranch && !/^[a-zA-Z]+(\s[a-zA-Z]+)?$/.test(values.bankBranch)) {
+    errors.bankBranch = 'Invalid Name'
   }
 
   if (isTouched.bankAccHolderName && !values.bankAccHolderName) {
     errors.bankAccHolderName = 'Required'
+  } else if (
+    isTouched.bankAccHolderName &&
+    !/^[a-zA-Z]+(\s[a-zA-Z]+)?$/.test(values.bankAccHolderName)
+  ) {
+    errors.bankAccHolderName = 'Invalid Name'
   }
 
   if (isTouched.GSTreg && !values.GSTreg) {
     errors.GSTreg = 'Required'
   }
 
-  if (isTouched.license && !values.license) {
-    errors.license = 'Required'
-  }
-
-  if (isTouched.rcFront && !values.rcFront) {
-    errors.rcFront = 'Required'
-  }
-  if (isTouched.rcBack && !values.rcBack) {
-    errors.rcBack = 'Required'
-  }
-  if (isTouched.insurance && !values.insurance) {
-    errors.insurance = 'Required'
-  }
   if (isTouched.insuranceValid && !values.insuranceValid) {
     errors.insuranceValid = 'Required'
   }
-  if (isTouched.TDSfront && !values.TDSfront) {
-    errors.TDSfront = 'Required'
-  }
-  if (isTouched.TDSback && !values.TDSback) {
-    errors.TDSback = 'Required'
-  }
-  if (isTouched.transportShed && !values.transportShed) {
-    errors.transportShed = 'Required'
-  }
-  if (isTouched.shedName && !values.shedName) {
-    errors.shedName = 'Required'
-  }
-  if (isTouched.ownershipTrans && !values.ownershipTrans) {
-    errors.ownershipTrans = 'Required'
-  }
+
   if (isTouched.freightRate && !values.freightRate) {
     errors.freightRate = 'Required'
   }
@@ -92,7 +75,7 @@ export default function VendorRequestValidation(values, isTouched) {
   if (isTouched.ifscCode && !values.ifscCode) {
     errors.ifscCode = 'Required'
   } else if (isTouched.ifscCode && !/^[A-Z]{4}[\d]{7}$/.test(values.ifscCode)) {
-    errors.ifscCode = 'Must Like 20 "IOBA0001234"'
+    errors.ifscCode = 'Must Like "IOBA0001234"'
   }
 
   if (isTouched.street && !values.street) {
@@ -103,12 +86,29 @@ export default function VendorRequestValidation(values, isTouched) {
   if (isTouched.city && !values.city) {
     errors.city = 'Required'
   } else if (isTouched.city && /^[A-Z0-9 _]*[A-Z0-9][A-Z0-9 _]*$/.test(values.city)) {
-    errors.city = 'Letters & Number Only'
+    errors.city = 'Letters Only'
   }
   if (isTouched.state && !values.state) {
     errors.state = 'Required'
   } else if (isTouched.state && /^[A-Z0-9 _]*[A-Z0-9][A-Z0-9 _]*$/.test(values.state)) {
-    errors.state = 'Letters & Number Only'
+    errors.state = 'Letters Only'
+  }
+  if (isTouched.district && !values.district) {
+    errors.district = 'Required'
+  } else if (isTouched.district && /^[A-Z0-9 _]*[A-Z0-9][A-Z0-9 _]*$/.test(values.district)) {
+    errors.district = 'Letters Only'
+  }
+
+  if (isTouched.area && !values.area) {
+    errors.area = 'Required'
+  } else if (isTouched.area && /^[A-Z0-9 _]*[A-Z0-9][A-Z0-9 _]*$/.test(values.area)) {
+    errors.area = 'Letters Only'
+  }
+
+  if (isTouched.postalCode && !values.postalCode) {
+    errors.postalCode = 'Required'
+  } else if (isTouched.postalCode && !/^[\d]{6}$/.test(values.postalCode)) {
+    errors.postalCode = '6 Numbers Only'
   }
 
   return errors

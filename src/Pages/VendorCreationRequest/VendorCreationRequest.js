@@ -64,12 +64,13 @@ const VendorCreationRequest = () => {
   const [passBookDel, setPassBookDel] = useState(false)
   const [tdsFrontDel, setTdsFrontDel] = useState(false)
   const [tdsBackDel, setTdsBackDel] = useState(false)
-  const [fileUpdate, setFileUpdate] = useState(true)
+  const [hideFileUpdate, setHideFileUpdate] = useState(true)
+  const X = () => <span className="text-danger">*</span>
 
   // SET FORM VALUES
   const formValues = {
-    shedownerMob: '',
-    shedownerWhatsapp: '',
+    // shedownerMob: '',
+    // shedownerWhatsapp: '',
     panNumber: '',
     aadhar: '',
     bankName: '',
@@ -86,8 +87,8 @@ const VendorCreationRequest = () => {
     region: '',
     GSTreg: '',
     GSTNumber: '',
-    GSTtax: '',
-    payment: '',
+    // GSTtax: '',
+    // payment: '',
     remarks: '',
     // Files
     panCopy: '',
@@ -130,20 +131,36 @@ const VendorCreationRequest = () => {
       setCurrentInfo(resData)
       setFetch(true)
     })
-  }, [fileUpdate])
+  }, [hideFileUpdate])
 
   // ERROR VALIDATIONS
   useEffect(() => {
-    // if (Object.keys(isTouched).length == 17) {
-    // if (Object.keys(isTouched).length == Object.keys(formValues).length) {
-    if (Object.keys(errors).length == 0) {
-      setAcceptBtn(false)
-      setRejectBtn(false)
-    } else {
-      setAcceptBtn(true)
-      setRejectBtn(false)
+    isTouched.panNumber = true
+    isTouched.aadhar = true
+    isTouched.bankAccount = true
+    isTouched.region = true
+    isTouched.panCopy = true
+    isTouched.aadharCopy = true
+    isTouched.licenseCopy = true
+    isTouched.rcFront = true
+    isTouched.rcBack = true
+    isTouched.insurance = true
+    isTouched.transportShed = true
+    isTouched.bankPass = true
+    isTouched.TDSfront = true
+    isTouched.TDSback = true
+    isTouched.remarks = true
+    // isTouched.GSTNumber = true
+
+    if (Object.keys(isTouched).length >= Object.keys(formValues).length) {
+      if (Object.keys(errors).length == 0) {
+        setAcceptBtn(false)
+        setRejectBtn(false)
+      } else {
+        setAcceptBtn(true)
+        setRejectBtn(false)
+      }
     }
-    // }
   }, [values, errors])
 
   // ADD VENDOR REQUEST DETAILS
@@ -162,7 +179,10 @@ const VendorCreationRequest = () => {
       currentInfo.vendor_info.aadhar_card_number || values.aadhar
     )
     formData.append('bank_name', values.bankName)
-    formData.append('bank_acc_number', currentInfo.vendor_info.bank_acc_number || values.bankAccount)
+    formData.append(
+      'bank_acc_number',
+      currentInfo.vendor_info.bank_acc_number || values.bankAccount
+    )
     formData.append('bank_acc_holder_name', values.bankAccHolderName)
     formData.append('bank_branch', values.bankBranch)
     formData.append('bank_ifsc_code', values.ifscCode)
@@ -222,7 +242,7 @@ const VendorCreationRequest = () => {
         console.log(res)
         if (res.status == 200) {
           toast.success('Vendor Documents Updated !')
-          setTimeout(() => setFileUpdate(true), 500)
+          setTimeout(() => setHideFileUpdate(true), 500)
           setPanDel(false)
           setAdharDel(false)
           setLicenseDel(false)
@@ -233,12 +253,15 @@ const VendorCreationRequest = () => {
           setPassBookDel(false)
           setTdsFrontDel(false)
           setTdsBackDel(false)
-          setFileUpdate(false)
+          setHideFileUpdate(false)
         }
       })
       .catch((err) => {
         toast.warning(err)
       })
+
+    setAcceptBtn(false)
+    setRejectBtn(false)
   }
 
   return (
@@ -275,7 +298,7 @@ const VendorCreationRequest = () => {
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="shedownerMob">
-                Shed Mobile Number*{' '}
+                Shed Mobile Number{' '}
                 {/* {errors.shedownerMob && (
                   <span className="small text-danger">{errors.shedownerMob}</span>
                 )} */}
@@ -294,7 +317,7 @@ const VendorCreationRequest = () => {
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="shedownerWhatsapp">
-                Shed Whatsapp Number*{' '}
+                Shed Whatsapp Number{' '}
                 {errors.shedownerWhatsapp && (
                   <span className="small text-danger">{errors.shedownerWhatsapp}</span>
                 )}
@@ -314,7 +337,8 @@ const VendorCreationRequest = () => {
 
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="panNumber">
-                PAN Card Number*{' '}
+                PAN Card Number
+                <X />{' '}
                 {errors.panNumber && <span className="small text-danger">{errors.panNumber}</span>}
               </CFormLabel>
               <CFormInput
@@ -333,8 +357,8 @@ const VendorCreationRequest = () => {
 
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="aadhar">
-                Aadhar Card Number{' '}
-                {errors.aadhar && <span className="small text-danger">{errors.aadhar}</span>}
+                Aadhar Card Number
+                <X /> {errors.aadhar && <span className="small text-danger">{errors.aadhar}</span>}
               </CFormLabel>
               <CFormInput
                 size="sm"
@@ -352,7 +376,8 @@ const VendorCreationRequest = () => {
 
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="bankAccount">
-                Bank Account Number*
+                Bank Account Number
+                <X />{' '}
                 {errors.bankAccount && (
                   <span className="small text-danger">{errors.bankAccount}</span>
                 )}
@@ -362,6 +387,7 @@ const VendorCreationRequest = () => {
                 id="bankAccount"
                 name="bankAccount"
                 maxLength={20}
+                className={`${errors.bankAccount && 'is-invalid'}`}
                 value={(fetch ? currentInfo.vendor_info.bank_acc_number : '') || values.bankAccount}
                 onKeyUp={() => (currentInfo.vendor_info.bank_acc_number = '')}
                 onFocus={onFocus}
@@ -371,7 +397,8 @@ const VendorCreationRequest = () => {
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="bankAccHolderName">
-                Bank Account Holder Name*
+                Bank Account Holder Name
+                <X />{' '}
                 {errors.bankAccHolderName && (
                   <span className="small text-danger">{errors.bankAccHolderName}</span>
                 )}
@@ -391,7 +418,8 @@ const VendorCreationRequest = () => {
 
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="bankName">
-                Bank Name*{' '}
+                Bank Name
+                <X />{' '}
                 {errors.bankName && <span className="small text-danger">{errors.bankName}</span>}
               </CFormLabel>
               <CFormSelect
@@ -421,7 +449,8 @@ const VendorCreationRequest = () => {
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="bankBranch">
-                Bank Branch*{' '}
+                Bank Branch
+                <X />{' '}
                 {errors.bankBranch && (
                   <span className="small text-danger">{errors.bankBranch}</span>
                 )}
@@ -442,7 +471,8 @@ const VendorCreationRequest = () => {
 
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="ifscCode">
-                Bank IFSC Code*{' '}
+                Bank IFSC Code
+                <X />{' '}
                 {errors.ifscCode && <span className="small text-danger">{errors.ifscCode}</span>}
               </CFormLabel>
               <CFormInput
@@ -461,8 +491,8 @@ const VendorCreationRequest = () => {
 
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="GSTreg">
-                GST Registeration*{' '}
-                {errors.GSTreg && <span className="small text-danger">{errors.GSTreg}</span>}
+                GST Registeration
+                <X /> {errors.GSTreg && <span className="small text-danger">{errors.GSTreg}</span>}
               </CFormLabel>
               <CFormSelect
                 size="sm"
@@ -485,7 +515,8 @@ const VendorCreationRequest = () => {
             {values.GSTreg == 1 && (
               <CCol xs={12} md={3}>
                 <CFormLabel htmlFor="GSTNumber">
-                  GST Registration Number*{' '}
+                  GST Registration Number
+                  <X />{' '}
                   {errors.GSTNumber && (
                     <span className="small text-danger">{errors.GSTNumber}</span>
                   )}
@@ -508,19 +539,33 @@ const VendorCreationRequest = () => {
                 GST Tax Code
                 {/* {errors.GSTtax && <span className="small text-danger">{errors.GSTtax}</span>} */}
               </CFormLabel>
-              <CFormInput size="sm" name="GSTtax" id="GSTtax" value={12345} readOnly />
+              <CFormInput
+                size="sm"
+                className={`${errors.GSTtax && 'is-invalid'}`}
+                name="GSTtax"
+                id="GSTtax"
+                value={12345}
+                readOnly
+              />
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="payment">
                 Payment Terms 3Days
                 {/* {errors.payment && <span className="small text-danger">{errors.payment}</span>} */}
               </CFormLabel>
-              <CFormInput size="sm" id="payment" name="payment" value={2000} readOnly />
+              <CFormInput
+                size="sm"
+                className={`${errors.payment && 'is-invalid'}`}
+                id="payment"
+                name="payment"
+                value={2000}
+                readOnly
+              />
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="street">
-                Street*
-                {errors.street && <span className="small text-danger">{errors.street}</span>}
+                Street
+                <X /> {errors.street && <span className="small text-danger">{errors.street}</span>}
               </CFormLabel>
               <CFormInput
                 size="sm"
@@ -538,12 +583,13 @@ const VendorCreationRequest = () => {
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="area">
                 Area
-                {/* {errors.area && <span className="small text-danger">{errors.area}</span>} */}
+                <X /> {errors.area && <span className="small text-danger">{errors.area}</span>}
               </CFormLabel>
               <CFormInput
                 size="sm"
                 id="area"
                 name="area"
+                className={`${errors.area && 'is-invalid'}`}
                 value={values.area}
                 onFocus={onFocus}
                 onBlur={onBlur}
@@ -553,7 +599,7 @@ const VendorCreationRequest = () => {
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="city">
                 City
-                {errors.city && <span className="small text-danger">{errors.city}</span>}
+                <X /> {errors.city && <span className="small text-danger">{errors.city}</span>}
               </CFormLabel>
               <CFormInput
                 size="sm"
@@ -570,13 +616,15 @@ const VendorCreationRequest = () => {
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="district">
                 District
-                {/* {errors.district && <span className="small text-danger">{errors.district}</span>} */}
+                <X />{' '}
+                {errors.district && <span className="small text-danger">{errors.district}</span>}
               </CFormLabel>
-              {/* <AsyncSelect cacheOptions defaultOptions loadOptions={promiseOptions} /> */}
+
               <CFormInput
                 size="sm"
                 id="district"
                 name="district"
+                className={`${errors.district && 'is-invalid'}`}
                 value={values.district}
                 onFocus={onFocus}
                 onBlur={onBlur}
@@ -585,8 +633,8 @@ const VendorCreationRequest = () => {
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="state">
-                State*
-                {errors.state && <span className="small text-danger">{errors.state}</span>}
+                State
+                <X /> {errors.state && <span className="small text-danger">{errors.state}</span>}
               </CFormLabel>
 
               <CFormSelect
@@ -597,7 +645,7 @@ const VendorCreationRequest = () => {
                 onFocus={onFocus}
                 onBlur={onBlur}
                 onChange={handleChange}
-                className={`${errors.GSTreg && 'is-invalid'}`}
+                className={`${errors.state && 'is-invalid'}`}
                 aria-label="Small select example"
               >
                 <option value={''} hidden selected>
@@ -636,15 +684,17 @@ const VendorCreationRequest = () => {
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="postalCode">
                 Postal Code
-                {/* {errors.postalCode && (
+                <X />{' '}
+                {errors.postalCode && (
                   <span className="small text-danger">{errors.postalCode}</span>
-                )} */}
+                )}
               </CFormLabel>
               <CFormInput
                 size="sm"
                 id="postalCode"
                 name="postalCode"
                 maxLength={6}
+                className={`${errors.postalCode && 'is-invalid'}`}
                 value={values.postalCode}
                 onFocus={onFocus}
                 onBlur={onBlur}
@@ -684,10 +734,10 @@ const VendorCreationRequest = () => {
                   <span
                     className="float-end"
                     id="pan"
-                    onClick={(useEffect) => {
+                    onClick={() => {
                       if (window.confirm('Are you sure to remove this file?')) {
                         setPanDel(true)
-                        setFileUpdate(false)
+                        setHideFileUpdate(false)
                       }
                     }}
                   >
@@ -737,7 +787,7 @@ const VendorCreationRequest = () => {
                     onClick={() => {
                       if (window.confirm('Are you sure to remove this file?')) {
                         setAdharDel(true)
-                        setFileUpdate(false)
+                        setHideFileUpdate(false)
                       }
                     }}
                   >
@@ -789,7 +839,7 @@ const VendorCreationRequest = () => {
                     onClick={() => {
                       if (window.confirm('Are you sure to remove this file?')) {
                         setLicenseDel(true)
-                        setFileUpdate(false)
+                        setHideFileUpdate(false)
                       }
                     }}
                   >
@@ -837,7 +887,7 @@ const VendorCreationRequest = () => {
                     onClick={() => {
                       if (window.confirm('Are you sure to remove this file?')) {
                         setInsuranceDel(true)
-                        setFileUpdate(false)
+                        setHideFileUpdate(false)
                       }
                     }}
                   >
@@ -885,7 +935,7 @@ const VendorCreationRequest = () => {
                     onClick={() => {
                       if (window.confirm('Are you sure to remove this file?')) {
                         setPassBookDel(true)
-                        setFileUpdate(false)
+                        setHideFileUpdate(false)
                       }
                     }}
                   >
@@ -933,7 +983,7 @@ const VendorCreationRequest = () => {
                     onClick={() => {
                       if (window.confirm('Are you sure to remove this file?')) {
                         setRcFrontDel(true)
-                        setFileUpdate(false)
+                        setHideFileUpdate(false)
                       }
                     }}
                   >
@@ -981,7 +1031,7 @@ const VendorCreationRequest = () => {
                     onClick={() => {
                       if (window.confirm('Are you sure to remove this file?')) {
                         setRcBackDel(true)
-                        setFileUpdate(false)
+                        setHideFileUpdate(false)
                       }
                     }}
                   >
@@ -1034,7 +1084,7 @@ const VendorCreationRequest = () => {
                     onClick={() => {
                       if (window.confirm('Are you sure to remove this file?')) {
                         setTransShedDel(true)
-                        setFileUpdate(false)
+                        setHideFileUpdate(false)
                       }
                     }}
                   >
@@ -1083,7 +1133,7 @@ const VendorCreationRequest = () => {
                     onClick={() => {
                       if (window.confirm('Are you sure to remove this file?')) {
                         setTdsFrontDel(true)
-                        setFileUpdate(false)
+                        setHideFileUpdate(false)
                       }
                     }}
                   >
@@ -1131,7 +1181,7 @@ const VendorCreationRequest = () => {
                     onClick={() => {
                       if (window.confirm('Are you sure to remove this file?')) {
                         setTdsBackDel(true)
-                        setFileUpdate(false)
+                        setHideFileUpdate(false)
                       }
                     }}
                   >
@@ -1192,7 +1242,7 @@ const VendorCreationRequest = () => {
                 color="success"
                 className="mx-1 px-2 text-white"
                 type="button"
-                hidden={fileUpdate}
+                hidden={hideFileUpdate}
                 onClick={() => updateVendorDocument()}
               >
                 Update Files
@@ -1202,7 +1252,7 @@ const VendorCreationRequest = () => {
                 color="warning"
                 className="mx-1 px-2 text-white"
                 type="button"
-                disabled={acceptBtn}
+                disabled={acceptBtn || (!hideFileUpdate && true)}
                 onClick={() => addVendorRequest(2)}
               >
                 Accept
@@ -1212,7 +1262,7 @@ const VendorCreationRequest = () => {
                 color="warning"
                 className="mx-1 px-2 text-white"
                 type="button"
-                disabled={rejectBtn}
+                disabled={rejectBtn || (!hideFileUpdate && true)}
                 onClick={() => addVendorRequest(0)}
               >
                 Reject

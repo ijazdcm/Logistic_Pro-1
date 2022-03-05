@@ -23,6 +23,7 @@ import 'react-toastify/dist/ReactToastify.css'
 // SERVICES FILE
 import VendorCreationService from 'src/Service/VendorCreation/VendorCreationService'
 import ShedService from 'src/Service/SmallMaster/Shed/ShedService'
+import DocumentVerificationService from 'src/Service/DocsVerify/DocsVerifyService'
 
 // VALIDATIONS FILE
 import useForm from 'src/Hooks/useForm.js'
@@ -171,11 +172,10 @@ const VendorCreationApproval = () => {
   }, [fileUpdate])
 
   // UPDATE VENDOR DOCUMENTS
-  const updateVendorDocument = (status) => {
+  const updateVendorDocument = () => {
     const fileData = new FormData()
     // File Update
     fileData.append('_method', 'PUT')
-
     panDel && fileData.append('pan_copy', values.panCopy)
     adharDel && fileData.append('aadhar_copy', values.aadharCopy)
     licenseDel && fileData.append('license_copy', values.licenseCopy)
@@ -210,7 +210,6 @@ const VendorCreationApproval = () => {
         toast.warning(err)
       })
   }
-
   return (
     <>
       <CCard>
@@ -1042,6 +1041,16 @@ const VendorCreationApproval = () => {
               style={{ display: 'flex', justifyContent: 'flex-end' }}
             >
               {/* addDocumentVerification */}
+              <CButton
+                size="sm"
+                color="success"
+                className="mx-1 px-2 text-white"
+                type="button"
+                hidden={fileUpdate}
+                onClick={() => updateVendorDocument()}
+              >
+                Update Files
+              </CButton>
               <CButton
                 size="sm"
                 color="warning"

@@ -378,7 +378,7 @@ const ParkingYardGate = () => {
                 <CButton
                   size="sm"
                   color="warning"
-                  disabled={enableSubmit}
+                  // disabled={enableSubmit}
                   onClick={(e) => {
                     e.preventDefault()
                     action(ACTION.WAIT_OUTSIDE)

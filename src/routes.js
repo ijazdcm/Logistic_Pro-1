@@ -46,6 +46,7 @@ import vehicleInspection from './Pages/VehicleInspection/vehicleInspection'
 import VehicleInspectionHire from './Pages/VehicleInspection/VehicleInspectionHire'
 import vehicleMaintainence from './Pages/VehicleMaintenance/vehicleMaintainence'
 import VMain from './Pages/VehicleMaintenance/VMain'
+import vehicleMaintainenceEnd from './Pages/VehicleMaintenance/vehicleMaintainenceEnd'
 import DocVerify from './Pages/DocumentVerification/DocumentVerificationTable'
 import DocVerifyVendorAvail from './Pages/DocumentVerification/DocumentVerification'
 import DocVerifyVendorNotAvail from './Pages/DocumentVerification/DocVerifyVendorNotAvailDeleted'
@@ -227,6 +228,12 @@ const routes = [
     exact: true,
     name: 'Vehicle Maintainence',
     component: vehicleMaintainence,
+  },
+  {
+    path: '/VMain/vehicleMaintainenceEnd/:id',
+    exact: true,
+    name: 'Vehicle Maintainence',
+    component: vehicleMaintainenceEnd,
   },
   {
     path: '/DocsVerify',

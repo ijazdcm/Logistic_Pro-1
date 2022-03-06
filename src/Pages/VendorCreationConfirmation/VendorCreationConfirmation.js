@@ -683,7 +683,7 @@ const VendorCreationConfirmation = () => {
               style={{ display: 'flex', justifyContent: 'flex-end' }}
             >
               {/* addDocumentVerification */}
-              <CButton
+              {/* <CButton
                 size="sm"
                 color="warning"
                 className="mx-1 px-2 text-white"
@@ -692,14 +692,17 @@ const VendorCreationConfirmation = () => {
                 onClick={() => updateSAP()}
               >
                 Update To SAP
-              </CButton>
+              </CButton> */}
               <CButton
                 size="sm"
                 color="success"
                 className="mx-1 px-2 text-white"
                 type="button"
                 disabled={fetch ? false : true}
-                onClick={() => setConfirmBtn(true)}
+                onClick={() => {
+                  updateSAP()
+                  setConfirmBtn(true)
+                }}
               >
                 Confirm
               </CButton>

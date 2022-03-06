@@ -33,9 +33,9 @@ export default function RJCustomerValidation(values, isTouched) {
   if(isTouched.area && !/^[a-zA-Z ]+$/.test(values.area)) {
     errors.area = 'Allow only Letters'
   }
-  if(isTouched.state && !/^[a-zA-Z ]+$/.test(values.state)) {
-    errors.state = 'Allow only Letters'
-  }
+  // if(isTouched.state && !/^[a-zA-Z ]+$/.test(values.state)) {
+  //   errors.state = 'Allow only Letters'
+  // }
   if(isTouched.district && !/^[a-zA-Z ]+$/.test(values.district)) {
     errors.district = 'Allow only Letters'
   }
@@ -54,12 +54,12 @@ export default function RJCustomerValidation(values, isTouched) {
   ) {
     errors.GST = 'Must Have 15 Digit Numeric'
   }
-  if (
-    isTouched.region &&
-    !/^[\d]{2}/.test(values.region)
-  ) {
-    errors.region = 'Allow only Numeric'
-  }
+  // if (
+  //   isTouched.region &&
+  //   !/^[\d]{2}/.test(values.region)
+  // ) {
+  //   errors.region = 'Allow only Numeric'
+  // }
   if (
     isTouched.postalCode &&
     !/^[\d]{6}/.test(values.postalCode)
@@ -68,6 +68,12 @@ export default function RJCustomerValidation(values, isTouched) {
   }
   if (isTouched.createdtype && values.createdtype=== '') {
     errors.createdtype = 'Required'
+  }
+  if (isTouched.Payment && values.Payment==='') {
+    errors.Payment = 'Required'
+  }
+  if (isTouched.incoterms_description && values.incoterms_description==='') {
+    errors.incoterms_description = 'Required'
   }
   return errors
 }

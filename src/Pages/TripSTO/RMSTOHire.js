@@ -3,6 +3,7 @@
 import {
   CButton,
   CCard,
+  CAlert,
   CCol,
   CContainer,
   CForm,
@@ -48,6 +49,7 @@ import PanDataService from 'src/Service/SAP/PanDataService'
 
 // VALIDATIONS FILE
 import useForm from 'src/Hooks/useForm.js'
+import useFormRMSTOHire from 'src/Hooks/useFormRMSTOHire'
 import validate from 'src/Utils/Validation'
 import DocumentVerificationValidation from 'src/Utils/TransactionPages/DocumentVerification/DocumentVerificationValidation'
 import RMSTOHireValidation from 'src/Utils/TripSTO/RMSTOHireValidation'
@@ -69,35 +71,25 @@ const RMSTOHire = () => {
   const [panData, setPanData] = useState({})
   const [readOnly, setReadOnly] = useState(true)
   const [write, setWrite] = useState(false)
-  const [shed_owner_phone_1, setShed_owner_phone_1] = useState('No Shed')
-  const [shed_owner_phone_2, setShed_owner_phone_2] = useState('No Shed')
+  const [shed_owner_phone_1, setShed_owner_phone_1] = useState('')
+  const [shed_owner_phone_2, setShed_owner_phone_2] = useState('')
+  const [validateSubmit, setValidateSubmit] = useState(true)
+  const [errorModal, setErrorModal] = useState(false)
+
+  const [pending, setPending] = useState(true)
+
+  const [vehicleSto, setVehicleSto] = useState('')
 
   // SET FORM VALUES
   const formValues = {
     panNumber: '',
-    license: '',
-    rcFront: '',
-    rcBack: '',
-    insurance: '',
-    insuranceValid: '',
-    TDSfront: '',
-    transportShed: '',
     shedName: '',
-    ownershipTrans: '',
-    freightRate: '',
     remarks: '',
     ownerName: '',
     ownerMob: '',
-    aadhar: '',
-    bankAcc: '',
-    aadharCopy: '',
-    panCopy: '',
-    passCopy: '',
   }
 
-  function login() {
-    // alert('No Errors CallBack Called')
-  }
+  // function login() {}
 
   // VALIDATIONS
   // function callBack() {}
@@ -105,21 +97,21 @@ const RMSTOHire = () => {
   //   useForm(DocumentVerificationValidation, formValues)
 
   const { values, errors, handleChange, onFocus, handleSubmit, enableSubmit, onBlur, isTouched } =
-    useForm(login, RMSTOHireValidation, formValues)
+    useFormRMSTOHire(panData, RMSTOHireValidation, formValues)
 
   // GET PAN DETAILS FROM SAP
   const getPanData = (e) => {
     e.preventDefault()
-    // PanDataService.getPanData(values.panNumber).then((res) => {
-    //   console.log(res.data)
-    // })
-    let panDetail = PanDataService.getPanData(values.panNumber)
-    if (panDetail != '') {
-      setPanData(panDetail)
-      toast.success('Pan Details Detected!')
-    } else {
-      toast.warning('No Pan Details Detected! Fill Up The Fields')
-    }
+    let panDetail = PanDataService.getPanData(values.panNumber).then((res) => {
+      if (res.status == 200 && res.data != '') {
+        setPanData(res.data[0])
+        toast.success('Pan Details Detected!')
+        // setVendor(true)
+      } else {
+        toast.warning('No Pan Details Detected! Fill Up The Fields')
+        // setVendor(false)
+      }
+    })
 
     setReadOnly(true)
     setWrite(true)
@@ -155,61 +147,31 @@ const RMSTOHire = () => {
 
       // console.log('dd')
       ShedMasterService.getShedById(values.shedName).then((res) => {
-        isTouched.shed_name = true
-        isTouched.shed_pan = true
-        isTouched.shed_aadhar = true
+        // isTouched.shed_name = true
+        // isTouched.shed_pan = true
+        // isTouched.shed_aadhar = true
+        // isTouched.customerCode = true // double command
         // isTouched.customerCode = true
-        isTouched.customerCode = true
         // console.log(res.data.data)
-        // values.shed_name = res.data.data.shed_id
-        // values.shed_pan = res.data.data.pan_number
-        // values.shed_aadhar = res.data.data.shed_adhar_number
+        // values.shed_name = res.data.data.shed_id // double command
+        // values.shed_pan = res.data.data.pan_number // double command
+        // values.shed_aadhar = res.data.data.shed_adhar_number // double command
         setShed_owner_phone_1(res.data.data.shed_owner_phone_1)
         setShed_owner_phone_2(res.data.data.shed_owner_phone_2)
       })
     } else {
-      setShed_owner_phone_1('No Shed')
-      setShed_owner_phone_2('No Shed')
+      setShed_owner_phone_1('')
+      setShed_owner_phone_2('')
       // setShedCode('')
     }
   }, [values.shedName])
 
-  // ADD DOCUMENT VERIFICATION DETAILS
-  const addDocumentVerification = (status) => {
-    const formData = new FormData()
-    formData.append('vehicle_id', currentVehicleInfo.vehicle_id)
-    //   formData.append('vehicle_inspection_id', currentVehicleInfo.vehicle_inspection.inspection_id)
-    formData.append('pan_number', values.panNumber || panNumber)
-    formData.append('vendor_code', panData.LIFNR || 0)
-    formData.append('owner_name', panData.NAME1 || values.ownerName)
-    formData.append('owner_number', panData.TELF1 || values.ownerMob)
-    formData.append('aadhar_number', panData.IDNUMBER || 0)
-    formData.append('bank_acc_number', panData.BANKN || 0)
-    //   formData.append('license_copy', values.license)
-    //   formData.append('rc_copy_front', values.rcFront)
-    //   formData.append('rc_copy_back', values.rcBack)
-    //   formData.append('insurance_copy_front', values.insurance)
-    //   // data.append('insurance_copy_back', values.insect_vevils_presence_in_tar)
-    //   formData.append('insurance_validity', values.insuranceValid)
-    //   formData.append('tds_dec_form_front', values.TDSfront)
-    //   formData.append('tds_dec_form_back', values.TDSback)
-    //   formData.append('aadhar_copy', values.aadharCopy)
-    //   formData.append('pan_copy', values.panCopy)
-    //   formData.append('pass_copy', values.passCopy)
-    //   formData.append('transport_shed_sheet', values.transportShedSheet)
+  function assignTripSTO(vehicleId) {
+    // alert(vehicleId)
 
-    formData.append('shed_id', values.shedName)
-    //   formData.append('ownership_transfer_form', values.ownershipTrans)
-    formData.append('shed_owner_number', shed_owner_phone_1)
-    formData.append('shed_owner_whatsapp', shed_owner_phone_2)
-    //   formData.append('freight_rate', values.freightRate)
-    formData.append('remarks', values.remarks ? values.remarks : 'NO REMARKS')
-    formData.append('document_status', status)
-    formData.append('document_verification_status', status)
-
-    TripStoService.assignRMSTOHire(formData).then((res) => {
-      if (res.status === 200) {
-        toast.success('RMSto Hire Vechile Assigned Successfully!')
+    TripStoService.doAssignTripSto(vehicleId).then((res) => {
+      if (res.status === 204) {
+        toast.success('TripSto Assigned Successfully!')
         setTimeout(() => {
           window.location.href = '/RMSTOTable'
         }, 1000)
@@ -217,39 +179,49 @@ const RMSTOHire = () => {
         toast.warning('Failed To Assign Trip STO..Kindly Contact Admin.!')
       }
     })
-
-    // VehicleInspectionService.addVehicleInspectionDetails(data).then((res) => {
-    //   if (res.status == 200) {
-    //     toast.success('Vehicle Inspection process completed')
-    //     navigation('/vInspection')
-    //   }
-    // })
-
-    //   DocumentVerificationService.addDocumentVerificationData(formData)
-    //     .then((res) => {
-    //       console.log(res)
-    //       if (res.status == 200) {
-    //         toast.success('Document Verification Done!')
-    //         navigation('/DocsVerify')
-    //       }
-    //     })
-    //     .catch((err) => {
-    //       toast.warning(err)
-    //     })
   }
-  console.log('ask65')
 
-  // const { id } = useParams()
+  const assignRMSTOHireVehicle = (data) => {
+    console.log(data)
+    // console.log(panData.LIFNR)
+    console.log(panData)
+    if (panData.LIFNR) {
+      setErrorModal(true)
+      // setVehicleSto(data.vehicle_id)
+    } else {
+      //  =================================================================================================
+      const formData = new FormData()
+      formData.append('vehicle_id', currentVehicleInfo.vehicle_id)
+      formData.append('pan_number', values.panNumber || panNumber)
+      formData.append('owner_name', panData.NAME1 || values.ownerName)
+      formData.append('owner_number', panData.TELF1 || values.ownerMob)
+      formData.append('shed_id', values.shedName)
+      formData.append('remarks', values.remarks ? values.remarks : 'NO REMARKS')
 
-  // console.log(values)
+      TripStoService.assignRMSTOHire(formData).then((res) => {
+        if (res.status === 200) {
+          toast.success('RMSto Hire Vechile Assigned Successfully!')
+          setTimeout(() => {
+            window.location.href = '/RMSTOTable'
+          }, 1000)
+        } else {
+          toast.warning('Failed To Assign Trip STO..Kindly Contact Admin.!')
+        }
+      })
+    }
+    // =================================================================================================
+  }
 
   useEffect(() => {
     TripStoService.getSingleVehicleInfoOnParkingYardGate(id).then((res) => {
       console.log(res.data.data)
-      // values.vehicle_id = res.data.data.vehicle_id
-      isTouched.vehicle_id = true
+      console.log(id)
+      // values.vehicle_id = res.data.data.vehicle_id // double command
+      // isTouched.vehicle_id = true
       isTouched.remarks = true
+      // isTouched.vType = true
       setCurrentVehicleInfo(res.data.data)
+      setVehicleSto(res.data.data.vehicle_id)
       setFetch(true)
     })
 
@@ -293,18 +265,13 @@ const RMSTOHire = () => {
   //   })
   // }, [])
 
-  // ERROR VALIDATIONS
-  // useEffect(() => {
-  //   if (Object.keys(isTouched).length == Object.keys(formValues).length) {
-  //     if (Object.keys(errors).length == 0) {
-  //       setAcceptBtn(false)
-  //       setRejectBtn(true)
-  //     } else {
-  //       setAcceptBtn(true)
-  //       setRejectBtn(false)
-  //     }
-  //   }
-  // }, [values, errors])
+  useEffect(() => {
+    if (Object.keys(errors).length === 0 && Object.keys(isTouched)) {
+      setValidateSubmit(false)
+    } else {
+      setValidateSubmit(true)
+    }
+  })
 
   return (
     <>
@@ -401,7 +368,7 @@ const RMSTOHire = () => {
                         name="panNumber"
                         id="panNumber"
                         maxLength={10}
-                        // value={values.panNumber || panNumber}
+                        value={values.panNumber || panNumber}
                         onFocus={onFocus}
                         onBlur={onBlur}
                         onChange={handleChange}
@@ -423,6 +390,8 @@ const RMSTOHire = () => {
                           className="text-white"
                           onClick={() => {
                             values.panNumber = ''
+                            values.ownerName = ''
+                            values.ownerMob = ''
                             setPanData('')
                             setPanNumber('')
                             setWrite(false)
@@ -451,7 +420,7 @@ const RMSTOHire = () => {
                       name="VendorCode"
                       size="sm"
                       id="VendorCode"
-                      value={panData ? panData.LIFNR : values.VendorCode}
+                      value={panData ? panData.LIFNR : ''}
                       readOnly
                     />
                   </CCol>
@@ -505,7 +474,7 @@ const RMSTOHire = () => {
                       size="sm"
                       id="aadhar"
                       maxLength={12}
-                      value={panData ? panData.IDNUMBER : values.aadhar}
+                      value={panData ? panData.IDNUMBER : ''}
                       onFocus={onFocus}
                       onBlur={onBlur}
                       onChange={handleChange}
@@ -524,7 +493,7 @@ const RMSTOHire = () => {
                       size="sm"
                       id="bankAcc"
                       maxLength={18}
-                      value={panData ? panData.BANKN : values.bankAcc}
+                      value={panData ? panData.BANKN : ''}
                       onFocus={onFocus}
                       onBlur={onBlur}
                       onChange={handleChange}
@@ -549,7 +518,7 @@ const RMSTOHire = () => {
                       onBlur={onBlur}
                       onChange={handleChange}
                     >
-                      <option value="0">No Shed</option>
+                      <option value="0">Select..</option>
                       {/* {shedNames.map((data) => {
                         return (
                           <>
@@ -641,12 +610,14 @@ const RMSTOHire = () => {
                       color="warning"
                       className="mx-1 px-2 text-white"
                       type="button"
-                      // disabled={acceptBtn}
-                      onClick={() => addDocumentVerification(1)}
+                      // disabled={validateSubmit}
+                      disabled={enableSubmit}
+                      // disabled={enableSubmit && acceptBtn}
+                      onClick={() => assignRMSTOHireVehicle(values)}
                     >
                       Accept
                     </CButton>
-                    <CButton
+                    {/* <CButton
                       size="sm"
                       color="warning"
                       className="mx-1 px-2 text-white"
@@ -655,7 +626,7 @@ const RMSTOHire = () => {
                       onClick={() => addDocumentVerification(0)}
                     >
                       Reject
-                    </CButton>
+                    </CButton> */}
                   </CCol>
                 </CRow>
               </CForm>
@@ -663,27 +634,31 @@ const RMSTOHire = () => {
           </CTabContent>
         </CCard>
       )}
-      {/* Modal Area */}
-      <CModal visible={visible} onClose={() => setVisible(false)}>
+
+      {/* Error Modal Section */}
+      <CModal visible={errorModal} onClose={() => setErrorModal(false)}>
         <CModalHeader>
-          <CModalTitle>Odometer Photo</CModalTitle>
+          <CModalTitle className="h4">Trip STO Confirmation</CModalTitle>
         </CModalHeader>
-
         <CModalBody>
-          <img
-            src="https://media-exp1.licdn.com/dms/image/C560BAQEhfRQblzW2Jw/company-logo_200_200/0/1597849191912?e=2159024400&v=beta&t=GfooSG4SaLjwT3-7D7uTYkhI_3ZT8q64wR-d0e_Ti_s"
-            alt=""
-          />
+          <CRow>
+            <CCol>
+              <CAlert color="danger" data-aos="fade-down">
+                {'Are You Sure to Want to go Trip STO ?'}
+              </CAlert>
+            </CCol>
+          </CRow>
         </CModalBody>
-
         <CModalFooter>
-          <CButton color="secondary" onClick={() => setVisible(false)}>
-            Close
+          <CButton color="primary" onClick={() => assignTripSTO(vehicleSto)}>
+            Yes
+          </CButton>
+          <CButton onClick={() => setErrorModal(false)} color="primary">
+            <Link to=""> No </Link>
           </CButton>
         </CModalFooter>
       </CModal>
-
-      {/* Modal Area */}
+      {/* Error Modal Section */}
     </>
   )
 }

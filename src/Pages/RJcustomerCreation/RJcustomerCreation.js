@@ -48,7 +48,10 @@ const RJcustomerCreation = () => {
     postalCode: '',
     region: '',
     GST: '',
-    payment: '',
+    Payment: '',
+    customer_payment_id: '',
+    incoterms: '',
+    incoterms_description: ''
   }
 
   const navigation = useNavigate()
@@ -89,9 +92,12 @@ const RJcustomerCreation = () => {
     formData.append('customer_area', values.area)
     formData.append('customer_state', values.state)
     formData.append('customer_postal_code', values.postalCode)
-    formData.append('customer_region', values.region)
+    formData.append('region', values.state.substring(0,2))
     formData.append('customer_gst_number', values.GST)
-    formData.append('customer_payment_terms', values.payment)
+    formData.append('customer_payment_terms', values.Payment)
+    formData.append('customer_payment_id', values.Payment)
+    formData.append('incoterms', values.incoterms_description)
+    formData.append('incoterms_description', values.incoterms_description)
     formData.append(
       'customer_remarks',
       values.customer_remarks ? values.customer_remarks : 'NO REMARKS'
@@ -129,8 +135,8 @@ const RJcustomerCreation = () => {
               <CRow className="">
                 <CCol xs={12} md={3}>
                   <CFormLabel htmlFor="createdtype">
-                    Created Type*
-                    {errors.createdby && (
+                    Customer Type*
+                    {errors.createdtype && (
                       <span className="small text-danger">{errors.createdtype}</span>
                     )}
                   </CFormLabel>
@@ -413,22 +419,36 @@ const RJcustomerCreation = () => {
                     placeholder=""
                   />
                 </CCol>
+
                 <CCol xs={12} md={3}>
-                  <CFormLabel htmlFor="state">
-                    State
-                    {errors.state && <span className="small text-danger">{errors.state}</span>}
-                  </CFormLabel>
-                  <CFormInput
-                    name="state"
-                    size="sm"
-                    maxLength={20}
-                    id="state"
-                    onChange={handleChange}
-                    value={values.state}
-                    onFocus={onFocus}
-                    onBlur={onBlur}
-                    placeholder=""
-                  />
+              <CFormLabel htmlFor="state">
+                State
+                {errors.state && <span className="small text-danger">{errors.state}</span>}
+              </CFormLabel>
+
+              <CFormSelect
+                size="sm"
+                id="state"
+                name="state"
+                value={values.state}
+                onFocus={onFocus}
+                onBlur={onBlur}
+                onChange={handleChange}
+                className={`${errors.state && 'is-invalid'}`}
+                aria-label="Small select example"
+              >
+                <option value={''} hidden selected>
+                  Select...
+                </option>
+                <option value="24-Gujarat">Gujarat</option>
+                <option value="27-Maharashtra">Maharashtra</option>
+                <option value="29-Karnataka">Karnataka</option>
+                <option value="32-Kerala">Kerala</option>
+                <option value="33-Tamil nadu">Tamil nadu</option>
+                <option value="34-Pondicherry">Pondicherry</option>
+                <option value="36-Telengana">Telengana</option>
+                <option value="37-Andhra pradesh">Andhra pradesh</option>
+              </CFormSelect>
                 </CCol>
 
                 <CCol xs={12} md={3}>
@@ -456,15 +476,16 @@ const RJcustomerCreation = () => {
                     {errors.region && <span className="small text-danger">{errors.region}</span>}
                   </CFormLabel>
                   <CFormInput
-                    name="region"
-                    size="sm"
-                    maxLength={2}
-                    id="region"
-                    onChange={handleChange}
-                    value={values.region}
-                    onFocus={onFocus}
-                    onBlur={onBlur}
-                    placeholder=""
+                     size="sm"
+                     id="region"
+                     name="region"
+                     maxLength={2}
+                     value={values.state.substring(0, 2)}
+                     placeholder="Select State"
+                     onFocus={onFocus}
+                     onBlur={onBlur}
+                     onChange={handleChange}
+                     readOnly
                   />
                 </CCol>
                 <CCol xs={12} md={3}>
@@ -485,20 +506,123 @@ const RJcustomerCreation = () => {
                   />
                 </CCol>
                 <CCol xs={12} md={3}>
-                  <CFormLabel htmlFor="Payment">Payment Terms</CFormLabel>
+                  <CFormLabel htmlFor="Payment">Payment Terms*
+                    {errors.Payment && <span className="small text-danger">{errors.Payment}</span>}
+                  </CFormLabel>
+                  <CFormSelect
+                size="sm"
+                id="Payment"
+                name="Payment"
+                value={values.Payment}
+                onFocus={onFocus}
+                onBlur={onBlur}
+                onChange={handleChange}
+                className={`${errors.Payment && 'is-invalid'}`}
+                aria-label="Small select example"
+              >
+                <option value={''} hidden selected>
+                  Select...
+                </option>
+                <option value="ADVA">Advance Payment</option>
+                <option value="D001">Within 1 day Due net</option>
+                <option value="D002">Within 2 day Due net</option>
+                <option value="D003">Within 3 day Due net</option>
+                <option value="D004">Within 4 day Due net</option>
+                <option value="D005">Within 5 day Due net</option>
+                <option value="D006">Within 6 day Due net</option>
+                <option value="D007">Within 7 day Due net</option>
+                <option value="D008">Within 8 day Due net</option>
+                <option value="D009">Within 9 day Due net</option>
+                <option value="D010">Within 10 day Due net</option>
+                <option value="D011">Within 11 day Due net</option>
+                <option value="D012">Within 12 day Due net</option>
+                <option value="D013">Within 13 day Due net</option>
+                <option value="D014">Within 14 day Due net</option>
+                <option value="D015">Within 15 day Due net</option>
+                <option value="D016">Within 16 day Due net</option>
+                <option value="D017">Within 17 day Due net</option>
+                <option value="D018">Within 18 day Due net</option>
+                <option value="D019">Within 19 day Due net</option>
+                <option value="D020">Within 20 day Due net</option>
+                <option value="D021">Within 21 day Due net</option>
+                <option value="D022">Within 22 day Due net</option>
+                <option value="D023">Within 23 day Due net</option>
+                <option value="D024">Within 24 day Due net</option>
+                <option value="D025">Within 25 day Due net</option>
+                <option value="D026">Within 26 day Due net</option>
+                <option value="D027">Within 27 day Due net</option>
+                <option value="D028">Within 28 day Due net</option>
+                <option value="D029">Within 20 day Due net</option>
+                <option value="D030">Within 30 day Due net</option>
+                <option value="D035">Within 35 day Due net</option>
+                <option value="D045">Within 40 day Due net</option>
+                <option value="D040">Within 45 day Due net</option>
+                <option value="D050">Within 50 day Due net</option>
+                <option value="D060">Within 60 day Due net</option>
+                <option value="D090">Within 90 day Due net</option>
+              </CFormSelect>
+                </CCol>
+                <CCol xs={12} md={3}>
+                  <CFormLabel htmlFor="customer_payment_id">
+                    Payment Type
+                    {errors.customer_payment_id && <span className="small text-danger">{errors.customer_payment_id}</span>}
+                  </CFormLabel>
                   <CFormInput
-                    name="Payment"
-                    size="sm"
-                    maxLength={20}
-                    id="Payment"
-                    onChange={handleChange}
-                    value={values.Payment}
-                    onFocus={onFocus}
-                    onBlur={onBlur}
-                    placeholder=""
+                     size="sm"
+                     id="customer_payment_id"
+                     name="customer_payment_id"
+                     maxLength={2}
+                     value={values.Payment}
+                     placeholder="Select Payment Terms"
+                     onFocus={onFocus}
+                     onBlur={onBlur}
+                     onChange={handleChange}
+                     readOnly
                   />
                 </CCol>
+                <CCol xs={12} md={3}>
+                <CFormLabel htmlFor="incoterms_description">
+                Incoterms Description*
+                {errors.incoterms_description && <span className="small text-danger">{errors.incoterms_description}</span>}
+              </CFormLabel>
 
+              <CFormSelect
+                size="sm"
+                id="incoterms_description"
+                name="incoterms_description"
+                value={values.incoterms_description}
+                onFocus={onFocus}
+                onBlur={onBlur}
+                onChange={handleChange}
+                className={`${errors.incoterms_description && 'is-invalid'}`}
+                aria-label="Small select example"
+              >
+                <option value={''} hidden selected>
+                  Select...
+                </option>
+                <option value="CFR">Cost and Freight</option>
+                <option value="CT1">Customer Regular</option>
+                <option value="FOB">Free on Board</option>
+              </CFormSelect>
+              </CCol>
+              <CCol xs={12} md={3}>
+                  <CFormLabel htmlFor="incoterms">
+                  Incoterms Type
+                    {errors.incoterms && <span className="small text-danger">{errors.incoterms}</span>}
+                  </CFormLabel>
+                  <CFormInput
+                     size="sm"
+                     id="incoterms"
+                     name="incoterms"
+                     maxLength={2}
+                     value={values.incoterms_description}
+                     placeholder="Select incoterms"
+                     onFocus={onFocus}
+                     onBlur={onBlur}
+                     onChange={handleChange}
+                     readOnly
+                  />
+                </CCol>
                 <CCol xs={12} md={3}>
                   <CFormLabel htmlFor="customer_remarks">Remarks</CFormLabel>
                   <CFormInput
@@ -575,5 +699,4 @@ const RJcustomerCreation = () => {
     </>
   )
 }
-
 export default RJcustomerCreation

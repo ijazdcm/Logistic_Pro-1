@@ -38,7 +38,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import MaintenanceWorkorderComponent from 'src/components/commoncomponent/MaintenanceWorkorderComponent'
 import MaintenanceWorkorderService from 'src/Service/MaintenanceWorkorder/MaintenanceWorkorderService'
 
-const VehicleMaintainence = () => {
+const VehicleMaintainenceEnd = () => {
   const [outSide, setoutSide] = useState(false)
   const formValues = {
     vehicle_id: '',
@@ -76,7 +76,7 @@ const VehicleMaintainence = () => {
       // data.append('closing_odometer_photo', values.closingOdoPhoto);
       data.append('remarks', (values.remarks)?values.remarks:"NO REMARKS");
 
-    VehicleMaintenanceService.addVehicleMaintenance(data).then(res=>{
+    VehicleMaintenanceService.updateMaintenance(data).then(res=>{
 
         if(res.status==200)
         {
@@ -112,15 +112,15 @@ const VehicleMaintainence = () => {
 
     const { id } = useParams()
 
-    useEffect(() => {
-      VehicleMaintenanceService.getSingleVehicleInfoOnParkingYardGate(id).then((res) => {
-        values.vehicle_id = res.data.data.vehicle_id
-        isTouched.vehicle_id = true
-        isTouched.remarks = true
-        setCurrentVehicleInfo(res.data.data)
-        setFetch(true)
-      })
-    }, [id])
+    // useEffect(() => {
+    //   VehicleMaintenanceService.getSingleVehicleInfoOnParkingYardGate(id).then((res) => {
+    //     values.vehicle_id = res.data.data.vehicle_id
+    //     isTouched.vehicle_id = true
+    //     isTouched.remarks = true
+    //     setCurrentVehicleInfo(res.data.data)
+    //     setFetch(true)
+    //   })
+    // }, [id])
 
     useEffect(() => {
       if (values.workOrder) {
@@ -190,6 +190,30 @@ const VehicleMaintainence = () => {
       }
     }, [values, errors])
 
+    useEffect(() => {
+        //section to fetch single Driver info
+        VehicleMaintenanceService.getMaintenanceById(id).then((res) => {
+          values.vehicle_id = res.data.data.vehicle_id
+          values.driverId = res.data.data.driver_id
+          values.maintenenceType = res.data.data.maintenance_typ
+          values.maintenenceBy = res.data.data.maintenance_by
+          values.workOrder = res.data.data.work_order
+          values.vendorName = res.data.data.vendor_id
+          values.MaintenanceStart = res.data.data.maintenance_start_datetime
+          values.MaintenanceEnd = res.data.data.maintenance_end_datetime
+          values.closingOdoKM = res.data.data.closing_odometer_km
+        })
+      }, [id])
+      useEffect(() => {
+        VehicleMaintenanceService.getVehicleMaintenanceInfo(id).then((res) => {
+          const resData = res.data.data[0]
+          values.vehicle_id = res.data.data.vehicle_id
+          console.log(resData)
+          setCurrentInfo(resData)
+          setFetch(true)
+        })
+      }, [])
+
   return (
     <>
       <CCard>
@@ -204,7 +228,7 @@ const VehicleMaintainence = () => {
                       name="vNum"
                       size="sm"
                       id="vNum"
-                      value={currentVehicleInfo.vehicle_number}
+                      value={fetch ? currentInfo.vendor_info.vehicle_id : ''}
                       placeholder=""
                       readOnly
                     />
@@ -221,7 +245,7 @@ const VehicleMaintainence = () => {
                     id="maintenenceBy"
                     className={`${errors.maintenenceBy && 'is-invalid'}`}
                     name="maintenenceBy"
-                    value={values.maintenenceBy}
+                    value={fetch ? currentInfo.vendor_info.maintenance_by : ''}
                     onFocus={onFocus}
                     onBlur={onBlur}
                     onChange={handleChange}
@@ -244,13 +268,12 @@ const VehicleMaintainence = () => {
                       <span className="small text-danger">{errors.maintenenceType}</span>
                     )}
                   </CFormLabel>
-
                   <CFormSelect
                     size="sm"
                     id="maintenenceType"
                     className={`${errors.maintenenceType && 'is-invalid'}`}
                     name="maintenenceType"
-                    value={values.maintenenceType}
+                    value={fetch ? currentInfo.vendor_info.vendor_Id : ''}
                     onFocus={onFocus}
                     onBlur={onBlur}
                     onChange={handleChange}
@@ -276,7 +299,7 @@ const VehicleMaintainence = () => {
                     id="MaintenanceStart"
                     className={`${errors.MaintenanceStart && 'is-invalid'}`}
                     name="MaintenanceStart"
-                    value={values.MaintenanceStart}
+                    value={fetch ? currentInfo.vendor_info.maintenance_start_datetime : ''}
                     type="date"
                     onFocus={onFocus}
                     onBlur={onBlur}
@@ -296,7 +319,7 @@ const VehicleMaintainence = () => {
           onBlur={onBlur}
           onChange={handleChange}
           hidden={!outSide}
-          value={values.driverId}
+          value={fetch ? currentInfo.vendor_info.driver_id : ''}
           className={`${errors.driverId && 'is-invalid'}`}
           aria-label="Small select example"
 
@@ -327,10 +350,10 @@ const VehicleMaintainence = () => {
                   <CFormSelect
                     size="sm"
                     id="workOrder"
-                    className={`${errors.workOrder && 'is-invalid'}`}
+                    className={`${currentVehicleInfo.workOrder && 'is-invalid'}`}
                     name="workOrder"
                     // value={values.workOrder || ''}
-                    value={values.workOrder}
+                    value={fetch ? currentInfo.vendor_info.work_order : ''}
                     onFocus={onFocus}
                     onBlur={onBlur}
                     onChange={handleChange}
@@ -351,20 +374,17 @@ const VehicleMaintainence = () => {
                   <CFormInput
                     size="sm"
                     id="vendorName"
-                    className={`${errors.vendorName && 'is-invalid'}`}
+                    className={`${currentVehicleInfo.vendorName && 'is-invalid'}`}
                     name="vendorName"
-                    value={values.vendorName}
+                    value={fetch ? currentInfo.vendor_info.work_order : ''}
                     onFocus={onFocus}
                     onBlur={onBlur}
                     hidden={!outSide}
                     onChange={handleChange}
                     readOnly
                   />
-
                 </CCol>
-
-
-                {/* <CCol xs={12} md={3}>
+                <CCol xs={12} md={3}>
                   <CFormLabel htmlFor="MaintenanceEnd"
                     hidden={!outSide}
                   >
@@ -386,12 +406,12 @@ const VehicleMaintainence = () => {
                     onChange={handleChange}
                     hidden={!outSide}
                   />
-                </CCol> */}
+                </CCol>
                 <CCol xs={12} md={3}>
                   <CFormLabel htmlFor="closingOdoKM"
                     hidden={!outSide}
                   >
-                    Opening Odometer KM
+                    Closing Odometer KM
                     {errors.closingOdoKM && (
                       <span className="small text-danger">{errors.closingOdoKM}</span>
                     )}
@@ -464,7 +484,6 @@ const VehicleMaintainence = () => {
                     hidden={outSide}
                     // disabled={acceptBtn}
                     onClick={() => addVehicleMaintenance(1)}
-
                   >
                     Maintenence Start
                   </CButton>
@@ -490,4 +509,4 @@ const VehicleMaintainence = () => {
   )
 }
 
-export default VehicleMaintainence
+export default VehicleMaintainenceEnd

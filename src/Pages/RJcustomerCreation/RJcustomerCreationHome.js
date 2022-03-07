@@ -27,7 +27,7 @@ const CustomerCreationHome = () => {
   const [documentSrc, setDocumentSrc] = useState('')
   let viewData
 
-  
+
 
 
   //section for handling view model for each model
@@ -51,6 +51,7 @@ const CustomerCreationHome = () => {
           customer_state: data.customer_state,
           customer_district: data.customer_district,
           customer_postal_code: data.customer_postal_code,
+          customer_code: data.customer_code,
         })
       })
       setRowData(rowDataList)
@@ -75,6 +76,12 @@ const CustomerCreationHome = () => {
       center: true,
     },
     {
+      name: 'Customer Code',
+      selector: (row) => row.customer_code,
+      sortable: true,
+      center: true,
+    },
+    {
       name: 'PAN Number',
       selector: (row) => row.customer_PAN_card_number,
       sortable: true,
@@ -92,18 +99,18 @@ const CustomerCreationHome = () => {
       sortable: true,
       center: true,
     },
-    {
-      name: 'Street Name',
-      selector: (row) => row.customer_street_name,
-      sortable: true,
-      center: true,
-    },
-    {
-      name: 'Area',
-      selector: (row) => row.customer_area,
-      sortable: true,
-      center: true,
-    },
+    // {
+    //   name: 'Street Name',
+    //   selector: (row) => row.customer_street_name,
+    //   sortable: true,
+    //   center: true,
+    // },
+    // {
+    //   name: 'Area',
+    //   selector: (row) => row.customer_area,
+    //   sortable: true,
+    //   center: true,
+    // },
     {
       name: 'City',
       selector: (row) => row.customer_city,

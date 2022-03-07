@@ -41,8 +41,6 @@ const VehicleMaintainence = () => {
           Overall_Duration: data.created_at,
           Action: (
             <span>
-              {data.vehicle_type_id.type != 'Party Vehicle' &&
-              data.vehicle_type_id.type != 'Hire' ? (
                 <CButton className="badge" color="warning">
                   <Link
                     className="text-white"
@@ -51,13 +49,11 @@ const VehicleMaintainence = () => {
                     Vehicle Maintenance
                   </Link>
                 </CButton>
-              ) : (
-                ''
-              )}
             </span>
           ),
         })
       })
+
       setRowData(rowDataList)
       setPending(false)
     })

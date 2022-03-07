@@ -286,9 +286,9 @@ const VendorCreationRequest = () => {
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="ownerName">
                 Owner Name
-                {/* {errors.vehicleType && (
+                 {errors.vehicleType && (
                   <span className="small text-danger">{errors.vehicleType}</span>
-                )} */}
+                )}
               </CFormLabel>
               <CFormInput
                 size="sm"
@@ -300,9 +300,9 @@ const VendorCreationRequest = () => {
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="shedownerMob">
                 Shed Mobile Number{' '}
-                {/* {errors.shedownerMob && (
+                 {errors.shedownerMob && (
                   <span className="small text-danger">{errors.shedownerMob}</span>
-                )} */}
+                )}
               </CFormLabel>
               <CFormInput
                 size="sm"

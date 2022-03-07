@@ -27,7 +27,7 @@ import DocumentVerificationService from 'src/Service/DocsVerify/DocsVerifyServic
 
 // VALIDATIONS FILE
 import useForm from 'src/Hooks/useForm.js'
-import VendorRequestValidation from 'src/Utils/TransactionPages/VendorCreation/VendorRequestValidation'
+import VendorApprovalValidation from 'src/Utils/TransactionPages/VendorCreation/VendorApprovalValidation'
 
 const VendorCreationApproval = () => {
   const { id } = useParams()
@@ -36,6 +36,9 @@ const VendorCreationApproval = () => {
   const [currentInfo, setCurrentInfo] = useState({})
   const [shedData, setShedData] = useState({})
   const [approveBtn, setApproveBtn] = useState(false)
+  const [acceptBtn, setAcceptBtn] = useState(true)
+  const [rejectBtn, setRejectBtn] = useState(true)
+
   const [adharvisible, setAdharVisible] = useState(false)
   const [BankPassbook, setBankPassbook] = useState(false)
   const [PanCard, setPanCard] = useState(false)
@@ -57,11 +60,12 @@ const VendorCreationApproval = () => {
   const [passBookDel, setPassBookDel] = useState(false)
   const [tdsFrontDel, setTdsFrontDel] = useState(false)
   const [tdsBackDel, setTdsBackDel] = useState(false)
-  const [fileUpdate, setFileUpdate] = useState(true)
+  const [hideFileUpdate, setHideFileUpdate] = useState(true)
+  const X = () => <span className="text-danger">*</span>
 
   const formValues = {
     shedName: '',
-    // shedownerMob: '',
+    ownerMob: '',
     shedownerWhatsapp: '',
     panNumber: '',
     aadhar: '',
@@ -95,14 +99,10 @@ const VendorCreationApproval = () => {
     TDSback: '',
   }
 
+  // VALIDATIONS
   function callBack() {}
-
-  const { values, errors, handleChange, onFocus, handleSubmit, enableSubmit, onBlur } = useForm(
-    callBack,
-    VendorRequestValidation,
-    formValues
-  )
-
+  const { values, errors, handleChange, onFocus, handleSubmit, enableSubmit, onBlur, isTouched } =
+    useForm(callBack, VendorApprovalValidation, formValues)
   // ADD VENDOR REQUEST DETAILS
   const addVendorApproval = (status) => {
     const formData = new FormData()
@@ -169,7 +169,53 @@ const VendorCreationApproval = () => {
       setCurrentInfo(resData)
       setFetch(true)
     })
-  }, [fileUpdate])
+  }, [hideFileUpdate])
+
+  // ERROR VALIDATIONS
+  useEffect(() => {
+    isTouched.shedName = true
+    isTouched.ownerName = true
+    isTouched.ownerMob = true
+    isTouched.panNumber = true
+    isTouched.panNumber = true
+    isTouched.panNumber = true
+    isTouched.aadhar = true
+    isTouched.bankName = true
+    isTouched.bankAccount = true
+    isTouched.bankAccHolderName = true
+    isTouched.GSTtax = true
+    isTouched.payment_term_3days = true
+    isTouched.state = true
+    isTouched.district = true
+    isTouched.area = true
+    isTouched.postalCode = true
+    isTouched.city = true
+    isTouched.street = true
+
+    isTouched.region = true
+    isTouched.panCopy = true
+    isTouched.aadharCopy = true
+    isTouched.licenseCopy = true
+    isTouched.rcFront = true
+    isTouched.rcBack = true
+    isTouched.insurance = true
+    isTouched.transportShed = true
+    isTouched.bankPass = true
+    isTouched.TDSfront = true
+    isTouched.TDSback = true
+    isTouched.remarks = true
+    //isTouched.GSTNumber = true
+
+    if (Object.keys(isTouched).length == Object.keys(formValues).length) {
+      if (Object.keys(errors).length == 0) {
+        setAcceptBtn(false)
+        setRejectBtn(false)
+      } else {
+        setAcceptBtn(true)
+        setRejectBtn(false)
+      }
+    }
+  }, [values, errors])
 
   // UPDATE VENDOR DOCUMENTS
   const updateVendorDocument = () => {
@@ -192,7 +238,7 @@ const VendorCreationApproval = () => {
         console.log(res)
         if (res.status == 200) {
           toast.success('Vendor Documents Updated !')
-          setTimeout(() => setFileUpdate(true), 500)
+          setTimeout(() => setHideFileUpdate(true), 500)
           setPanDel(false)
           setAdharDel(false)
           setLicenseDel(false)
@@ -203,12 +249,14 @@ const VendorCreationApproval = () => {
           setPassBookDel(false)
           setTdsFrontDel(false)
           setTdsBackDel(false)
-          setFileUpdate(false)
+          setHideFileUpdate(false)
         }
       })
       .catch((err) => {
         toast.warning(err)
       })
+    setAcceptBtn(false)
+    setRejectBtn(false)
   }
   return (
     <>
@@ -218,49 +266,65 @@ const VendorCreationApproval = () => {
           <CRow className="">
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="shedName">
-                Shed Name
+                Shed Name <X />{' '}
                 {errors.shedName && <span className="small text-danger">{errors.shedName}</span>}
               </CFormLabel>
-              <CFormInput size="sm" id="shedName" defaultValue={fetch ? shedData.shed_name : ''} />
+              <CFormInput
+                size="sm"
+                id="shedName"
+                className={`${errors.shedName && 'is-invalid'}`}
+                defaultValue={fetch ? shedData.shed_name : ''}
+                onFocus={onFocus}
+                onBlur={onBlur}
+                onChange={handleChange}
+              />
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="ownerName">
-                Owner Name
-                {errors.vehicleType && (
-                  <span className="small text-danger">{errors.vehicleType}</span>
-                )}
+                Owner Name <X />{' '}
+                {errors.ownerName && <span className="small text-danger">{errors.ownerName}</span>}
               </CFormLabel>
               <CFormInput
                 size="sm"
                 id="ownerName"
                 defaultValue={fetch ? shedData.shed_owner_name : ''}
+                className={`${errors.ownerName && 'is-invalid'}`}
+                onFocus={onFocus}
+                onBlur={onBlur}
+                onChange={handleChange}
               />
             </CCol>
             <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="shedownerMob">
-                Shed Mobile Number
-                {/* {errors.shedownerMob && (
-                  <span className="small text-danger">{errors.shedownerMob}</span>
-                )} */}
+              <CFormLabel htmlFor="ownerMob">
+                Shed Mobile Number <X />
+                {errors.ownerMob && <span className="small text-danger">{errors.ownerMob}</span>}
               </CFormLabel>
               <CFormInput
                 size="sm"
-                id="shedownerMob"
+                id="ownerMob"
+                className={`${errors.ownerMob && 'is-invalid'}`}
+                name="ownerMob"
                 defaultValue={fetch ? shedData.shed_owner_phone_1 : ''}
+                onFocus={onFocus}
+                onBlur={onBlur}
+                onChange={handleChange}
                 maxLength={10}
               />
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="shedownerWhatsapp">
-                Shed Whatsapp Number
-                {/* {errors.shedownerWhatsapp && (
-                  <span className="small text-danger">{errors.shedownerWhatsapp}</span>
-                )} */}
+                Shed Whatsapp Number <X />
+                {errors.ownerMob && <span className="small text-danger">{errors.ownerMob}</span>}
               </CFormLabel>
               <CFormInput
                 size="sm"
                 id="shedownerWhatsapp"
+                className={`${errors.ownerMob && 'is-invalid'}`}
+                name="shedownerWhatsapp"
                 defaultValue={fetch ? shedData.shed_owner_phone_2 : ''}
+                onFocus={onFocus}
+                onBlur={onBlur}
+                onChange={handleChange}
                 maxLength={10}
               />
             </CCol>
@@ -270,12 +334,18 @@ const VendorCreationApproval = () => {
           <CRow className="">
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="panNumber">
-                PAN Card Number*
-                {/* {errors.panNumber && <span className="small text-danger">{errors.panNumber}</span>} */}
+                PAN Card Number <X />
+                {errors.panNumber && <span className="small text-danger">{errors.panNumber}</span>}
               </CFormLabel>
               <CFormInput
                 size="sm"
                 id="panNumber"
+                className={`${errors.panNumber && 'is-invalid'}`}
+                name="panNumber"
+                maxLength={10}
+                onFocus={onFocus}
+                onBlur={onBlur}
+                onChange={handleChange}
                 defaultValue={
                   (fetch ? currentInfo.vendor_info.pan_card_number : '') || values.panNumber
                 }
@@ -283,81 +353,126 @@ const VendorCreationApproval = () => {
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="aadhar">
-                Aadhar Card Number
-                {/* {errors.aadhar && <span className="small text-danger">{errors.aadhar}</span>} */}
+                Aadhar Card Number <X />
+                {errors.aadhar && <span className="small text-danger">{errors.aadhar}</span>}
               </CFormLabel>
               <CFormInput
                 size="sm"
                 id="aadhar"
+                className={`${errors.aadhar && 'is-invalid'}`}
                 name="aadhar"
+                maxLength={12}
                 defaultValue={
                   (fetch ? currentInfo.vendor_info.aadhar_card_number : '') || values.aadhar
                 }
+                onKeyUp={() => (currentInfo.vendor_info.aadhar_card_number = '')}
+                onFocus={onFocus}
+                onBlur={onBlur}
+                onChange={handleChange}
               />
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="bankAccount">
-                Bank Account Number*
-                {/* {errors.bankAccount && (
+                Bank Account Number <X />
+                {errors.bankAccount && (
                   <span className="small text-danger">{errors.bankAccount}</span>
-                )} */}
+                )}
               </CFormLabel>
               <CFormInput
                 size="sm"
                 id="bankAccount"
-                defaultValue={fetch ? currentInfo.vendor_info.bank_acc_number : ''}
+                name="bankAccount"
+                maxLength={20}
+                className={`${errors.bankAccount && 'is-invalid'}`}
+                value={(fetch ? currentInfo.vendor_info.bank_acc_number : '') || values.bankAccount}
+                onKeyUp={() => (currentInfo.vendor_info.bank_acc_number = '')}
+                onFocus={onFocus}
+                onBlur={onBlur}
+                onChange={handleChange}
               />
             </CCol>
             <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="bankaccountholderName">
-                Bank Account Holder Name*
-                {/* {errors.bankaccountholderName && (
-                  <span className="small text-danger">{errors.bankaccountholderName}</span>
-                )} */}
+              <CFormLabel htmlFor="bankAccHolderName">
+                Bank Account Holder Name
+                <X />
+                {errors.bankAccHolderName && (
+                  <span className="small text-danger">{errors.bankAccHolderName}</span>
+                )}
               </CFormLabel>
               <CFormInput
                 size="sm"
-                id="bankaccountholderName"
+                id="bankAccHolderName"
                 defaultValue={fetch ? currentInfo.vendor_info.bank_acc_holder_name : ''}
+                className={`${errors.bankAccHolderName && 'is-invalid'}`}
+                onFocus={onFocus}
+                onBlur={onBlur}
+                onChange={handleChange}
               />
             </CCol>
           </CRow>
           <CRow>
             <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="bankName">Bank Name</CFormLabel>
+              <CFormLabel htmlFor="bankName">
+                Bank Name <X />
+                {errors.bankAccHolderName && (
+                  <span className="small text-danger">{errors.bankName}</span>
+                )}
+              </CFormLabel>
               <CFormInput
                 type="text"
                 name="bankName"
                 size="sm"
                 id="bankName"
                 defaultValue={fetch ? currentInfo.vendor_info.bank_name : ''}
+                className={`${errors.bankName && 'is-invalid'}`}
+                onFocus={onFocus}
+                onBlur={onBlur}
+                onChange={handleChange}
               />
             </CCol>
             <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="bankBranch">Bank Branch</CFormLabel>
+              <CFormLabel htmlFor="bankBranch">
+                Bank Branch <X />
+                {errors.bankBranch && (
+                  <span className="small text-danger">{errors.bankBranch}</span>
+                )}
+              </CFormLabel>
               <CFormInput
                 type="text"
                 name="bankBranch"
                 size="sm"
                 id="bankBranch"
                 defaultValue={fetch ? currentInfo.vendor_info.bank_branch : ''}
+                className={`${errors.bankBranch && 'is-invalid'}`}
+                onFocus={onFocus}
+                onBlur={onBlur}
+                onChange={handleChange}
               />
             </CCol>
 
             <CCol xs={12} md={3}>
-              <CFormLabel htmlFor="ifscCode">Bank IFSC Code</CFormLabel>
+              <CFormLabel htmlFor="ifscCode">
+                Bank IFSC Code <X />
+                {errors.bankAccHolderName && (
+                  <span className="small text-danger">{errors.bankAccHolderName}</span>
+                )}
+              </CFormLabel>
               <CFormInput
                 type="text"
                 name="ifscCode"
                 size="sm"
                 id="ifscCode"
                 defaultValue={fetch ? currentInfo.vendor_info.bank_ifsc_code : ''}
+                className={`${errors.bankAccHolderName && 'is-invalid'}`}
+                onFocus={onFocus}
+                onBlur={onBlur}
+                onChange={handleChange}
               />
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="GSTreg">
-                GST Registeration
-                {/* {errors.GSTreg && <span className="small text-danger">{errors.GSTreg}</span>} */}
+                GST Registeration <X />
+                {errors.GSTreg && <span className="small text-danger">{errors.GSTreg}</span>}
               </CFormLabel>
 
               <CFormSelect
@@ -391,122 +506,163 @@ const VendorCreationApproval = () => {
                 <CCol xs={12} md={3}>
                   <CFormLabel htmlFor="GST">
                     GST Registration Number*
-                    {/* {errors.GST && <span className="small text-danger">{errors.GST}</span>} */}
+                    {errors.GST && <span className="small text-danger">{errors.GST}</span>}
                   </CFormLabel>
                   <CFormInput
                     size="sm"
                     id="GST"
                     defaultValue={fetch ? currentInfo.vendor_info.gst_registration_number : ''}
+                    onFocus={onFocus}
+                    onBlur={onBlur}
+                    onChange={handleChange}
                   />
                 </CCol>
               ))}
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="GSTtax">
-                GST Tax Code
-                {/* {errors.GSTtax && <span className="small text-danger">{errors.GSTtax}</span>} */}
+                GST Tax Code <X />
+                {errors.GSTtax && <span className="small text-danger">{errors.GSTtax}</span>}
               </CFormLabel>
               <CFormInput
                 size="sm"
                 id="GSTtax"
+                className={`${errors.GSTtax && 'is-invalid'}`}
                 defaultValue={fetch ? currentInfo.vendor_info.gst_tax_code : ''}
+                onFocus={onFocus}
+                onBlur={onBlur}
+                onChange={handleChange}
               />
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="Payment">
-                Payment Terms 3Days
-                {/* {errors.Payment && <span className="small text-danger">{errors.Payment}</span>} */}
+                Payment Terms 3Days <X />
+                {errors.payment_term_3days && (
+                  <span className="small text-danger">{errors.payment_term_3days}</span>
+                )}
               </CFormLabel>
               <CFormInput
                 size="sm"
                 id="Payment"
+                className={`${errors.payment_term_3days && 'is-invalid'}`}
                 defaultValue={fetch ? currentInfo.vendor_info.payment_term_3days : ''}
+                onFocus={onFocus}
+                onBlur={onBlur}
+                onChange={handleChange}
               />
             </CCol>
 
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="Street">
-                Street
-                {/* {errors.Street && <span className="small text-danger">{errors.Street}</span>} */}
+                Street <X />
+                {errors.street && <span className="small text-danger">{errors.street}</span>}
               </CFormLabel>
               <CFormInput
                 size="sm"
                 id="Street"
                 defaultValue={fetch ? currentInfo.vendor_info.street : ''}
+                className={`${errors.street && 'is-invalid'}`}
+                onFocus={onFocus}
+                onBlur={onBlur}
+                onChange={handleChange}
               />
             </CCol>
 
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="Area">
-                Area
-                {/* {errors.Area && <span className="small text-danger">{errors.Area}</span>} */}
+                Area <X />
+                {errors.area && <span className="small text-danger">{errors.area}</span>}
               </CFormLabel>
               <CFormInput
                 size="sm"
                 id="Area"
                 defaultValue={fetch ? currentInfo.vendor_info.area : ''}
+                className={`${errors.area && 'is-invalid'}`}
+                onFocus={onFocus}
+                onBlur={onBlur}
+                onChange={handleChange}
               />
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="City">
-                City
-                {/* {errors.City && <span className="small text-danger">{errors.City}</span>} */}
+                City <X />
+                {errors.city && <span className="small text-danger">{errors.city}</span>}
               </CFormLabel>
               <CFormInput
                 size="sm"
                 id="City"
                 defaultValue={fetch ? currentInfo.vendor_info.city : ''}
+                className={`${errors.city && 'is-invalid'}`}
+                onFocus={onFocus}
+                onBlur={onBlur}
+                onChange={handleChange}
               />
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="District">
-                District
-                {/* {errors.District && <span className="small text-danger">{errors.District}</span>} */}
+                District <X />
+                {errors.district && <span className="small text-danger">{errors.district}</span>}
               </CFormLabel>
               <CFormInput
                 size="sm"
-                id="District"
+                id="district"
                 defaultValue={fetch ? currentInfo.vendor_info.district : ''}
+                className={`${errors.district && 'is-invalid'}`}
+                onFocus={onFocus}
+                onBlur={onBlur}
+                onChange={handleChange}
               />
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="State">
-                State
-                {/* {errors.State && <span className="small text-danger">{errors.State}</span>} */}
+                State <X />
+                {errors.state && <span className="small text-danger">{errors.state}</span>}
               </CFormLabel>
               <CFormInput
                 size="sm"
                 id="State"
                 defaultValue={fetch ? currentInfo.vendor_info.state : ''}
+                className={`${errors.state && 'is-invalid'}`}
+                onFocus={onFocus}
+                onBlur={onBlur}
+                onChange={handleChange}
               />
             </CCol>
 
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="postalCode">
-                Postal Code
-                {/* {errors.postalCode && (
+                Postal Code <X />
+                {errors.postalCode && (
                   <span className="small text-danger">{errors.postalCode}</span>
-                )} */}
+                )}
               </CFormLabel>
               <CFormInput
                 size="sm"
                 id="postalCode"
                 defaultValue={fetch ? currentInfo.vendor_info.postal_code : ''}
+                className={`${errors.postalCode && 'is-invalid'}`}
+                onFocus={onFocus}
+                onBlur={onBlur}
+                onChange={handleChange}
               />
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="Region">
-                Region
-                {/* {errors.Region && <span className="small text-danger">{errors.Region}</span>} */}
+                Region <X />
+                {errors.region && <span className="small text-danger">{errors.region}</span>}
               </CFormLabel>
               <CFormInput
                 size="sm"
                 id="Region"
                 defaultValue={fetch ? currentInfo.vendor_info.region : ''}
+                onFocus={onFocus}
+                onBlur={onBlur}
+                onChange={handleChange}
+                className={`${errors.region && 'is-invalid'}`}
               />
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="panCopy">
-                PAN Card Attachment
+                PAN Card Attachment <X />
                 {errors.panCopy && <span className="small text-danger">{errors.panCopy}</span>}
               </CFormLabel>
 
@@ -539,7 +695,7 @@ const VendorCreationApproval = () => {
                     onClick={(useEffect) => {
                       if (window.confirm('Are you sure to remove this file?')) {
                         setPanDel(true)
-                        setFileUpdate(false)
+                        setHideFileUpdate(false)
                       }
                     }}
                   >
@@ -555,7 +711,7 @@ const VendorCreationApproval = () => {
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="aadharCopy">
-                Aadhar Card Copy
+                Aadhar Card Copy <X />
                 {errors.aadharCopy && (
                   <span className="small text-danger">{errors.aadharCopy}</span>
                 )}
@@ -589,7 +745,7 @@ const VendorCreationApproval = () => {
                     onClick={() => {
                       if (window.confirm('Are you sure to remove this file?')) {
                         setAdharDel(true)
-                        setFileUpdate(false)
+                        setHideFileUpdate(false)
                       }
                     }}
                   >
@@ -606,7 +762,7 @@ const VendorCreationApproval = () => {
 
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="licenseCopy">
-                License Copy
+                License Copy <X />
                 {errors.licenseCopy && (
                   <span className="small text-danger">{errors.licenseCopy}</span>
                 )}
@@ -642,7 +798,7 @@ const VendorCreationApproval = () => {
                       onClick={() => {
                         if (window.confirm('Are you sure to remove this file?')) {
                           setLicenseDel(true)
-                          setFileUpdate(false)
+                          setHideFileUpdate(false)
                         }
                       }}
                     >
@@ -658,7 +814,7 @@ const VendorCreationApproval = () => {
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="insurance">
-                Insurance Copy
+                Insurance Copy <X />
                 {errors.insurance && <span className="small text-danger">{errors.insurance}</span>}
               </CFormLabel>
               {insuranceDel ? (
@@ -690,7 +846,7 @@ const VendorCreationApproval = () => {
                     onClick={() => {
                       if (window.confirm('Are you sure to remove this file?')) {
                         setInsuranceDel(true)
-                        setFileUpdate(false)
+                        setHideFileUpdate(false)
                       }
                     }}
                   >
@@ -706,7 +862,7 @@ const VendorCreationApproval = () => {
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="bankPass">
-                Bank Pass Book
+                Bank Pass Book <X />
                 {errors.bankPass && <span className="small text-danger">{errors.bankPass}</span>}
               </CFormLabel>
               {passBookDel ? (
@@ -738,7 +894,7 @@ const VendorCreationApproval = () => {
                     onClick={() => {
                       if (window.confirm('Are you sure to remove this file?')) {
                         setPassBookDel(true)
-                        setFileUpdate(false)
+                        setHideFileUpdate(false)
                       }
                     }}
                   >
@@ -754,7 +910,7 @@ const VendorCreationApproval = () => {
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="rcFront">
-                RC Copy - Front
+                RC Copy - Front <X />
                 {errors.rcFront && <span className="small text-danger">{errors.rcFront}</span>}
               </CFormLabel>
               {rcFrontDel ? (
@@ -786,7 +942,7 @@ const VendorCreationApproval = () => {
                     onClick={() => {
                       if (window.confirm('Are you sure to remove this file?')) {
                         setRcFrontDel(true)
-                        setFileUpdate(false)
+                        setHideFileUpdate(false)
                       }
                     }}
                   >
@@ -802,7 +958,7 @@ const VendorCreationApproval = () => {
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="rcBack">
-                RC Copy Back
+                RC Copy Back <X />
                 {errors.rcBack && <span className="small text-danger">{errors.rcBack}</span>}
               </CFormLabel>
               {rcBackDel ? (
@@ -834,7 +990,7 @@ const VendorCreationApproval = () => {
                     onClick={() => {
                       if (window.confirm('Are you sure to remove this file?')) {
                         setRcBackDel(true)
-                        setFileUpdate(false)
+                        setHideFileUpdate(false)
                       }
                     }}
                   >
@@ -850,7 +1006,7 @@ const VendorCreationApproval = () => {
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="transportShed">
-                Transporter Shed Sheet
+                Transporter Shed Sheet <X />
                 {errors.transportShed && (
                   <span className="small text-danger">{errors.transportShed}</span>
                 )}
@@ -887,7 +1043,7 @@ const VendorCreationApproval = () => {
                     onClick={() => {
                       if (window.confirm('Are you sure to remove this file?')) {
                         setTransShedDel(true)
-                        setFileUpdate(false)
+                        setHideFileUpdate(false)
                       }
                     }}
                   >
@@ -904,7 +1060,7 @@ const VendorCreationApproval = () => {
 
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="TDSfront">
-                TDS Declaration Form Front
+                TDS Declaration Form Front <X />
                 {errors.TDSfront && <span className="small text-danger">{errors.TDSfront}</span>}
               </CFormLabel>
               {tdsFrontDel ? (
@@ -936,7 +1092,7 @@ const VendorCreationApproval = () => {
                     onClick={() => {
                       if (window.confirm('Are you sure to remove this file?')) {
                         setTdsFrontDel(true)
-                        setFileUpdate(false)
+                        setHideFileUpdate(false)
                       }
                     }}
                   >
@@ -952,7 +1108,7 @@ const VendorCreationApproval = () => {
             </CCol>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="TDSback">
-                TDS Declaration Form Back
+                TDS Declaration Form Back <X />
                 {errors.TDSback && <span className="small text-danger">{errors.TDSback}</span>}
               </CFormLabel>
               {tdsBackDel ? (
@@ -984,7 +1140,7 @@ const VendorCreationApproval = () => {
                     onClick={() => {
                       if (window.confirm('Are you sure to remove this file?')) {
                         setTdsBackDel(true)
-                        setFileUpdate(false)
+                        setHideFileUpdate(false)
                       }
                     }}
                   >
@@ -1046,7 +1202,7 @@ const VendorCreationApproval = () => {
                 color="success"
                 className="mx-1 px-2 text-white"
                 type="button"
-                hidden={fileUpdate}
+                hidden={hideFileUpdate}
                 onClick={() => updateVendorDocument()}
               >
                 Update Files
@@ -1056,18 +1212,18 @@ const VendorCreationApproval = () => {
                 color="warning"
                 className="mx-1 px-2 text-white"
                 type="button"
-                disabled={fetch ? false : true}
-                onClick={() => setApproveBtn(true)}
+                disabled={acceptBtn || (!hideFileUpdate && true)}
+                onClick={() => addVendorRequest(2)}
               >
-                Approve
+                Accept
               </CButton>
               <CButton
                 size="sm"
                 color="warning"
                 className="mx-1 px-2 text-white"
                 type="button"
-                disabled={fetch ? false : true}
-                onClick={() => addVendorApproval(1)}
+                disabled={rejectBtn || (!hideFileUpdate && true)}
+                onClick={() => addVendorRequest(0)}
               >
                 Reject
               </CButton>

@@ -15,13 +15,12 @@ import {
   CAlert,
 } from '@coreui/react'
 import React, { useState, useEffect } from 'react'
-import { Link } from 'react-router-dom'
 import useForm from 'src/Hooks/useForm'
-import validate from 'src/Utils/Validation'
 import CustomTable from 'src/components/customComponent/CustomTable'
 import LocationApi from '../../../Service/SubMaster/LocationApi'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import LocationSubmasterValidation from 'src/Utils/SubMaster/LocationSubmasterValidation'
 
 const LocationTable = () => {
   const [modal, setModal] = useState(false)
@@ -38,7 +37,8 @@ const LocationTable = () => {
   const [pending, setPending] = useState(true)
   const formValues = {
     location: '',
-    location_code: ''
+    location_code: '',
+    location_alpha_code: '',
   }
   // =================== Validation ===============
   const {
@@ -51,7 +51,7 @@ const LocationTable = () => {
     onBlur,
     onClick,
     onKeyUp,
-  } = useForm(login, validate, formValues)
+  } = useForm(login, LocationSubmasterValidation, formValues)
 
   function login() {
     // alert('No Errors CallBack Called')
@@ -63,16 +63,22 @@ const LocationTable = () => {
   // =================== CRUD =====================
   const Create = (e) => {
     e.preventDefault()
-    let createValues = { location_name: values.location,
-      location_code: values.location_code.toUpperCase() }
+    let createValues = {
+      location_name: values.location,
+      location_code: values.location_code,
+      location_alpha_code: values.location_alpha_code.toUpperCase(),
+    }
     LocationApi.createLocation(createValues)
       .then((response) => {
-        setSuccess('New Location Added Successfully')
-        values.location = '';
-        values.location_code = '';
+        if (response.status === 201) {
+          setSuccess('New Location Added Successfully')
+          values.location = ''
+          values.location_code = ''
+          values.location_alpha_code = ''
+        }
       })
       .catch((error) => {
-        showError(error);
+        showError(error)
       })
   }
 
@@ -89,15 +95,14 @@ const LocationTable = () => {
   }
 
   const Update = (id) => {
-    let updateValues = { location_name: values.location, 
-      location_code: values.location_code }
+    let updateValues = { location_name: values.location, location_code: values.location_code }
     console.log(updateValues, id)
     LocationApi.updateLocation(updateValues, id)
       .then((response) => {
         setSuccess('Location Updated Successfully')
       })
       .catch((error) => {
-        showError(error);
+        showError(error)
       })
   }
 
@@ -111,12 +116,16 @@ const LocationTable = () => {
     })
   }
 
-  const showError = (error) =>{
-    let errors = error.response.data.errors;
-        setError(Object.keys(errors).map((key, index) => errors[key][0]).join(' <br/> '))
-        setTimeout(() => {
-          setError('')
-        }, 1000)
+  const showError = (error) => {
+    let errors = error.response.data.errors
+    setError(
+      Object.keys(errors)
+        .map((key, index) => errors[key][0])
+        .join(' <br/> ')
+    )
+    setTimeout(() => {
+      setError('')
+    }, 1000)
   }
 
   useEffect(() => {
@@ -124,11 +133,11 @@ const LocationTable = () => {
       let viewData = response.data.data
       let rowDataList = []
       viewData.map((data, index) => {
-
         rowDataList.push({
           sno: index + 1,
           Location: data.location,
           location_code: data.location_code,
+          location_alpha_code: data.location_alpha_code,
           Created_at: data.created_at,
           Status: data.location_status === 1 ? '✔️' : '❌',
           Action: (
@@ -200,6 +209,13 @@ const LocationTable = () => {
       sortable: true,
     },
     {
+      name: 'Location Alpha Code',
+      selector: (row) => row.location_alpha_code,
+      left: true,
+      sortable: true,
+    },
+
+    {
       name: 'Status',
       selector: (row) => row.Status,
       left: true,
@@ -246,12 +262,13 @@ const LocationTable = () => {
           </CCol>
         </CRow>
         <CCard className="mt-1">
-          <CustomTable 
-          columns={columns} 
-          data={rowData || ''} 
-          fieldName={'Location'}
-          showSearchFilter={true}
-          pending={pending}/>
+          <CustomTable
+            columns={columns}
+            data={rowData || ''}
+            fieldName={'Location'}
+            showSearchFilter={true}
+            pending={pending}
+          />
         </CCard>
       </CContainer>
 
@@ -275,7 +292,7 @@ const LocationTable = () => {
               )}
               {error && (
                 <CAlert color="danger" data-aos="fade-down" dismissible>
-                  <div  dangerouslySetInnerHTML={{__html: error}}/>
+                  <div dangerouslySetInnerHTML={{ __html: error }} />
                 </CAlert>
               )}
 
@@ -297,15 +314,36 @@ const LocationTable = () => {
               />
               <CFormLabel htmlFor="location">
                 Location Code*{' '}
-                {errors.location_code && <span className="small text-danger">{errors.location_code}</span>}
+                {errors.location_code && (
+                  <span className="small text-danger">{errors.location_code}</span>
+                )}
               </CFormLabel>
               <CFormInput
                 size="sm"
                 id="location_code"
-                maxLength={125}
+                type="number"
+                maxLength={4}
                 className={`${errors.location_code && 'is-invalid'}`}
                 name="location_code"
                 value={values.location_code || ''}
+                onFocus={onFocus}
+                onBlur={onBlur}
+                onChange={handleChange}
+                aria-label="Small select example"
+              />
+              <CFormLabel htmlFor="location_alpha_code">
+                Location Alpha Code*{' '}
+                {errors.location_alpha_code && (
+                  <span className="small text-danger">{errors.location_alpha_code}</span>
+                )}
+              </CFormLabel>
+              <CFormInput
+                size="sm"
+                id="location_alpha_code"
+                maxLength={125}
+                className={`${errors.location_alpha_code && 'is-invalid'}`}
+                name="location_alpha_code"
+                value={values.location_alpha_code || ''}
                 onFocus={onFocus}
                 onBlur={onBlur}
                 onChange={handleChange}

@@ -11,6 +11,10 @@ export default function TripSheetCreationValidation(values, isTouched) {
     if (isTouched.advance_amount && !values.advance_amount) {
       errors.advance_amount = 'Number Only'
     }
+    else if (isTouched.advance_amount && values.advance_amount.length>6)
+    {
+      errors.advance_amount = 'Only 6 digits'
+    }
   }
 
   //division_id validation rule
@@ -38,15 +42,25 @@ export default function TripSheetCreationValidation(values, isTouched) {
 
   //vehicle_type_id validation rule
   if (values.vehicle_type_id == 3) {
+
     //freight_rate_per_tone validation rule
     if (isTouched.freight_rate_per_tone && !values.freight_rate_per_tone) {
       errors.freight_rate_per_tone = 'Only Numeric'
+    }else if (isTouched.freight_rate_per_tone && values.freight_rate_per_tone.length>6)
+    {
+      errors.freight_rate_per_tone = 'Only 6 digits'
     }
 
     //advance_payment_diesel validation rule
     if (isTouched.advance_payment_diesel && !values.advance_payment_diesel) {
       errors.advance_payment_diesel = 'Only Numeric'
     }
+
+    else if (isTouched.advance_payment_diesel  && values.advance_payment_diesel.length>6)
+    {
+      errors.advance_payment_diesel  = 'Only 6 digits'
+    }
+
   } else {
     //expected_return_date_time validation rule
     if (isTouched.expected_return_date_time && !values.expected_return_date_time) {
@@ -54,8 +68,6 @@ export default function TripSheetCreationValidation(values, isTouched) {
     }
   }
 
-  // else if (isTouched.bankName && !/^[a-zA-Z ]+$/.test(values.bankName)) {
-  //   errors.bankName = 'Bank name only have Letters and space'
-  // }
+
   return errors
 }

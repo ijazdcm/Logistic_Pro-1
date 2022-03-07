@@ -8,6 +8,11 @@ export default function RMSTOHireValidation(values, isTouched) {
     errors.ownerName = 'Only have Letters and space'
   }
 
+  //Shed Name Validation Rule
+  if (isTouched.shedName && values.shedName === '0') {
+    errors.shedName = 'Required'
+  }
+
   //Owner Mobile Number Validation Rule
   if (isTouched.ownerMob && !values.ownerMob) {
     errors.ownerMob = 'Required'

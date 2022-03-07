@@ -15,7 +15,7 @@ class TripStoService {
   }
 
   assignRMSTOHire(data) {
-    return api.get(TRIPSTO_URL, data)
+    return api.post(TRIPSTO_URL, data)
   }
 
   getSingleVehicleInfoOnParkingYardGate(id) {

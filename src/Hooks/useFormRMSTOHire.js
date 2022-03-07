@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 
-const useFormRJSO = (callback, validate, formValues) => {
+const useFormRMSTOHire = (pan_data, validate, formValues) => {
   const [values, setValues] = useState(formValues)
   const [errors, setErrors] = useState({})
   const [isTouched, setIsTouched] = useState({})
@@ -9,7 +9,7 @@ const useFormRJSO = (callback, validate, formValues) => {
 
   useEffect(() => {
     if (Object.keys(errors).length === 0 && isSubmitting) {
-      callback()
+      // callback()
     }
   }, [errors])
 
@@ -20,66 +20,45 @@ const useFormRJSO = (callback, validate, formValues) => {
   }, [values])
 
   const chechFormFieldMatchs = () => {
-    // console.log(Object.keys(formValues).length + '-ask-' + Object.keys(isTouched).length)
+    console.log(Object.keys(formValues).length + '-ask-' + Object.keys(isTouched).length)
+    console.log(pan_data)
 
     /* ================conditions for Form Submit========================== */
 
     // Drop Down Fields
-    let vehicle_number = values.vehicleNumber != '0' && values.vehicleNumber != ''
-    let payment_term = values.PaymentTerm != '0' && values.PaymentTerm != ''
-    let shed_name = values.shed_name != '0' && values.shed_name != ''
-    let materialType = values.materialType != '0' && values.materialType != ''
-    let uomType = values.uomType != '0' && values.uomType != ''
+    let shedName = values.shedName != '0' && values.shedName != ''
 
     // Error Check
     let no_error = Object.keys(errors).length === 0
 
-    // Input Fields
-    let deliveryTime = values.deliveryTime != ''
-    let returnTime = values.returnTime != ''
-    let materialDescription = values.materialDescription != ''
-    let hsnCode = values.hsnCode != ''
-    let orderQuantity = values.orderQuantity != ''
-    let freight_income = values.freight_income != ''
-    let advance_amount = values.advance_amount != ''
-    let emptyLoad = values.emptyLoad != ''
-    let emptyUnload = values.emptyUnload != ''
-    let lastDeliveryPoint = values.lastDeliveryPoint != ''
-    let loadPoint = values.loadPoint != ''
-    let unloadPoint = values.unloadPoint != ''
+    // let ownerData = pan_data.LIFNR ? true : values.ownerName != '' && values.ownerMob != ''
+    let ownerData = false
 
-    //Topay Condition
-    let topay =
-      values.PaymentTerm == '2'
-        ? values.customerName != '0' && values.customerName != ''
-          ? true
-          : false
-        : values.PaymentTerm == '1'
-        ? true
-        : false
+    // Input Fields
+    let panNumber = values.panNumber != ''
+
+    if (pan_data.LIFNR) {
+      ownerData = true
+      if (errors.ownerName || errors.ownerMob) {
+        no_error = true
+      }
+    } else {
+      if (values.ownerName != '' && values.ownerMob != '') {
+        ownerData = true
+      } else {
+        ownerData = false
+      }
+    }
+
+    console.log('ownerData : ' + ownerData)
+    console.log('shedName : ' + shedName)
+    console.log('panNumber : ' + panNumber)
+    console.log('no_error : ' + no_error)
+    console.log(errors)
 
     /* ================conditions for Form Submit========================== */
 
-    if (
-      vehicle_number &&
-      payment_term &&
-      shed_name &&
-      materialType &&
-      uomType &&
-      no_error &&
-      deliveryTime &&
-      returnTime &&
-      materialDescription &&
-      hsnCode &&
-      orderQuantity &&
-      freight_income &&
-      advance_amount &&
-      emptyLoad &&
-      emptyUnload &&
-      lastDeliveryPoint &&
-      loadPoint &&
-      unloadPoint
-    ) {
+    if (shedName && ownerData && panNumber && no_error) {
       setEnableSubmit(false)
       // console.log('submit_yes')
     } else {
@@ -151,4 +130,4 @@ const useFormRJSO = (callback, validate, formValues) => {
   }
 }
 
-export default useFormRJSO
+export default useFormRMSTOHire

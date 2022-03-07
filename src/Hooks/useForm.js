@@ -20,6 +20,12 @@ const useForm = (callback, validate, formValues) => {
   }, [values])
 
   const chechFormFieldMatchs = () => {
+    console.log(Object.keys(isTouched).length)
+    console.log('hjk1')
+    console.log(formValues)
+    console.log('hjk2')
+    console.log(isTouched)
+    console.log(Object.keys(formValues).length)
     if (Object.keys(formValues).length === Object.keys(isTouched).length) {
       setEnableSubmit(false)
     } else {
@@ -53,9 +59,7 @@ const useForm = (callback, validate, formValues) => {
     //     [event.target.name]: value==='on'?true:false,
     //   }))
     // }
-
     else {
-
       setValues((values) => ({
         ...values,
         [event.target.name]: value,
@@ -67,7 +71,7 @@ const useForm = (callback, validate, formValues) => {
     setIsTouched((isTouched) => ({ ...isTouched, [name]: true }))
     setValues((values) => ({
       ...values,
-      [name]: data.filter( data => data.value).map(data => data.value),
+      [name]: data.filter((data) => data.value).map((data) => data.value),
     }))
   }
 

@@ -31,6 +31,7 @@ import 'react-toastify/dist/ReactToastify.css'
 const TripSheetCreation = () => {
   const formValues = {
     vehicle_id: '',
+    vehicle_location_code: '',
     vehicle_type_id: '',
     driver_id: '',
     division_id: '',
@@ -59,6 +60,23 @@ const TripSheetCreation = () => {
     HIRE: 3,
   }
 
+  const Purpose = [
+    { id: 1, purpose: 'FG-Sales' },
+    { id: 2, purpose: 'FG-STO' },
+    { id: 3, purpose: 'RM-STO' },
+  ]
+
+  const SourcedBy = [
+    { id: 1, team: 'Logistics Team' },
+    { id: 2, team: 'WH-Team' },
+    { id: 3, team: 'Dispatch Team' },
+  ]
+
+  const DivisonList = [
+    { id: 1, division: 'NLFD' },
+    { id: 2, division: 'NLCD' },
+  ]
+
   useEffect(() => {
     TripSheetCreationService.getSingleVehicleInfoOnGate(id).then((res) => {
       if (res.status === 200) {
@@ -69,8 +87,9 @@ const TripSheetCreation = () => {
         values.vehicle_id = res.data.data.vehicle_id
         values.driver_id =
           res.data.data.driver_info != null ? res.data.data.driver_info.driver_id : ''
-        values.driveMobile =
-          res.data.data.driver_info != null ? res.data.data.driver_info.driver_phone_1 : ''
+        values.driveMobile = res.data.data.driver_info != null ? res.data.data.driver_info.driver_phone_1 : ''
+        values.vehicle_location_id = res.data.data.vehicle_location_id.location_alpha_code
+        values.purpose=res.data.data.trip_sto_status=="1"?"3":""
         setSingleVehicleInfo(res.data.data)
       }
     })
@@ -101,7 +120,7 @@ const TripSheetCreation = () => {
   useEffect(() => {
     if (
       Object.keys(errors).length === 0 &&
-      Object.keys(isTouched).length === Object.keys(formValues).length
+      Object.keys(isTouched)
     ) {
       setValidateSubmit(false)
     } else {
@@ -125,6 +144,9 @@ const TripSheetCreation = () => {
               isTouched={isTouched}
               dirverAssign={dirverAssign}
               setDirverAssign={setDirverAssign}
+              Purpose={Purpose}
+              SourcedBy={SourcedBy}
+              DivisonList={DivisonList}
             />
           ) : (
             <TripSheetCreationHire
@@ -135,6 +157,9 @@ const TripSheetCreation = () => {
               onBlur={onBlur}
               singleVehicleInfo={singleVehicleInfo}
               isTouched={isTouched}
+              Purpose={Purpose}
+              SourcedBy={SourcedBy}
+              DivisonList={DivisonList}
             />
           )}
           <CRow>
@@ -171,8 +196,8 @@ const TripSheetCreation = () => {
               <CButton
                 size="sm"
                 color="warning"
-                disabled={validateSubmit}
                 className="mx-3 px-3 text-white"
+                disabled={validateSubmit}
                 type="submit"
               >
                 Create

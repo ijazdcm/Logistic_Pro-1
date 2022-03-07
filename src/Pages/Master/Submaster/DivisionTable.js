@@ -39,6 +39,7 @@ const DivisionTable = () => {
   const [pending, setPending] = useState(true)
   const formValues = {
     division: '',
+    division_code: '',
   }
   // =================== Validation ===============
   const {
@@ -63,11 +64,17 @@ const DivisionTable = () => {
   // =================== CRUD =====================
   const Create = (e) => {
     e.preventDefault()
-    let createValues = { division_name: values.division }
+    let createValues = { division_name: values.division,division_code:values.division_code }
     DivisionApi.createDivision(createValues)
       .then((response) => {
-        //console.log(response)
-        setSuccess('New Division Added Successfully')
+
+        if(response.status===201)
+        {
+          setSuccess('New Division Added Successfully')
+          setModal(false)
+          setMount(prevState=>prevState+1)
+        }
+
       })
       .catch((error) => {
         setError(error.response.data.errors.division_name[0])
@@ -126,6 +133,7 @@ const DivisionTable = () => {
         rowDataList.push({
           sno: index + 1,
           Division: data.division,
+          division_code: data.division_code,
           Created_at: data.created_at,
           Status: status,
           Action: (
@@ -185,6 +193,13 @@ const DivisionTable = () => {
     {
       name: 'Division',
       selector: (row) => row.Division,
+      sortable: true,
+      left: true,
+    },
+
+    {
+      name: 'Division Code',
+      selector: (row) => row.division_code,
       sortable: true,
       left: true,
     },
@@ -279,6 +294,22 @@ const DivisionTable = () => {
                 className={`${errors.division && 'is-invalid'}`}
                 name="division"
                 value={values.division || ''}
+                onFocus={onFocus}
+                onBlur={onBlur}
+                onChange={handleChange}
+                aria-label="Small select example"
+              />
+              <CFormLabel htmlFor="division_code">
+                Division Code*{' '}
+                {errors.division_code && <span className="small text-danger">{errors.division_code}</span>}
+              </CFormLabel>
+              <CFormInput
+                size="sm"
+                id="division_code"
+                maxLength={8}
+                className={`${errors.division && 'is-invalid'}`}
+                name="division_code"
+                value={values.division_code || ''}
                 onFocus={onFocus}
                 onBlur={onBlur}
                 onChange={handleChange}

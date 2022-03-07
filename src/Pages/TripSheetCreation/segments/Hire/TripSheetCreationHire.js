@@ -11,21 +11,11 @@ const TripSheetCreationHire = ({
   enableSubmit,
   onBlur,
   singleVehicleInfo,
-  isTouched
+  isTouched,
+  Purpose,
+  SourcedBy,
+  DivisonList,
 }) => {
-
-
-
-  useEffect(() => {
-    isTouched.expected_return_date_time = true
-    isTouched.remarks = true
-    isTouched.driveMobile = true
-    isTouched.Vehicle_Sourced_by = true
-    isTouched.advance_payment_diesel = true
-  }, [])
-
-
-
   return (
     <>
       <CRow>
@@ -72,36 +62,40 @@ const TripSheetCreationHire = ({
             readOnly
           />
         </CCol>
-        <CCol xs={12} md={3}>
-          <CFormLabel htmlFor="gateInDateTime">Gate-In Date & Time</CFormLabel>
-          <CFormInput
-            size="sm"
-            id="gateInDateTime"
-            type="text"
-            value={singleVehicleInfo.gate_in_date_time_string}
-            readOnly
-          />
-        </CCol>
-        <CCol xs={12} md={3}>
-          <CFormLabel htmlFor="inspectionDateTime">Inspection Date & Time</CFormLabel>
-          <CFormInput
-            size="sm"
-            id="inspectionDateTime"
-            type="text"
-            value={singleVehicleInfo.vehicle_inspection_trip.inspection_time_string}
-            readOnly
-          />
-        </CCol>
-        <CCol xs={12} md={3}>
-          <CFormLabel htmlFor="verifyDate">Doc. Verification Date & Time</CFormLabel>
-          <CFormInput
-            size="sm"
-            type="inspection_time_string"
-            id="verifyDate"
-            value={singleVehicleInfo.vehicle_inspection_trip.inspection_time_string}
-            readOnly
-          />
-        </CCol>
+        {singleVehicleInfo.trip_sto_status !== '1' && (
+          <>
+            <CCol xs={12} md={3}>
+              <CFormLabel htmlFor="gateInDateTime">Gate-In Date & Time</CFormLabel>
+              <CFormInput
+                size="sm"
+                id="gateInDateTime"
+                type="text"
+                value={singleVehicleInfo.gate_in_date_time_string}
+                readOnly
+              />
+            </CCol>
+            <CCol xs={12} md={3}>
+              <CFormLabel htmlFor="inspectionDateTime">Inspection Date & Time</CFormLabel>
+              <CFormInput
+                size="sm"
+                id="inspectionDateTime"
+                type="text"
+                value={singleVehicleInfo.vehicle_inspection_trip.inspection_time_string}
+                readOnly
+              />
+            </CCol>
+            <CCol xs={12} md={3}>
+              <CFormLabel htmlFor="verifyDate">Doc. Verification Date & Time</CFormLabel>
+              <CFormInput
+                size="sm"
+                type="inspection_time_string"
+                id="verifyDate"
+                value={singleVehicleInfo.vehicle_inspection_trip.inspection_time_string}
+                readOnly
+              />
+            </CCol>
+          </>
+        )}
       </CRow>
       <CRow>
         <CCol xs={12} md={3}>
@@ -109,7 +103,7 @@ const TripSheetCreationHire = ({
           <CFormInput
             size="sm"
             id="shedName"
-            value={singleVehicleInfo.vehicle_vendor_info.shed_info.shed_name}
+            value={singleVehicleInfo.vendor_info.shed_info.shed_name}
             readOnly
           />
         </CCol>
@@ -119,7 +113,7 @@ const TripSheetCreationHire = ({
             size="sm"
             id="ownerName"
             type="text"
-            value={singleVehicleInfo.vehicle_vendor_info.owner_name}
+            value={singleVehicleInfo.vendor_info.owner_name}
             readOnly
           />
         </CCol>
@@ -128,50 +122,148 @@ const TripSheetCreationHire = ({
           <CFormInput
             size="sm"
             id="ownerMob"
-            value={singleVehicleInfo.vehicle_vendor_info.shed_info.shed_owner_phone_1}
+            value={singleVehicleInfo.vendor_info.shed_info.shed_owner_phone_1}
             type="text"
             readOnly
           />
         </CCol>
         <CCol xs={12} md={3}>
-          <CFormLabel htmlFor="division_id">
-            Divison
-            {errors.division_id && <span className="small text-danger">{errors.division_id}</span>}
+          <CFormLabel htmlFor="purpose">
+            Purpose*
+            {errors.purpose && <span className="small text-danger">{errors.purpose}</span>}
           </CFormLabel>
           <CFormSelect
             size="sm"
-            name="division_id"
+            name="purpose"
+            id="purpose"
             onFocus={onFocus}
             onBlur={onBlur}
             onChange={handleChange}
-            value={values.division_id}
-            className={`${errors.division_id && 'is-invalid'}`}
+            disabled={singleVehicleInfo.trip_sto_status == '1' ? true : false}
+            value={singleVehicleInfo.trip_sto_status != '1' ? values.purpose : 3}
+            className={`${errors.purpose && 'is-invalid'}`}
             aria-label="Small select example"
-            id="division_id"
           >
-            <DivisonListComponent />
+            <option value="">Select...</option>
+            {singleVehicleInfo.trip_sto_status == '1' &&
+              Purpose.map(({ id, purpose }) => {
+                return (
+                  <>
+                    <option value={id}>{purpose}</option>
+                  </>
+                )
+              })}
+            {Purpose.map(({ id, purpose }) => {
+              if (id != 3) {
+                return (
+                  <>
+                    <option value={id}>{purpose}</option>
+                  </>
+                )
+              }
+            })}
           </CFormSelect>
         </CCol>
-      </CRow>
-      <CRow>
-        <CCol xs={12} md={3}>
-          <CFormLabel htmlFor="freight_rate_per_tone">
-            Freight Rate Per TON
-            {errors.freight_rate_per_tone && (
-              <span className="small text-danger">{errors.freight_rate_per_tone}</span>
-            )}
-          </CFormLabel>
-          <CFormInput
-            size="sm"
-            onFocus={onFocus}
-            onBlur={onBlur}
-            onChange={handleChange}
-            value={values.freight_rate_per_tone}
-            id="freight_rate_per_tone"
-            name="freight_rate_per_tone"
-            type="number"
-          />
-        </CCol>
+        {values.purpose == 2 ||values.purpose == 3? (
+          <CCol xs={12} md={3}>
+            <CFormLabel htmlFor="Vehicle_Sourced_by">
+              Vehicle sourced by*
+              {errors.Vehicle_Sourced_by && (
+                <span className="small text-danger">{errors.Vehicle_Sourced_by}</span>
+              )}
+            </CFormLabel>
+            <CFormSelect
+              size="sm"
+              name="Vehicle_Sourced_by"
+              onFocus={onFocus}
+              onBlur={onBlur}
+              onChange={handleChange}
+              value={values.Vehicle_Sourced_by}
+              className={`${errors.Vehicle_Sourced_by && 'is-invalid'}`}
+              aria-label="Small select example"
+              id="Vehicle_Sourced_by"
+            >
+              <option value="">Select...</option>
+              {SourcedBy.map(({ id, team }) => {
+
+           if(values.purpose == 2)
+           {
+              if(id==1 || id==3)
+              {
+                return (
+                  <>
+                    <option value={id}>{team}</option>
+                  </>
+                )
+              }
+           }else
+           {
+            if(id==1 || id==2)
+            {
+              return (
+                <>
+                  <option value={id}>{team}</option>
+                </>
+              )
+            }
+           }
+
+              })}
+            </CFormSelect>
+          </CCol>
+        ) : (
+          singleVehicleInfo.trip_sto_status != '1' && (
+            <CCol xs={12} md={3}>
+              <CFormLabel htmlFor="division_id">
+                Division*
+                {errors.division_id && (
+                  <span className="small text-danger">{errors.division_id}</span>
+                )}
+              </CFormLabel>
+              <CFormSelect
+                size="sm"
+                name="division_id"
+                onFocus={onFocus}
+                onBlur={onBlur}
+                onChange={handleChange}
+                value={values.division_id}
+                className={`${errors.division_id && 'is-invalid'}`}
+                aria-label="Small select example"
+                id="division_id"
+              >
+                <option value="">Select...</option>
+                {DivisonList.map(({ id, division }) => {
+                  return (
+                    <>
+                      <option value={id}>{division}</option>
+                    </>
+                  )
+                })}
+              </CFormSelect>
+            </CCol>
+          )
+        )}
+        {singleVehicleInfo.trip_sto_status != '1' && (
+          <CCol xs={12} md={3}>
+            <CFormLabel htmlFor="freight_rate_per_tone">
+              Freight Rate Per TON *
+              {errors.freight_rate_per_tone && (
+                <span className="small text-danger">{errors.freight_rate_per_tone}</span>
+              )}
+            </CFormLabel>
+            <CFormInput
+              size="sm"
+              onFocus={onFocus}
+              onBlur={onBlur}
+              onChange={handleChange}
+              value={values.freight_rate_per_tone}
+              id="freight_rate_per_tone"
+              name="freight_rate_per_tone"
+              type="number"
+            />
+          </CCol>
+        )}
+
         <CCol xs={12} md={3}>
           <CFormLabel htmlFor="trip_advance_eligiblity">
             Trip Advance Eligibility
@@ -215,6 +307,12 @@ const TripSheetCreationHire = ({
                 id="advance_amount"
               />
             </CCol>
+          </>
+        ) : (
+          <></>
+        )}
+        {values.trip_advance_eligiblity == 1 ? (
+          <>
             <CCol xs={12} md={3}>
               <CFormLabel htmlFor="advance_payment_diesel">
                 Advance Payment Diesel*
@@ -222,63 +320,20 @@ const TripSheetCreationHire = ({
                   <span className="small text-danger">{errors.advance_payment_diesel}</span>
                 )}
               </CFormLabel>
-              <CFormInput size="sm" name='advance_payment_diesel' type="number" onFocus={onFocus}
+              <CFormInput
+                size="sm"
+                name="advance_payment_diesel"
+                type="number"
+                onFocus={onFocus}
                 onBlur={onBlur}
                 onChange={handleChange}
-                value={values.advance_payment_diesel} id="advance_payment_diesel" />
+                value={values.advance_payment_diesel}
+                id="advance_payment_diesel"
+              />
             </CCol>
           </>
         ) : (
           <></>
-        )}
-      </CRow>
-      <CRow>
-        <CCol xs={12} md={3}>
-          <CFormLabel htmlFor="Purpose">
-            Purpose
-            {errors.purpose && <span className="small text-danger">{errors.purpose}</span>}
-          </CFormLabel>
-          <CFormSelect
-            size="sm"
-            name="purpose"
-            onFocus={onFocus}
-            onBlur={onBlur}
-            onChange={handleChange}
-            value={values.purpose}
-            className={`${errors.purpose && 'is-invalid'}`}
-            aria-label="Small select example"
-            id="Purpose"
-          >
-            <option value="">Select...</option>
-            <option value="1">FG Sales</option>
-            <option value="2">STO</option>
-            <option value="3">Others</option>
-          </CFormSelect>
-        </CCol>
-
-        {values.purpose == 2 && (
-          <CCol xs={12} md={3}>
-            <CFormLabel htmlFor="Vehicle_Sourced_by">
-              Vehicle sourced by
-              {errors.Vehicle_Sourced_by && <span className="small text-danger">{errors.Vehicle_Sourced_by}</span>}
-            </CFormLabel>
-            <CFormSelect
-              size="sm"
-              name="Vehicle_Sourced_by"
-              onFocus={onFocus}
-              onBlur={onBlur}
-              onChange={handleChange}
-              value={values.Vehicle_Sourced_by}
-              className={`${errors.Vehicle_Sourced_by && 'is-invalid'}`}
-              aria-label="Small select example"
-              id="Vehicle_Sourced_by"
-            >
-              <option value="">Select...</option>
-              <option value="Logistics">Logistics</option>
-              <option value="WM-Team">WM-Team</option>
-              <option value="Inventry Team">Inventry Team</option>
-            </CFormSelect>
-          </CCol>
         )}
         <CCol xs={12} md={3}>
           <CFormLabel htmlFor="expected_date_time">
@@ -287,12 +342,20 @@ const TripSheetCreationHire = ({
               <span className="small text-danger">{errors.expected_date_time}</span>
             )}
           </CFormLabel>
-          <CFormInput size="sm" onFocus={onFocus}
-              onBlur={onBlur}
-              onChange={handleChange}
-              value={values.expected_date_time} type="date" name='expected_date_time' id="expected_date_time" />
+          <CFormInput
+            size="sm"
+            onFocus={onFocus}
+            onBlur={onBlur}
+            onChange={handleChange}
+            value={values.expected_date_time}
+            type="date"
+            name="expected_date_time"
+            id="expected_date_time"
+          />
         </CCol>
       </CRow>
+      <CRow></CRow>
+      <CRow></CRow>
     </>
   )
 }
